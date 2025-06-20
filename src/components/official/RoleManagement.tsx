@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,15 +6,20 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus, Users, Shield, Edit, Trash2, User, Search, UserPlus } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
 
 export const RoleManagement = () => {
   const [isCreateRoleOpen, setIsCreateRoleOpen] = useState(false);
   const [isAddUserOpen, setIsAddUserOpen] = useState(false);
+  const [isEditRoleOpen, setIsEditRoleOpen] = useState(false);
+  const [isEditUserOpen, setIsEditUserOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [newRoleName, setNewRoleName] = useState('');
   const [newRolePermissions, setNewRolePermissions] = useState<string[]>([]);
   const [newUserEmail, setNewUserEmail] = useState('');
   const [newUserRole, setNewUserRole] = useState('');
+  const [editingRole, setEditingRole] = useState<any>(null);
+  const [editingUser, setEditingUser] = useState<any>(null);
 
   const roles = [
     {
@@ -105,33 +109,144 @@ export const RoleManagement = () => {
   ];
 
   const handleCreateRole = () => {
+    if (!newRoleName.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a role name",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (newRolePermissions.length === 0) {
+      toast({
+        title: "Error", 
+        description: "Please select at least one permission",
+        variant: "destructive"
+      });
+      return;
+    }
+
     console.log('Creating new role:', { name: newRoleName, permissions: newRolePermissions });
+    toast({
+      title: "Role Created",
+      description: `Role "${newRoleName}" has been created successfully`
+    });
     setIsCreateRoleOpen(false);
     setNewRoleName('');
     setNewRolePermissions([]);
   };
 
   const handleAddUser = () => {
+    if (!newUserEmail.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter an email address",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!newUserRole) {
+      toast({
+        title: "Error",
+        description: "Please select a role",
+        variant: "destructive"
+      });
+      return;
+    }
+
     console.log('Adding new user:', { email: newUserEmail, role: newUserRole });
+    toast({
+      title: "User Added",
+      description: `User invitation sent to ${newUserEmail}`
+    });
     setIsAddUserOpen(false);
     setNewUserEmail('');
     setNewUserRole('');
   };
 
-  const handleEditRole = (roleId: number) => {
-    console.log('Editing role:', roleId);
+  const handleEditRole = (role: any) => {
+    console.log('Editing role:', role);
+    setEditingRole(role);
+    setNewRoleName(role.name);
+    setNewRolePermissions([...role.permissions]);
+    setIsEditRoleOpen(true);
   };
 
-  const handleDeleteRole = (roleId: number) => {
-    console.log('Deleting role:', roleId);
+  const handleUpdateRole = () => {
+    if (!newRoleName.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a role name",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    console.log('Updating role:', editingRole.id, { name: newRoleName, permissions: newRolePermissions });
+    toast({
+      title: "Role Updated",
+      description: `Role "${newRoleName}" has been updated successfully`
+    });
+    setIsEditRoleOpen(false);
+    setEditingRole(null);
+    setNewRoleName('');
+    setNewRolePermissions([]);
   };
 
-  const handleEditUser = (userId: number) => {
-    console.log('Editing user:', userId);
+  const handleDeleteRole = (role: any) => {
+    if (role.userCount > 0) {
+      toast({
+        title: "Cannot Delete Role",
+        description: `Cannot delete role "${role.name}" as it has ${role.userCount} assigned users`,
+        variant: "destructive"
+      });
+      return;
+    }
+
+    console.log('Deleting role:', role);
+    toast({
+      title: "Role Deleted",
+      description: `Role "${role.name}" has been deleted successfully`
+    });
   };
 
-  const handleDeactivateUser = (userId: number) => {
-    console.log('Deactivating user:', userId);
+  const handleEditUser = (user: any) => {
+    console.log('Editing user:', user);
+    setEditingUser(user);
+    setNewUserEmail(user.email);
+    setNewUserRole(user.role);
+    setIsEditUserOpen(true);
+  };
+
+  const handleUpdateUser = () => {
+    if (!newUserEmail.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter an email address",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    console.log('Updating user:', editingUser.id, { email: newUserEmail, role: newUserRole });
+    toast({
+      title: "User Updated",
+      description: `User "${editingUser.name}" has been updated successfully`
+    });
+    setIsEditUserOpen(false);
+    setEditingUser(null);
+    setNewUserEmail('');
+    setNewUserRole('');
+  };
+
+  const handleDeactivateUser = (user: any) => {
+    console.log('Deactivating user:', user);
+    toast({
+      title: "User Deactivated",
+      description: `User "${user.name}" has been deactivated`
+    });
   };
 
   const getStatusColor = (status: string) => {
@@ -218,16 +333,16 @@ export const RoleManagement = () => {
                       <Button 
                         size="sm" 
                         variant="outline" 
-                        className="bg-white/10 border-white/20 text-white"
-                        onClick={() => handleEditRole(role.id)}
+                        className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                        onClick={() => handleEditRole(role)}
                       >
                         <Edit className="w-4 h-4" />
                       </Button>
                       <Button 
                         size="sm" 
                         variant="outline" 
-                        className="bg-red-500/20 border-red-500/30 text-red-300"
-                        onClick={() => handleDeleteRole(role.id)}
+                        className="bg-red-500/20 border-red-500/30 text-red-300 hover:bg-red-500/30"
+                        onClick={() => handleDeleteRole(role)}
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
@@ -236,7 +351,7 @@ export const RoleManagement = () => {
                   <p className="text-white/70 text-sm mb-3">{role.description}</p>
                   <div className="flex flex-wrap gap-2">
                     {role.permissions.map((permission, index) => (
-                      <Badge key={index} variant="outline" className="text-white/60 text-xs">
+                      <Badge key={index} variant="outline" className="text-white/60 text-xs border-white/20">
                         {permission.replace('_', ' ')}
                       </Badge>
                     ))}
@@ -287,16 +402,16 @@ export const RoleManagement = () => {
                       <Button 
                         size="sm" 
                         variant="outline" 
-                        className="bg-white/10 border-white/20 text-white"
-                        onClick={() => handleEditUser(user.id)}
+                        className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                        onClick={() => handleEditUser(user)}
                       >
                         <Edit className="w-3 h-3" />
                       </Button>
                       <Button 
                         size="sm" 
                         variant="outline" 
-                        className="bg-red-500/20 border-red-500/30 text-red-300"
-                        onClick={() => handleDeactivateUser(user.id)}
+                        className="bg-red-500/20 border-red-500/30 text-red-300 hover:bg-red-500/30"
+                        onClick={() => handleDeactivateUser(user)}
                       >
                         <Trash2 className="w-3 h-3" />
                       </Button>
@@ -359,6 +474,56 @@ export const RoleManagement = () => {
         </DialogContent>
       </Dialog>
 
+      {/* Edit Role Modal */}
+      <Dialog open={isEditRoleOpen} onOpenChange={setIsEditRoleOpen}>
+        <DialogContent className="bg-white/95 backdrop-blur-lg border-white/20">
+          <DialogHeader>
+            <DialogTitle className="text-gray-900">Edit Role</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium text-gray-700 block mb-2">Role Name</label>
+              <Input
+                value={newRoleName}
+                onChange={(e) => setNewRoleName(e.target.value)}
+                placeholder="Enter role name..."
+                className="bg-white border-gray-300"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-gray-700 block mb-2">Permissions</label>
+              <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto">
+                {permissions.map((permission) => (
+                  <label key={permission} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={newRolePermissions.includes(permission)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setNewRolePermissions([...newRolePermissions, permission]);
+                        } else {
+                          setNewRolePermissions(newRolePermissions.filter(p => p !== permission));
+                        }
+                      }}
+                      className="rounded"
+                    />
+                    <span className="text-sm text-gray-700">{permission.replace('_', ' ')}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setIsEditRoleOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleUpdateRole} className="bg-blue-500 hover:bg-blue-600 text-white">
+                Update Role
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Add User Modal */}
       <Dialog open={isAddUserOpen} onOpenChange={setIsAddUserOpen}>
         <DialogContent className="bg-white/95 backdrop-blur-lg border-white/20">
@@ -396,6 +561,49 @@ export const RoleManagement = () => {
               </Button>
               <Button onClick={handleAddUser} className="bg-green-500 hover:bg-green-600 text-white">
                 Add User
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit User Modal */}
+      <Dialog open={isEditUserOpen} onOpenChange={setIsEditUserOpen}>
+        <DialogContent className="bg-white/95 backdrop-blur-lg border-white/20">
+          <DialogHeader>
+            <DialogTitle className="text-gray-900">Edit User</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium text-gray-700 block mb-2">Email Address</label>
+              <Input
+                value={newUserEmail}
+                onChange={(e) => setNewUserEmail(e.target.value)}
+                placeholder="user@telangana.gov.in"
+                className="bg-white border-gray-300"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium text-gray-700 block mb-2">Assign Role</label>
+              <Select value={newUserRole} onValueChange={setNewUserRole}>
+                <SelectTrigger className="bg-white border-gray-300">
+                  <SelectValue placeholder="Select a role" />
+                </SelectTrigger>
+                <SelectContent>
+                  {roles.map((role) => (
+                    <SelectItem key={role.id} value={role.name}>
+                      {role.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setIsEditUserOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleUpdateUser} className="bg-blue-500 hover:bg-blue-600 text-white">
+                Update User
               </Button>
             </div>
           </div>
