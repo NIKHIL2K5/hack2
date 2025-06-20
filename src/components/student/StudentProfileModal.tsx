@@ -53,7 +53,7 @@ export const StudentProfileModal = ({ profile, setProfile, appliedJobs, onUpdate
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Profile Summary */}
         <div className="lg:col-span-1">
-          <Card className="mb-6">
+          <Card className="mb-6 hover-card">
             <CardContent className="p-6 text-center">
               <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full mx-auto mb-4 flex items-center justify-center">
                 {profile.profilePicture ? (
@@ -71,7 +71,7 @@ export const StudentProfileModal = ({ profile, setProfile, appliedJobs, onUpdate
           </Card>
 
           {/* Applied Companies */}
-          <Card>
+          <Card className="hover-card">
             <CardHeader>
               <CardTitle className="text-lg flex items-center">
                 <Building2 className="w-5 h-5 mr-2" />
@@ -79,20 +79,26 @@ export const StudentProfileModal = ({ profile, setProfile, appliedJobs, onUpdate
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {appliedJobs.map((job) => (
-                <div key={job.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <div>
-                    <p className="font-medium text-sm">{job.company}</p>
-                    <p className="text-xs text-gray-600">{job.title}</p>
+              {appliedJobs.length > 0 ? (
+                appliedJobs.map((job) => (
+                  <div key={job.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <div>
+                      <p className="font-medium text-sm">{job.company}</p>
+                      <p className="text-xs text-gray-600">{job.title}</p>
+                      <p className="text-xs text-gray-500">Applied: {job.appliedDate}</p>
+                    </div>
+                    <Badge className={job.statusColor}>
+                      <job.icon className="w-3 h-3 mr-1" />
+                      {job.status}
+                    </Badge>
                   </div>
-                  <Badge className={job.statusColor}>
-                    <job.icon className="w-3 h-3 mr-1" />
-                    {job.status}
-                  </Badge>
+                ))
+              ) : (
+                <div className="text-center py-8">
+                  <Building2 className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                  <p className="text-gray-500 text-sm">No applications yet</p>
+                  <p className="text-gray-400 text-xs mt-1">Start applying to jobs to see them here!</p>
                 </div>
-              ))}
-              {appliedJobs.length === 0 && (
-                <p className="text-gray-500 text-center py-4">No applications yet</p>
               )}
             </CardContent>
           </Card>
@@ -101,7 +107,7 @@ export const StudentProfileModal = ({ profile, setProfile, appliedJobs, onUpdate
         {/* Profile Form */}
         <div className="lg:col-span-2">
           <form onSubmit={onUpdateProfile} className="space-y-6">
-            <Card>
+            <Card className="hover-card">
               <CardHeader>
                 <CardTitle>Personal Information</CardTitle>
               </CardHeader>
@@ -113,6 +119,7 @@ export const StudentProfileModal = ({ profile, setProfile, appliedJobs, onUpdate
                       value={profile.name} 
                       onChange={(e) => setProfile({...profile, name: e.target.value})}
                       placeholder="Enter your full name"
+                      className="hover:border-blue-400 transition-colors"
                     />
                   </div>
                   <div>
@@ -122,6 +129,7 @@ export const StudentProfileModal = ({ profile, setProfile, appliedJobs, onUpdate
                       value={profile.email} 
                       onChange={(e) => setProfile({...profile, email: e.target.value})}
                       placeholder="your.email@example.com"
+                      className="hover:border-blue-400 transition-colors"
                     />
                   </div>
                 </div>
@@ -132,6 +140,7 @@ export const StudentProfileModal = ({ profile, setProfile, appliedJobs, onUpdate
                       value={profile.phone} 
                       onChange={(e) => setProfile({...profile, phone: e.target.value})}
                       placeholder="+91 9876543210"
+                      className="hover:border-blue-400 transition-colors"
                     />
                   </div>
                   <div>
@@ -140,6 +149,7 @@ export const StudentProfileModal = ({ profile, setProfile, appliedJobs, onUpdate
                       value={profile.location} 
                       onChange={(e) => setProfile({...profile, location: e.target.value})}
                       placeholder="City, State"
+                      className="hover:border-blue-400 transition-colors"
                     />
                   </div>
                 </div>
@@ -149,13 +159,13 @@ export const StudentProfileModal = ({ profile, setProfile, appliedJobs, onUpdate
                     value={profile.bio} 
                     onChange={(e) => setProfile({...profile, bio: e.target.value})}
                     placeholder="Tell us about yourself..."
-                    className="h-24"
+                    className="h-24 hover:border-blue-400 transition-colors"
                   />
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="hover-card">
               <CardHeader>
                 <CardTitle>Professional Information</CardTitle>
               </CardHeader>
@@ -166,6 +176,7 @@ export const StudentProfileModal = ({ profile, setProfile, appliedJobs, onUpdate
                     value={profile.skills.join(", ")} 
                     onChange={(e) => setProfile({...profile, skills: e.target.value.split(", ").filter(Boolean)})}
                     placeholder="React, JavaScript, Python, etc."
+                    className="hover:border-blue-400 transition-colors"
                   />
                 </div>
                 <div>
@@ -174,7 +185,7 @@ export const StudentProfileModal = ({ profile, setProfile, appliedJobs, onUpdate
                     value={profile.education} 
                     onChange={(e) => setProfile({...profile, education: e.target.value})}
                     placeholder="Your educational background..."
-                    className="h-20"
+                    className="h-20 hover:border-blue-400 transition-colors"
                   />
                 </div>
                 <div>
@@ -183,13 +194,13 @@ export const StudentProfileModal = ({ profile, setProfile, appliedJobs, onUpdate
                     value={profile.experience} 
                     onChange={(e) => setProfile({...profile, experience: e.target.value})}
                     placeholder="Your work experience, internships, projects..."
-                    className="h-24"
+                    className="h-24 hover:border-blue-400 transition-colors"
                   />
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="hover-card">
               <CardHeader>
                 <CardTitle>Links & Resume</CardTitle>
               </CardHeader>
@@ -201,6 +212,7 @@ export const StudentProfileModal = ({ profile, setProfile, appliedJobs, onUpdate
                       value={profile.portfolioUrl} 
                       onChange={(e) => setProfile({...profile, portfolioUrl: e.target.value})}
                       placeholder="https://yourportfolio.com"
+                      className="hover:border-blue-400 transition-colors"
                     />
                   </div>
                   <div>
@@ -209,6 +221,7 @@ export const StudentProfileModal = ({ profile, setProfile, appliedJobs, onUpdate
                       value={profile.githubUrl} 
                       onChange={(e) => setProfile({...profile, githubUrl: e.target.value})}
                       placeholder="https://github.com/username"
+                      className="hover:border-blue-400 transition-colors"
                     />
                   </div>
                   <div>
@@ -217,13 +230,14 @@ export const StudentProfileModal = ({ profile, setProfile, appliedJobs, onUpdate
                       value={profile.linkedinUrl} 
                       onChange={(e) => setProfile({...profile, linkedinUrl: e.target.value})}
                       placeholder="https://linkedin.com/in/username"
+                      className="hover:border-blue-400 transition-colors"
                     />
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">Resume</label>
                   <div className="flex items-center space-x-2">
-                    <Button type="button" variant="outline" className="border-gray-300">
+                    <Button type="button" variant="outline" className="border-gray-300 hover:border-blue-400 hover:bg-blue-50 transition-colors">
                       <Upload className="w-4 h-4 mr-2" />
                       Upload Resume
                     </Button>
@@ -235,7 +249,7 @@ export const StudentProfileModal = ({ profile, setProfile, appliedJobs, onUpdate
               </CardContent>
             </Card>
 
-            <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-emerald-600 text-white">
+            <Button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-emerald-600 text-white hover:from-blue-700 hover:to-emerald-700 hover-button">
               Update Profile
             </Button>
           </form>

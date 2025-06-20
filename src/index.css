@@ -45,6 +45,12 @@
     --sidebar-accent-foreground: 240 6% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217 91% 60%;
+
+    /* Enhanced hover colors */
+    --hover-primary: 210 100% 35%;
+    --hover-secondary: 210 40% 90%;
+    --hover-accent: 142 76% 45%;
+    --hover-neutral: 220 13% 85%;
   }
 
   .dark {
@@ -83,6 +89,12 @@
     --sidebar-accent-foreground: 240 5% 96%;
     --sidebar-border: 240 4% 16%;
     --sidebar-ring: 217 91% 60%;
+
+    /* Enhanced hover colors for dark mode */
+    --hover-primary: 210 40% 85%;
+    --hover-secondary: 217 33% 25%;
+    --hover-accent: 217 33% 25%;
+    --hover-neutral: 217 33% 25%;
   }
 }
 
@@ -125,6 +137,27 @@
 
   .gradient-secondary {
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  }
+
+  /* Enhanced hover effects */
+  .hover-primary {
+    @apply transition-all duration-300 hover:bg-blue-600 hover:shadow-lg hover:scale-105;
+  }
+
+  .hover-secondary {
+    @apply transition-all duration-300 hover:bg-gray-100 hover:shadow-md hover:scale-102;
+  }
+
+  .hover-accent {
+    @apply transition-all duration-300 hover:bg-green-600 hover:shadow-lg hover:scale-105;
+  }
+
+  .hover-card {
+    @apply transition-all duration-300 hover:shadow-xl hover:scale-102 hover:-translate-y-1;
+  }
+
+  .hover-button {
+    @apply transition-all duration-300 hover:shadow-lg hover:scale-105 hover:-translate-y-0.5;
   }
 }
 

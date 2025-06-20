@@ -183,42 +183,8 @@ const DashboardStudent = () => {
     joinedDate: "2024-01-15"
   });
 
-  // Applied jobs data - will be loaded from storage
-  const [appliedJobs, setAppliedJobs] = useState([
-    {
-      id: 1,
-      title: "Frontend Developer Intern",
-      company: "TechCorp Innovations",
-      appliedDate: "2024-01-20",
-      status: "Under Review",
-      statusColor: "bg-yellow-100 text-yellow-800",
-      icon: AlertCircle,
-      location: "Hyderabad",
-      stipend: "₹25,000"
-    },
-    {
-      id: 2,
-      title: "Data Science Intern",
-      company: "AI Solutions Ltd",
-      appliedDate: "2024-01-18",
-      status: "Interview Scheduled",
-      statusColor: "bg-blue-100 text-blue-800",
-      icon: Calendar,
-      location: "Warangal",
-      stipend: "₹30,000"
-    },
-    {
-      id: 3,
-      title: "UI/UX Designer",
-      company: "Design Studio Pro",
-      appliedDate: "2024-01-15",
-      status: "Rejected",
-      statusColor: "bg-red-100 text-red-800",
-      icon: XCircle,
-      location: "Nizamabad",
-      stipend: "₹20,000"
-    }
-  ]);
+  // Applied jobs data - start empty, will be loaded from storage
+  const [appliedJobs, setAppliedJobs] = useState([]);
 
   // Load user data on component mount
   useEffect(() => {
@@ -241,11 +207,14 @@ const DashboardStudent = () => {
         joinedDate: "2024-01-15"
       });
       
+      // Only load applied jobs if they exist
       if (savedUserData.appliedJobs && savedUserData.appliedJobs.length > 0) {
         setAppliedJobs(savedUserData.appliedJobs);
       }
       
-      toast.success(`Welcome back, ${savedUserData.name || 'User'}!`);
+      if (savedUserData.name) {
+        toast.success(`Welcome back, ${savedUserData.name}!`);
+      }
     }
   }, []);
 
@@ -430,7 +399,7 @@ const DashboardStudent = () => {
             </motion.h2>
             <Link to="/jobs">
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="outline" className="border-primary-300 text-primary-700 hover:bg-primary-50">
+                <Button variant="outline" className="border-primary-300 text-primary-700 hover:bg-blue-100 hover:border-blue-400 hover-button">
                   View All Jobs
                 </Button>
               </motion.div>
@@ -439,12 +408,13 @@ const DashboardStudent = () => {
 
           <div className="grid gap-6">
             {filteredJobs.slice(0, 6).map((job, index) => (
-              <JobCard 
-                key={job.id}
-                job={job}
-                index={index}
-                onApply={handleApplyJob}
-              />
+              <div key={job.id} className="hover-card">
+                <JobCard 
+                  job={job}
+                  index={index}
+                  onApply={handleApplyJob}
+                />
+              </div>
             ))}
           </div>
 
@@ -469,7 +439,7 @@ const DashboardStudent = () => {
         >
           <Link to="/my-applications">
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Button className="w-full h-20 gradient-primary text-white text-lg shadow-lg hover:shadow-xl transition-shadow">
+              <Button className="w-full h-20 gradient-primary text-white text-lg shadow-lg hover:shadow-xl transition-shadow hover-button">
                 <FileText className="w-6 h-6 mr-3" />
                 My Applications
               </Button>
@@ -478,7 +448,7 @@ const DashboardStudent = () => {
           
           <Link to="/application-tracker">
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Button className="w-full h-20 bg-accent text-white text-lg shadow-lg hover:shadow-xl hover:bg-accent-600 transition-all">
+              <Button className="w-full h-20 bg-accent text-white text-lg shadow-lg hover:shadow-xl hover:bg-green-600 transition-all hover-button">
                 <Briefcase className="w-6 h-6 mr-3" />
                 Track Applications
               </Button>
