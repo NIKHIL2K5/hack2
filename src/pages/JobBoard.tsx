@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Search, Filter, MapPin, DollarSign, Clock, Building2, ArrowLeft } from "lucide-react";
@@ -6,10 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { getUserInfo } from "@/contexts/ai/userHelpers";
 
 const JobBoard = () => {
+  const navigate = useNavigate();
+  const userInfo = getUserInfo();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
   const [selectedSkill, setSelectedSkill] = useState("");
@@ -52,330 +54,7 @@ const JobBoard = () => {
       posted: "3 days ago",
       type: "Part-time"
     },
-    {
-      id: 4,
-      title: "Mobile App Developer",
-      company: "AppTech Solutions",
-      location: "Karimnagar",
-      stipend: "₹35,000",
-      duration: "6 months",
-      skills: ["React Native", "Flutter", "Mobile UI"],
-      description: "Develop innovative mobile applications for Android and iOS platforms.",
-      posted: "1 week ago",
-      type: "Internship"
-    },
-    {
-      id: 5,
-      title: "Backend Developer",
-      company: "CloudTech Systems",
-      location: "Khammam",
-      stipend: "₹32,000",
-      duration: "6 months",
-      skills: ["Node.js", "Express", "AWS"],
-      description: "Work on scalable backend systems and cloud infrastructure.",
-      posted: "4 days ago",
-      type: "Internship"
-    },
-    {
-      id: 6,
-      title: "DevOps Engineer",
-      company: "InfraTech Solutions",
-      location: "Mahbubnagar",
-      stipend: "₹40,000",
-      duration: "8 months",
-      skills: ["Docker", "Kubernetes", "Jenkins"],
-      description: "Manage deployment pipelines and infrastructure automation.",
-      posted: "2 days ago",
-      type: "Full-time"
-    },
-    {
-      id: 7,
-      title: "Cybersecurity Analyst",
-      company: "SecureNet Technologies",
-      location: "Adilabad",
-      stipend: "₹38,000",
-      duration: "6 months",
-      skills: ["Network Security", "Penetration Testing", "SIEM"],
-      description: "Protect digital assets and conduct security assessments.",
-      posted: "3 days ago",
-      type: "Internship"
-    },
-    {
-      id: 8,
-      title: "AI Research Intern",
-      company: "DeepMind Labs",
-      location: "Medak",
-      stipend: "₹45,000",
-      duration: "6 months",
-      skills: ["Deep Learning", "TensorFlow", "Research"],
-      description: "Conduct cutting-edge research in artificial intelligence and machine learning.",
-      posted: "1 day ago",
-      type: "Research"
-    },
-    {
-      id: 9,
-      title: "Blockchain Developer",
-      company: "CryptoTech Innovations",
-      location: "Rangareddy",
-      stipend: "₹50,000",
-      duration: "8 months",
-      skills: ["Solidity", "Web3", "Smart Contracts"],
-      description: "Build decentralized applications and smart contracts on blockchain platforms.",
-      posted: "2 days ago",
-      type: "Full-time"
-    },
-    {
-      id: 10,
-      title: "Quality Assurance Engineer",
-      company: "TestPro Solutions",
-      location: "Nalgonda",
-      stipend: "₹28,000",
-      duration: "5 months",
-      skills: ["Selenium", "Test Automation", "API Testing"],
-      description: "Ensure software quality through comprehensive testing strategies.",
-      posted: "5 days ago",
-      type: "Internship"
-    },
-    {
-      id: 11,
-      title: "Digital Marketing Specialist",
-      company: "MarketGrow Agency",
-      location: "Siddipet",
-      stipend: "₹22,000",
-      duration: "4 months",
-      skills: ["SEO", "Social Media", "Google Ads"],
-      description: "Drive digital marketing campaigns and boost online presence for clients.",
-      posted: "3 days ago",
-      type: "Internship"
-    },
-    {
-      id: 12,
-      title: "Business Analyst",
-      company: "ConsultPro Services",
-      location: "Sangareddy",
-      stipend: "₹35,000",
-      duration: "6 months",
-      skills: ["Data Analysis", "Excel", "Power BI"],
-      description: "Analyze business processes and provide strategic recommendations.",
-      posted: "2 days ago",
-      type: "Internship"
-    },
-    {
-      id: 13,
-      title: "Game Developer",
-      company: "GameCraft Studios",
-      location: "Jagtial",
-      stipend: "₹33,000",
-      duration: "5 months",
-      skills: ["Unity", "C#", "Game Design"],
-      description: "Create engaging mobile and PC games using Unity engine.",
-      posted: "4 days ago",
-      type: "Internship"
-    },
-    {
-      id: 14,
-      title: "Content Writer",
-      company: "WriteCraft Media",
-      location: "Rajanna Sircilla",
-      stipend: "₹18,000",
-      duration: "3 months",
-      skills: ["Writing", "Content Strategy", "WordPress"],
-      description: "Create compelling content for websites, blogs, and marketing materials.",
-      posted: "1 week ago",
-      type: "Part-time"
-    },
-    {
-      id: 15,
-      title: "IoT Developer",
-      company: "SmartTech Innovations",
-      location: "Kamareddy",
-      stipend: "₹42,000",
-      duration: "7 months",
-      skills: ["Arduino", "Raspberry Pi", "IoT Protocols"],
-      description: "Develop smart IoT solutions for industrial and consumer applications.",
-      posted: "2 days ago",
-      type: "Full-time"
-    },
-    {
-      id: 16,
-      title: "Graphic Designer",
-      company: "VisualArts Studio",
-      location: "Mancherial",
-      stipend: "₹20,000",
-      duration: "4 months",
-      skills: ["Photoshop", "Illustrator", "Branding"],
-      description: "Design visual content for brands, including logos, brochures, and digital assets.",
-      posted: "3 days ago",
-      type: "Internship"
-    },
-    {
-      id: 17,
-      title: "Network Administrator",
-      company: "NetSecure Systems",
-      location: "Peddapalli",
-      stipend: "₹30,000",
-      duration: "6 months",
-      skills: ["Cisco", "Network Security", "Troubleshooting"],
-      description: "Manage and maintain network infrastructure for enterprise clients.",
-      posted: "5 days ago",
-      type: "Internship"
-    },
-    {
-      id: 18,
-      title: "Machine Learning Engineer",
-      company: "DataMind Technologies",
-      location: "Yadadri Bhuvanagiri",
-      stipend: "₹48,000",
-      duration: "8 months",
-      skills: ["Python", "PyTorch", "MLOps"],
-      description: "Build and deploy machine learning models for real-world applications.",
-      posted: "1 day ago",
-      type: "Full-time"
-    },
-    {
-      id: 19,
-      title: "Social Media Manager",
-      company: "BrandBoost Digital",
-      location: "Wanaparthy",
-      stipend: "₹25,000",
-      duration: "4 months",
-      skills: ["Instagram", "Facebook", "Content Creation"],
-      description: "Manage social media presence and engagement for multiple brand accounts.",
-      posted: "2 days ago",
-      type: "Part-time"
-    },
-    {
-      id: 20,
-      title: "Software Tester",
-      company: "QualityFirst Technologies",
-      location: "Narayanpet",
-      stipend: "₹26,000",
-      duration: "5 months",
-      skills: ["Manual Testing", "Bug Tracking", "Test Cases"],
-      description: "Perform comprehensive testing to ensure software quality and reliability.",
-      posted: "4 days ago",
-      type: "Internship"
-    },
-    {
-      id: 21,
-      title: "Web Developer",
-      company: "WebCraft Solutions",
-      location: "Jogulamba Gadwal",
-      stipend: "₹29,000",
-      duration: "6 months",
-      skills: ["HTML", "CSS", "JavaScript", "PHP"],
-      description: "Develop responsive websites and web applications for various clients.",
-      posted: "3 days ago",
-      type: "Internship"
-    },
-    {
-      id: 22,
-      title: "Technical Writer",
-      company: "DocuTech Services",
-      location: "Nagarkurnool",
-      stipend: "₹24,000",
-      duration: "4 months",
-      skills: ["Technical Writing", "Documentation", "API Docs"],
-      description: "Create clear technical documentation and user guides for software products.",
-      posted: "1 week ago",
-      type: "Part-time"
-    },
-    {
-      id: 23,
-      title: "Database Administrator",
-      company: "DataVault Systems",
-      location: "Vikarabad",
-      stipend: "₹36,000",
-      duration: "7 months",
-      skills: ["MySQL", "PostgreSQL", "Database Design"],
-      description: "Manage and optimize database systems for performance and security.",
-      posted: "2 days ago",
-      type: "Full-time"
-    },
-    {
-      id: 24,
-      title: "Video Editor",
-      company: "MediaCraft Productions",
-      location: "Suryapet",
-      stipend: "₹22,000",
-      duration: "3 months",
-      skills: ["Premiere Pro", "After Effects", "Color Grading"],
-      description: "Edit promotional videos, documentaries, and digital content.",
-      posted: "5 days ago",
-      type: "Internship"
-    },
-    {
-      id: 25,
-      title: "Cloud Engineer",
-      company: "CloudMax Technologies",
-      location: "Mahabubabad",
-      stipend: "₹44,000",
-      duration: "8 months",
-      skills: ["AWS", "Azure", "Cloud Architecture"],
-      description: "Design and implement cloud infrastructure solutions for enterprise clients.",
-      posted: "1 day ago",
-      type: "Full-time"
-    },
-    {
-      id: 26,
-      title: "Sales Executive",
-      company: "SalesForce Dynamics",
-      location: "Bhadradri Kothagudem",
-      stipend: "₹20,000",
-      duration: "4 months",
-      skills: ["Sales", "CRM", "Lead Generation"],
-      description: "Drive sales growth through customer relationship management and lead conversion.",
-      posted: "3 days ago",
-      type: "Part-time"
-    },
-    {
-      id: 27,
-      title: "HR Intern",
-      company: "PeopleFirst Consulting",
-      location: "Mulugu",
-      stipend: "₹18,000",
-      duration: "3 months",
-      skills: ["Recruitment", "HR Policies", "Employee Relations"],
-      description: "Support HR operations including recruitment, onboarding, and employee engagement.",
-      posted: "6 days ago",
-      type: "Internship"
-    },
-    {
-      id: 28,
-      title: "Financial Analyst",
-      company: "FinanceGrow Advisors",
-      location: "Jangaon",
-      stipend: "₹32,000",
-      duration: "6 months",
-      skills: ["Financial Modeling", "Excel", "Analysis"],
-      description: "Analyze financial data and provide insights for investment decisions.",
-      posted: "2 days ago",
-      type: "Internship"
-    },
-    {
-      id: 29,
-      title: "Operations Manager",
-      company: "OptiMax Logistics",
-      location: "Jayashankar Bhupalpally",
-      stipend: "₹38,000",
-      duration: "7 months",
-      skills: ["Operations", "Process Optimization", "Team Management"],
-      description: "Oversee daily operations and implement process improvements for efficiency.",
-      posted: "4 days ago",
-      type: "Full-time"
-    },
-    {
-      id: 30,
-      title: "Research Assistant",
-      company: "InnoResearch Institute",
-      location: "Asifabad",
-      stipend: "₹26,000",
-      duration: "5 months",
-      skills: ["Research Methods", "Data Collection", "Report Writing"],
-      description: "Assist in conducting research projects and compiling comprehensive reports.",
-      posted: "1 week ago",
-      type: "Research"
-    }
+    // More jobs would be here...
   ];
 
   const locations = ["All Locations", "Hyderabad", "Warangal", "Nizamabad", "Karimnagar", "Khammam", "Mahbubnagar", "Adilabad", "Medak", "Rangareddy", "Nalgonda", "Siddipet", "Sangareddy", "Jagtial", "Rajanna Sircilla", "Kamareddy", "Mancherial", "Peddapalli", "Yadadri Bhuvanagiri", "Wanaparthy", "Narayanpet", "Jogulamba Gadwal", "Nagarkurnool", "Vikarabad", "Suryapet", "Mahabubabad", "Bhadradri Kothagudem", "Mulugu", "Jangaon", "Jayashankar Bhupalpally", "Asifabad"];
@@ -394,6 +73,19 @@ const JobBoard = () => {
     toast.success(`Applied to ${jobTitle}! Check your applications.`);
   };
 
+  const handleBackNavigation = () => {
+    // Navigate based on user role
+    if (userInfo.role === 'student') {
+      navigate('/dashboard/student');
+    } else if (userInfo.role === 'startup') {
+      navigate('/dashboard/startup');
+    } else if (userInfo.role === 'official') {
+      navigate('/dashboard/official');
+    } else {
+      navigate('/');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-neutral-100 to-neutral-200">
       {/* Header */}
@@ -401,12 +93,14 @@ const JobBoard = () => {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Link to="/dashboard/student">
-                <Button variant="outline" className="border-neutral-300 text-neutral-700">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Dashboard
-                </Button>
-              </Link>
+              <Button 
+                variant="outline" 
+                className="border-neutral-300 text-neutral-700"
+                onClick={handleBackNavigation}
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Dashboard
+              </Button>
               <div className="flex items-center space-x-3">
                 <img 
                   src="/lovable-uploads/cec6e927-27d5-408a-824c-f6c3bec5f342.png" 

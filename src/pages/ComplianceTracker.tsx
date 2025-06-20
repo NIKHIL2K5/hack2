@@ -3,10 +3,12 @@ import { ArrowLeft, CheckCircle, AlertTriangle, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { getUserInfo } from "@/contexts/ai/userHelpers";
 
 const ComplianceTracker = () => {
   const navigate = useNavigate();
+  const userInfo = getUserInfo();
   
   const complianceItems = [
     { name: "MSME Registration", status: "completed", progress: 100 },
@@ -18,17 +20,32 @@ const ComplianceTracker = () => {
 
   const overallProgress = complianceItems.reduce((acc, item) => acc + item.progress, 0) / complianceItems.length;
 
+  const handleBackNavigation = () => {
+    // Navigate based on user role
+    if (userInfo.role === 'startup') {
+      navigate('/dashboard/startup');
+    } else if (userInfo.role === 'student') {
+      navigate('/dashboard/student');
+    } else if (userInfo.role === 'official') {
+      navigate('/dashboard/official');
+    } else {
+      navigate('/');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-700 to-purple-500 text-white">
       <header className="bg-white/5 backdrop-blur-lg border-b border-white/10">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center space-x-4">
-            <Link to="/dashboard/startup">
-              <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Dashboard
-              </Button>
-            </Link>
+            <Button 
+              variant="outline" 
+              className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+              onClick={handleBackNavigation}
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Dashboard
+            </Button>
             <h1 className="text-3xl font-bold">Compliance Tracker</h1>
           </div>
         </div>

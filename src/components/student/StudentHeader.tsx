@@ -1,9 +1,8 @@
-
 import { motion } from "framer-motion";
 import { User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { NotificationsPanel } from "./NotificationsPanel";
 
 interface StudentHeaderProps {
@@ -23,6 +22,15 @@ export const StudentHeader = ({
   appliedJobs = [],
   profile = {}
 }: StudentHeaderProps) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Clear any stored user data
+    localStorage.removeItem('studentUser');
+    // Navigate to home page
+    navigate('/');
+  };
+
   return (
     <header className="glass-card border-b border-neutral-200/80 shadow-sm">
       <div className="container mx-auto px-6 py-4">
@@ -64,11 +72,13 @@ export const StudentHeader = ({
               {ProfileModalContent}
             </Dialog>
             
-            <Link to="/">
-              <Button variant="outline" className="border-red-300 text-red-600 hover:bg-red-50">
-                <LogOut className="w-4 h-4" />
-              </Button>
-            </Link>
+            <Button 
+              variant="outline" 
+              className="border-red-300 text-red-600 hover:bg-red-50"
+              onClick={handleLogout}
+            >
+              <LogOut className="w-4 h-4" />
+            </Button>
           </motion.div>
         </div>
       </div>

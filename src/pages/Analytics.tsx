@@ -1,21 +1,39 @@
-
 import { motion } from "framer-motion";
 import { ArrowLeft, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { getUserInfo } from "@/contexts/ai/userHelpers";
 
 const Analytics = () => {
+  const navigate = useNavigate();
+  const userInfo = getUserInfo();
+
+  const handleBackNavigation = () => {
+    // Navigate based on user role
+    if (userInfo.role === 'official') {
+      navigate('/dashboard/official');
+    } else if (userInfo.role === 'startup') {
+      navigate('/dashboard/startup');
+    } else if (userInfo.role === 'student') {
+      navigate('/dashboard/student');
+    } else {
+      navigate('/');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-indigo-700 to-indigo-500 text-white">
       <header className="bg-white/5 backdrop-blur-lg border-b border-white/10">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center space-x-4">
-            <Link to="/dashboard/official">
-              <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Dashboard
-              </Button>
-            </Link>
+            <Button 
+              variant="outline" 
+              className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+              onClick={handleBackNavigation}
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Dashboard
+            </Button>
             <h1 className="text-3xl font-bold">Analytics Dashboard</h1>
           </div>
         </div>

@@ -4,12 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ApplicationStats } from "@/components/official/ApplicationStats";
 import { ApplicationsTable } from "@/components/official/ApplicationsTable";
 import { useOfficialData } from "@/hooks/useOfficialData";
 import { Scene3D } from "@/components/3d/Scene3D";
+import { getUserInfo } from "@/contexts/ai/userHelpers";
 
 const ApplicationsManagement = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const ApplicationsManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
+  const userInfo = getUserInfo();
 
   const stats = getApplicationStats();
 
@@ -58,6 +60,19 @@ const ApplicationsManagement = () => {
     document.body.removeChild(link);
   };
 
+  const handleBackNavigation = () => {
+    // Navigate based on user role
+    if (userInfo.role === 'startup') {
+      navigate('/dashboard/startup');
+    } else if (userInfo.role === 'student') {
+      navigate('/dashboard/student');
+    } else if (userInfo.role === 'official') {
+      navigate('/dashboard/official');
+    } else {
+      navigate('/');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-teal-900 text-white">
       {/* 3D Background */}
@@ -70,14 +85,14 @@ const ApplicationsManagement = () => {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Link to="/dashboard/startup">
-                <motion.div whileHover={{ scale: 1.1, x: -5 }}>
-                  <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    Back to Dashboard
-                  </Button>
-                </motion.div>
-              </Link>
+              <Button 
+                variant="outline" 
+                className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                onClick={handleBackNavigation}
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Dashboard
+              </Button>
               <div>
                 <h1 className="text-3xl font-bold">Applications Management</h1>
                 <p className="text-white/60">Manage and review job applications</p>

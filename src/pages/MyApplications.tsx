@@ -3,10 +3,12 @@ import { ArrowLeft, Clock, CheckCircle, XCircle, FileText, Building2 } from "luc
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { getUserInfo } from "@/contexts/ai/userHelpers";
 
 const MyApplications = () => {
   const navigate = useNavigate();
+  const userInfo = getUserInfo();
   
   const applications = [
     {
@@ -38,19 +40,32 @@ const MyApplications = () => {
     }
   ];
 
+  const handleBackNavigation = () => {
+    // Navigate based on user role
+    if (userInfo.role === 'student') {
+      navigate('/dashboard/student');
+    } else if (userInfo.role === 'startup') {
+      navigate('/dashboard/startup');
+    } else if (userInfo.role === 'official') {
+      navigate('/dashboard/official');
+    } else {
+      navigate('/');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-900 via-teal-700 to-teal-500 text-white">
       <header className="bg-white/5 backdrop-blur-lg border-b border-white/10">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center space-x-4">
-            <Link to="/dashboard/student">
-              <motion.div>
-                <Button variant="outline" className="bg-white/10 border-white/20 text-white">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Dashboard
-                </Button>
-              </motion.div>
-            </Link>
+            <Button 
+              variant="outline" 
+              className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+              onClick={handleBackNavigation}
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Dashboard
+            </Button>
             <h1 className="text-3xl font-bold">My Applications</h1>
           </div>
         </div>

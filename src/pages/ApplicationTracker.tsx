@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { getUserInfo } from "@/contexts/ai/userHelpers";
 
 const ApplicationTracker = () => {
   const navigate = useNavigate();
+  const userInfo = getUserInfo();
   
   const applications = [
     {
@@ -63,19 +65,32 @@ const ApplicationTracker = () => {
     }
   ];
 
+  const handleBackNavigation = () => {
+    // Navigate based on user role
+    if (userInfo.role === 'student') {
+      navigate('/dashboard/student');
+    } else if (userInfo.role === 'startup') {
+      navigate('/dashboard/startup');
+    } else if (userInfo.role === 'official') {
+      navigate('/dashboard/official');
+    } else {
+      navigate('/');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
       <header className="bg-white/80 backdrop-blur-lg border-b border-gray-200 sticky top-0 z-10">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center space-x-4">
-            <Link to="/dashboard/student">
-              <motion.div whileHover={{ scale: 1.1, x: -5 }}>
-                <Button variant="outline" className="border-gray-300 hover:bg-gray-50">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Dashboard
-                </Button>
-              </motion.div>
-            </Link>
+            <Button 
+              variant="outline" 
+              className="border-gray-300 hover:bg-gray-50"
+              onClick={handleBackNavigation}
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Dashboard
+            </Button>
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Application Tracker</h1>
               <p className="text-gray-600">Monitor your application status and progress</p>
