@@ -22,7 +22,7 @@ const mockSupabase = {
         // Try to find a matching FAQ answer first
         try {
           // Dynamically import to avoid circular dependencies
-          const { findFAQAnswer } = await import('../contexts/ai/faqData');
+          const { findFAQAnswer } = await import('../../contexts/ai/faqData');
           const faqAnswer = findFAQAnswer(message);
           
           if (faqAnswer) {
