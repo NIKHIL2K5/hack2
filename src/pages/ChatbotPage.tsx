@@ -1,10 +1,11 @@
-
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Send, Bot, User, ArrowLeft, Globe, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { getUserInfo } from "@/contexts/ai/userHelpers";
 
 const AnimatedBot = () => (
   <motion.div
@@ -33,10 +34,11 @@ const AnimatedBot = () => (
 );
 
 const ChatbotPage = () => {
+  const userInfo = getUserInfo();
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Hello! I'm Sethu, your AI assistant for discovering government schemes and opportunities. How can I help you today?",
+      text: `Hello! I'm Sethu, your AI assistant for discovering government schemes and opportunities. I'm powered by advanced AI and can help you with detailed guidance on ${userInfo.role === 'student' ? 'job searches, career planning, and skill development' : userInfo.role === 'startup' ? 'funding opportunities, government schemes, and business growth' : userInfo.role === 'official' ? 'scheme management and policy implementation' : 'navigating the platform'}. How can I help you today?`,
       sender: "bot",
       timestamp: new Date().toLocaleTimeString()
     }
@@ -45,13 +47,7 @@ const ChatbotPage = () => {
   const [language, setLanguage] = useState("english");
   const [isTyping, setIsTyping] = useState(false);
 
-  const predefinedResponses = {
-    schemes: "Here are some relevant government schemes for your startup:\n\n1. T-Hub Incubation Program\n2. Telangana State Innovation Cell (TSIC)\n3. WE-Hub (Women Entrepreneurs Hub)\n4. MSME Development Schemes\n\nWould you like detailed information about any of these?",
-    funding: "For startup funding in Telangana, consider:\n\n1. Seed Fund Scheme (Up to ₹50 lakhs)\n2. Angel Tax Exemption\n3. SIDBI Fund of Funds\n4. T-Angel Network\n\nI can help you understand eligibility criteria for each.",
-    compliance: "For startup compliance, you need:\n\n1. Company Registration\n2. DPIIT Recognition\n3. MSME Registration\n4. GST Registration\n5. EPF & ESI Registration\n\nShall I guide you through any specific process?"
-  };
-
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
 
     const userMessage = {
@@ -64,28 +60,44 @@ const ChatbotPage = () => {
     setMessages(prev => [...prev, userMessage]);
     setIsTyping(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      let botResponse = "I understand your query. Let me help you with that information.";
-      
-      if (inputMessage.toLowerCase().includes("scheme")) {
-        botResponse = predefinedResponses.schemes;
-      } else if (inputMessage.toLowerCase().includes("fund")) {
-        botResponse = predefinedResponses.funding;
-      } else if (inputMessage.toLowerCase().includes("compliance")) {
-        botResponse = predefinedResponses.compliance;
+    try {
+      const currentPage = window.location.pathname;
+      const context = `Current page: ${currentPage}, User role: ${userInfo.role}`;
+
+      const { data, error } = await supabase.functions.invoke('chat-with-ai', {
+        body: {
+          message: inputMessage,
+          context,
+          userRole: userInfo.role,
+          userName: userInfo.name,
+          hasImage: false
+        }
+      });
+
+      if (error) {
+        throw new Error(error.message);
       }
 
       const botMessage = {
         id: messages.length + 2,
-        text: botResponse,
+        text: data.content,
         sender: "bot",
         timestamp: new Date().toLocaleTimeString()
       };
 
       setMessages(prev => [...prev, botMessage]);
+    } catch (error) {
+      console.error('Chat error:', error);
+      const errorMessage = {
+        id: messages.length + 2,
+        text: "I apologize, but I'm having trouble processing your request right now. Please try again, and I'll do my best to provide comprehensive assistance.",
+        sender: "bot",
+        timestamp: new Date().toLocaleTimeString()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
 
     setInputMessage("");
   };
@@ -163,7 +175,7 @@ const ChatbotPage = () => {
                 <AnimatedBot />
                 <div>
                   <h1 className="text-2xl font-bold">Sethu - AI Assistant</h1>
-                  <p className="text-white/60">Discover government schemes & opportunities</p>
+                  <p className="text-white/60">Powered by OpenAI • Discover government schemes & opportunities</p>
                 </div>
               </div>
             </div>
@@ -235,7 +247,7 @@ const ChatbotPage = () => {
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-                  placeholder={language === "english" ? "Ask Sethu about government schemes..." : "సేతుని ప్రభుత్వ పథకాల గురించి అడుగండి..."}
+                  placeholder={language === "english" ? "Ask Sethu anything about government schemes, jobs, or career guidance..." : "సేతుని ప్రభుత్వ పథకాలు, ఉద్యోగాలు లేదా కెరీర్ గైడెన్స్ గురించి అడుగండి..."}
                   className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/60"
                   disabled={isTyping}
                 />
@@ -261,9 +273,9 @@ const ChatbotPage = () => {
           className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4"
         >
           {[
-            "Show available schemes",
-            "Funding opportunities",
-            "Compliance requirements"
+            "Show available government schemes",
+            "Find job opportunities for me",
+            "Help with career guidance"
           ].map((action, index) => (
             <motion.div key={index} whileHover={{ scale: 1.02 }}>
               <Button

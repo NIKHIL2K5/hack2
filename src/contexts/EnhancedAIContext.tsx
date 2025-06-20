@@ -5,6 +5,7 @@ import { applicationSyncService } from '@/services/applicationSync';
 import { findFAQAnswer } from './ai/faqMatcher';
 import { generateJobRecommendations, generateSchemeInfo, generateAnalytics, generateCareerGuidance } from './ai/dataGenerators';
 import { getUserInfo } from './ai/userHelpers';
+import { supabase } from '@/integrations/supabase/client';
 
 interface AIContextType {
   askEnhancedAI: (message: string, context?: string, image?: File) => Promise<any>;
@@ -51,7 +52,7 @@ export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
       const lowerMessage = message.toLowerCase();
       
-      // Determine response type based on message content
+      // Handle specific data requests with local data
       if (lowerMessage.includes('job') && (lowerMessage.includes('recommend') || lowerMessage.includes('suggest') || lowerMessage.includes('find'))) {
         const jobs = generateJobRecommendations(userInfo.role, context || '');
         return {
@@ -78,60 +79,28 @@ export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ ch
           data: analytics
         };
       }
-      
-      if (lowerMessage.includes('career') || lowerMessage.includes('guidance') || lowerMessage.includes('advice') || lowerMessage.includes('help')) {
-        const guidance = generateCareerGuidance(userInfo.role, message);
-        return {
-          type: 'career_guidance',
-          content: `Here's personalized career guidance for you:`,
-          data: guidance
-        };
-      }
 
-      // Enhanced general responses based on role and context
-      let response = '';
-      
-      if (userInfo.role === 'student') {
-        if (lowerMessage.includes('application')) {
-          const applications = applicationSyncService.getApplicationsForStudent(userInfo.email);
-          response = `You have submitted ${applications.length} job applications. Here's the status breakdown:\n\n`;
-          const statusCounts = applications.reduce((acc, app) => {
-            acc[app.status] = (acc[app.status] || 0) + 1;
-            return acc;
-          }, {} as Record<string, number>);
-          
-          Object.entries(statusCounts).forEach(([status, count]) => {
-            response += `• ${status.charAt(0).toUpperCase() + status.slice(1)}: ${count}\n`;
-          });
-          
-          if (applications.length > 0) {
-            response += `\nYour most recent application was for "${applications[applications.length - 1].jobTitle}" at ${applications[applications.length - 1].companyName}.`;
-          }
-        } else if (lowerMessage.includes('profile')) {
-          response = `Your student profile shows you're actively seeking opportunities. To improve your chances:\n\n• Keep your skills section updated\n• Add relevant projects to your portfolio\n• Write compelling cover letters\n• Follow up on applications professionally\n\nWould you like specific advice on any of these areas?`;
-        } else {
-          response = `As a student on our platform, I can help you with:\n\n• Finding relevant job opportunities\n\n• Application tracking and status\n\n• Career guidance and skill development\n\n• Interview preparation tips\n\n• Resume optimization\n\n• Government schemes for students\n\nWhat specific assistance do you need today?`;
+      // For general questions, use OpenAI
+      const { data, error } = await supabase.functions.invoke('chat-with-ai', {
+        body: {
+          message,
+          context,
+          userRole: userInfo.role,
+          userName: userInfo.name,
+          hasImage: !!image
         }
-      } else if (userInfo.role === 'startup') {
-        if (lowerMessage.includes('hiring') || lowerMessage.includes('recruit')) {
-          const userActions = dataSyncService.getActionsByUser(userInfo.email);
-          const jobPostings = userActions.filter(a => a.action === 'job_posted').length;
-          response = `You've posted ${jobPostings} job(s) so far. Here are some hiring best practices:\n\n• Write clear, detailed job descriptions\n\n• Specify required skills and experience\n\n• Offer competitive compensation\n\n• Respond to applications promptly\n\n• Provide feedback to candidates\n\nNeed help optimizing your job postings?`;
-        } else if (lowerMessage.includes('funding') || lowerMessage.includes('scheme')) {
-          response = `As a startup, you have access to various funding opportunities:\n\n• T-Hub Incubation Program\n\n• Telangana State Innovation Cell (TSIC)\n\n• MSME Development Schemes\n\n• Angel Tax Exemption\n\n• Startup India initiatives\n\nI can provide detailed information about eligibility and application processes for any of these schemes.`;
-        } else {
-          response = `As a startup on our platform, I can assist you with:\n\n• Posting and managing job openings\n\n• Reviewing candidate applications\n\n• Accessing government funding schemes\n\n• Compliance requirements\n\n• Hiring best practices\n\n• Market insights and analytics\n\nWhat would you like to know more about?`;
-        }
-      } else if (userInfo.role === 'official') {
-        response = `As a government official, I can help you with:\n\n• Managing government schemes and programs\n\n• Monitoring application processes\n\n• Tracking scheme effectiveness\n\n• Policy implementation guidance\n\n• Startup ecosystem analytics\n\n• Compliance monitoring\n\nHow can I assist you with your administrative duties today?`;
-      } else {
-        response = `Welcome to our comprehensive career and startup platform! I can help you with:\n\n• Job search and career guidance\n\n• Startup funding and schemes\n\n• Application tracking\n\n• Market insights\n\n• Skill development advice\n\nPlease let me know what you'd like to explore!`;
+      });
+
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw new Error(error.message);
       }
 
       return {
         type: 'text',
-        content: response
+        content: data.content
       };
+
     } catch (error) {
       console.error('Enhanced AI Error:', error);
       return {
