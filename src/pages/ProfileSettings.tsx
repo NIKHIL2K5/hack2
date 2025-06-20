@@ -11,7 +11,7 @@ const ProfileSettings = () => {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center space-x-4">
             <Link to="/">
-              <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
+              <Button variant="outline" className="bg-white/10 border-white/20 text-white">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back
               </Button>

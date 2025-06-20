@@ -16,7 +16,7 @@ interface ProfessionalInfoFormProps {
 
 export const ProfessionalInfoForm = ({ profile, setProfile }: ProfessionalInfoFormProps) => {
   return (
-    <Card className="hover-card">
+    <Card>
       <CardHeader>
         <CardTitle>Professional Information</CardTitle>
       </CardHeader>
@@ -27,7 +27,6 @@ export const ProfessionalInfoForm = ({ profile, setProfile }: ProfessionalInfoFo
             value={profile.skills.join(", ")} 
             onChange={(e) => setProfile({...profile, skills: e.target.value.split(", ").filter(Boolean)})}
             placeholder="React, JavaScript, Python, etc."
-            className="hover:border-blue-400 transition-colors"
           />
         </div>
         <div>
@@ -36,7 +35,7 @@ export const ProfessionalInfoForm = ({ profile, setProfile }: ProfessionalInfoFo
             value={profile.education} 
             onChange={(e) => setProfile({...profile, education: e.target.value})}
             placeholder="Your educational background..."
-            className="h-20 hover:border-blue-400 transition-colors"
+            className="h-20"
           />
         </div>
         <div>
@@ -45,7 +44,7 @@ export const ProfessionalInfoForm = ({ profile, setProfile }: ProfessionalInfoFo
             value={profile.experience} 
             onChange={(e) => setProfile({...profile, experience: e.target.value})}
             placeholder="Your work experience, internships, projects..."
-            className="h-24 hover:border-blue-400 transition-colors"
+            className="h-24"
           />
         </div>
       </CardContent>

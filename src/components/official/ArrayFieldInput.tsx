@@ -38,7 +38,7 @@ export const ArrayFieldInput = ({
               onClick={() => onRemove(index)}
               variant="outline"
               size="sm"
-              className="bg-red-500/20 border-red-500/50 text-red-200 hover:bg-red-500/30"
+              className="bg-red-500/20 border-red-500/50 text-red-200"
             >
               <Minus className="w-4 h-4" />
             </Button>
@@ -50,7 +50,7 @@ export const ArrayFieldInput = ({
         onClick={onAdd}
         variant="outline"
         size="sm"
-        className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+        className="bg-white/10 border-white/20 text-white"
       >
         <Plus className="w-4 h-4 mr-2" />
         Add {label.slice(0, -1)}

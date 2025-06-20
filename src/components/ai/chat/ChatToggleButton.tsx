@@ -13,12 +13,11 @@ export const ChatToggleButton: React.FC<ChatToggleButtonProps> = ({ isOpen, onTo
   return (
     <motion.div
       className="fixed bottom-6 right-6 z-50"
-      whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
       <Button
         onClick={onToggle}
-        className="w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 shadow-lg hover-button"
+        className="w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg"
       >
         <AnimatePresence mode="wait">
           {isOpen ? (

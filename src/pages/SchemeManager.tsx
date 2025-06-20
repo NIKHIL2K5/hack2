@@ -13,7 +13,7 @@ const SchemeManager = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <Link to="/dashboard/official">
-                <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
+                <Button variant="outline" className="bg-white/10 border-white/20 text-white">
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Back to Dashboard
                 </Button>

@@ -69,7 +69,7 @@ body {
   font-family: "Inter", sans-serif;
 }
 
-/* Custom CSS classes - HOVER EFFECTS REMOVED */
+/* Custom CSS classes - ALL HOVER EFFECTS REMOVED */
 .gradient-primary {
   background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
 }
@@ -79,11 +79,11 @@ body {
 }
 
 .hover-card {
-  transition: none; /* Removed hover transition */
+  /* All hover transitions removed */
 }
 
 .hover-button {
-  transition: none; /* Removed hover transition */
+  /* All hover transitions removed */
 }
 
 .text-primary-700 {

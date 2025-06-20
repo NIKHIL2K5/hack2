@@ -57,9 +57,8 @@ export const ApplicationStats = ({ stats }: ApplicationStatsProps) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1 }}
-          whileHover={{ scale: 1.05 }}
         >
-          <Card className="bg-white/10 backdrop-blur-lg border-white/20 hover:border-white/40 transition-all">
+          <Card className="bg-white/10 backdrop-blur-lg border-white/20">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
