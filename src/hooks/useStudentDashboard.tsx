@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { getAllCompanies, getDistrictsWithCompanies, getSectorsWithCompanies } from '@/services/companyData';
 import { dataSyncService } from '@/services/dataSync';
@@ -25,7 +24,7 @@ export const useStudentDashboard = () => {
     phone: '+91 9876543210',
     location: 'Hyderabad',
     education: 'B.Tech Computer Science',
-    skills: 'React, Node.js, Python',
+    skills: ['React', 'Node.js', 'Python'],
     experience: 'Fresher',
     resume: null,
     portfolio: '',
