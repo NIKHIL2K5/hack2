@@ -1,10 +1,17 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Bell } from 'lucide-react';
+import { Bell, BellOff, Check } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
 
 export const EmergencyAlertsPanel = () => {
+  const [alertStates, setAlertStates] = useState<Record<number, 'unread' | 'acknowledged' | 'dismissed'>>({
+    0: 'unread',
+    1: 'unread', 
+    2: 'unread'
+  });
+
   const emergencyAlerts = [
     { type: 'System Issue', message: 'Document upload service experiencing delays', priority: 'high', timestamp: '2 hours ago' },
     { type: 'Policy Change', message: 'New compliance requirements effective immediately', priority: 'medium', timestamp: '6 hours ago' },
@@ -17,6 +24,46 @@ export const EmergencyAlertsPanel = () => {
       case 'medium': return 'text-yellow-400';
       case 'low': return 'text-green-400';
       default: return 'text-gray-400';
+    }
+  };
+
+  const handleBellClick = (index: number, alert: any) => {
+    const currentState = alertStates[index];
+    
+    if (currentState === 'unread') {
+      setAlertStates(prev => ({ ...prev, [index]: 'acknowledged' }));
+      toast({
+        title: "Alert Acknowledged",
+        description: `You've acknowledged the ${alert.type} alert`,
+      });
+    } else if (currentState === 'acknowledged') {
+      setAlertStates(prev => ({ ...prev, [index]: 'dismissed' }));
+      toast({
+        title: "Alert Dismissed",
+        description: `You've dismissed the ${alert.type} alert`,
+      });
+    } else {
+      setAlertStates(prev => ({ ...prev, [index]: 'unread' }));
+      toast({
+        title: "Alert Restored",
+        description: `You've restored the ${alert.type} alert`,
+      });
+    }
+  };
+
+  const getBellIcon = (state: string) => {
+    switch (state) {
+      case 'acknowledged': return Check;
+      case 'dismissed': return BellOff;
+      default: return Bell;
+    }
+  };
+
+  const getBellColor = (state: string) => {
+    switch (state) {
+      case 'acknowledged': return 'text-green-400 bg-green-400/20';
+      case 'dismissed': return 'text-gray-400 bg-gray-400/20';
+      default: return 'text-white bg-white/10';
     }
   };
 
@@ -40,8 +87,13 @@ export const EmergencyAlertsPanel = () => {
                   <p className="text-white/70 text-sm">{alert.message}</p>
                   <span className="text-white/50 text-xs">{alert.timestamp}</span>
                 </div>
-                <Button size="sm" variant="outline" className="bg-white/10 border-white/20 text-white">
-                  <Bell className="w-4 h-4" />
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className={`border-white/20 hover:bg-white/20 transition-all ${getBellColor(alertStates[index])}`}
+                  onClick={() => handleBellClick(index, alert)}
+                >
+                  {React.createElement(getBellIcon(alertStates[index]), { className: "w-4 h-4" })}
                 </Button>
               </div>
             </div>
