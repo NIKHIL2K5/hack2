@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Search, Filter, MapPin, DollarSign, Clock, Building2, ArrowLeft } from "lucide-react";
@@ -13,7 +14,7 @@ const JobBoard = () => {
   const [selectedLocation, setSelectedLocation] = useState("");
   const [selectedSkill, setSelectedSkill] = useState("");
 
-  // Expanded jobs with more locations
+  // Expanded 30 jobs with diverse locations across Telangana
   const jobs = [
     {
       id: 1,
@@ -134,11 +135,251 @@ const JobBoard = () => {
       description: "Ensure software quality through comprehensive testing strategies.",
       posted: "5 days ago",
       type: "Internship"
+    },
+    {
+      id: 11,
+      title: "Digital Marketing Specialist",
+      company: "MarketGrow Agency",
+      location: "Siddipet",
+      stipend: "₹22,000",
+      duration: "4 months",
+      skills: ["SEO", "Social Media", "Google Ads"],
+      description: "Drive digital marketing campaigns and boost online presence for clients.",
+      posted: "3 days ago",
+      type: "Internship"
+    },
+    {
+      id: 12,
+      title: "Business Analyst",
+      company: "ConsultPro Services",
+      location: "Sangareddy",
+      stipend: "₹35,000",
+      duration: "6 months",
+      skills: ["Data Analysis", "Excel", "Power BI"],
+      description: "Analyze business processes and provide strategic recommendations.",
+      posted: "2 days ago",
+      type: "Internship"
+    },
+    {
+      id: 13,
+      title: "Game Developer",
+      company: "GameCraft Studios",
+      location: "Jagtial",
+      stipend: "₹33,000",
+      duration: "5 months",
+      skills: ["Unity", "C#", "Game Design"],
+      description: "Create engaging mobile and PC games using Unity engine.",
+      posted: "4 days ago",
+      type: "Internship"
+    },
+    {
+      id: 14,
+      title: "Content Writer",
+      company: "WriteCraft Media",
+      location: "Rajanna Sircilla",
+      stipend: "₹18,000",
+      duration: "3 months",
+      skills: ["Writing", "Content Strategy", "WordPress"],
+      description: "Create compelling content for websites, blogs, and marketing materials.",
+      posted: "1 week ago",
+      type: "Part-time"
+    },
+    {
+      id: 15,
+      title: "IoT Developer",
+      company: "SmartTech Innovations",
+      location: "Kamareddy",
+      stipend: "₹42,000",
+      duration: "7 months",
+      skills: ["Arduino", "Raspberry Pi", "IoT Protocols"],
+      description: "Develop smart IoT solutions for industrial and consumer applications.",
+      posted: "2 days ago",
+      type: "Full-time"
+    },
+    {
+      id: 16,
+      title: "Graphic Designer",
+      company: "VisualArts Studio",
+      location: "Mancherial",
+      stipend: "₹20,000",
+      duration: "4 months",
+      skills: ["Photoshop", "Illustrator", "Branding"],
+      description: "Design visual content for brands, including logos, brochures, and digital assets.",
+      posted: "3 days ago",
+      type: "Internship"
+    },
+    {
+      id: 17,
+      title: "Network Administrator",
+      company: "NetSecure Systems",
+      location: "Peddapalli",
+      stipend: "₹30,000",
+      duration: "6 months",
+      skills: ["Cisco", "Network Security", "Troubleshooting"],
+      description: "Manage and maintain network infrastructure for enterprise clients.",
+      posted: "5 days ago",
+      type: "Internship"
+    },
+    {
+      id: 18,
+      title: "Machine Learning Engineer",
+      company: "DataMind Technologies",
+      location: "Yadadri Bhuvanagiri",
+      stipend: "₹48,000",
+      duration: "8 months",
+      skills: ["Python", "PyTorch", "MLOps"],
+      description: "Build and deploy machine learning models for real-world applications.",
+      posted: "1 day ago",
+      type: "Full-time"
+    },
+    {
+      id: 19,
+      title: "Social Media Manager",
+      company: "BrandBoost Digital",
+      location: "Wanaparthy",
+      stipend: "₹25,000",
+      duration: "4 months",
+      skills: ["Instagram", "Facebook", "Content Creation"],
+      description: "Manage social media presence and engagement for multiple brand accounts.",
+      posted: "2 days ago",
+      type: "Part-time"
+    },
+    {
+      id: 20,
+      title: "Software Tester",
+      company: "QualityFirst Technologies",
+      location: "Narayanpet",
+      stipend: "₹26,000",
+      duration: "5 months",
+      skills: ["Manual Testing", "Bug Tracking", "Test Cases"],
+      description: "Perform comprehensive testing to ensure software quality and reliability.",
+      posted: "4 days ago",
+      type: "Internship"
+    },
+    {
+      id: 21,
+      title: "Web Developer",
+      company: "WebCraft Solutions",
+      location: "Jogulamba Gadwal",
+      stipend: "₹29,000",
+      duration: "6 months",
+      skills: ["HTML", "CSS", "JavaScript", "PHP"],
+      description: "Develop responsive websites and web applications for various clients.",
+      posted: "3 days ago",
+      type: "Internship"
+    },
+    {
+      id: 22,
+      title: "Technical Writer",
+      company: "DocuTech Services",
+      location: "Nagarkurnool",
+      stipend: "₹24,000",
+      duration: "4 months",
+      skills: ["Technical Writing", "Documentation", "API Docs"],
+      description: "Create clear technical documentation and user guides for software products.",
+      posted: "1 week ago",
+      type: "Part-time"
+    },
+    {
+      id: 23,
+      title: "Database Administrator",
+      company: "DataVault Systems",
+      location: "Vikarabad",
+      stipend: "₹36,000",
+      duration: "7 months",
+      skills: ["MySQL", "PostgreSQL", "Database Design"],
+      description: "Manage and optimize database systems for performance and security.",
+      posted: "2 days ago",
+      type: "Full-time"
+    },
+    {
+      id: 24,
+      title: "Video Editor",
+      company: "MediaCraft Productions",
+      location: "Suryapet",
+      stipend: "₹22,000",
+      duration: "3 months",
+      skills: ["Premiere Pro", "After Effects", "Color Grading"],
+      description: "Edit promotional videos, documentaries, and digital content.",
+      posted: "5 days ago",
+      type: "Internship"
+    },
+    {
+      id: 25,
+      title: "Cloud Engineer",
+      company: "CloudMax Technologies",
+      location: "Mahabubabad",
+      stipend: "₹44,000",
+      duration: "8 months",
+      skills: ["AWS", "Azure", "Cloud Architecture"],
+      description: "Design and implement cloud infrastructure solutions for enterprise clients.",
+      posted: "1 day ago",
+      type: "Full-time"
+    },
+    {
+      id: 26,
+      title: "Sales Executive",
+      company: "SalesForce Dynamics",
+      location: "Bhadradri Kothagudem",
+      stipend: "₹20,000",
+      duration: "4 months",
+      skills: ["Sales", "CRM", "Lead Generation"],
+      description: "Drive sales growth through customer relationship management and lead conversion.",
+      posted: "3 days ago",
+      type: "Part-time"
+    },
+    {
+      id: 27,
+      title: "HR Intern",
+      company: "PeopleFirst Consulting",
+      location: "Mulugu",
+      stipend: "₹18,000",
+      duration: "3 months",
+      skills: ["Recruitment", "HR Policies", "Employee Relations"],
+      description: "Support HR operations including recruitment, onboarding, and employee engagement.",
+      posted: "6 days ago",
+      type: "Internship"
+    },
+    {
+      id: 28,
+      title: "Financial Analyst",
+      company: "FinanceGrow Advisors",
+      location: "Jangaon",
+      stipend: "₹32,000",
+      duration: "6 months",
+      skills: ["Financial Modeling", "Excel", "Analysis"],
+      description: "Analyze financial data and provide insights for investment decisions.",
+      posted: "2 days ago",
+      type: "Internship"
+    },
+    {
+      id: 29,
+      title: "Operations Manager",
+      company: "OptiMax Logistics",
+      location: "Jayashankar Bhupalpally",
+      stipend: "₹38,000",
+      duration: "7 months",
+      skills: ["Operations", "Process Optimization", "Team Management"],
+      description: "Oversee daily operations and implement process improvements for efficiency.",
+      posted: "4 days ago",
+      type: "Full-time"
+    },
+    {
+      id: 30,
+      title: "Research Assistant",
+      company: "InnoResearch Institute",
+      location: "Asifabad",
+      stipend: "₹26,000",
+      duration: "5 months",
+      skills: ["Research Methods", "Data Collection", "Report Writing"],
+      description: "Assist in conducting research projects and compiling comprehensive reports.",
+      posted: "1 week ago",
+      type: "Research"
     }
   ];
 
-  const locations = ["All Locations", "Hyderabad", "Warangal", "Nizamabad", "Karimnagar", "Khammam", "Mahbubnagar", "Adilabad", "Medak", "Rangareddy", "Nalgonda"];
-  const skills = ["All Skills", "React", "JavaScript", "Python", "Machine Learning", "Figma", "Flutter", "Node.js", "Docker", "Network Security", "Deep Learning", "Solidity"];
+  const locations = ["All Locations", "Hyderabad", "Warangal", "Nizamabad", "Karimnagar", "Khammam", "Mahbubnagar", "Adilabad", "Medak", "Rangareddy", "Nalgonda", "Siddipet", "Sangareddy", "Jagtial", "Rajanna Sircilla", "Kamareddy", "Mancherial", "Peddapalli", "Yadadri Bhuvanagiri", "Wanaparthy", "Narayanpet", "Jogulamba Gadwal", "Nagarkurnool", "Vikarabad", "Suryapet", "Mahabubabad", "Bhadradri Kothagudem", "Mulugu", "Jangaon", "Jayashankar Bhupalpally", "Asifabad"];
+  const skills = ["All Skills", "React", "JavaScript", "Python", "Machine Learning", "Figma", "Flutter", "Node.js", "Docker", "Network Security", "Deep Learning", "Solidity", "SEO", "Unity", "Arduino", "Photoshop", "Cisco", "PyTorch", "PHP", "MySQL", "Premiere Pro", "AWS", "Sales", "Excel"];
 
   const filteredJobs = jobs.filter(job => {
     const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -161,12 +402,10 @@ const JobBoard = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <Link to="/dashboard/student">
-                <motion.div whileHover={{ scale: 1.05, x: -5 }}>
-                  <Button variant="outline" className="border-neutral-300 text-neutral-700 hover:bg-neutral-100">
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    Back to Dashboard
-                  </Button>
-                </motion.div>
+                <Button variant="outline" className="border-neutral-300 text-neutral-700">
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back to Dashboard
+                </Button>
               </Link>
               <div className="flex items-center space-x-3">
                 <img 
@@ -197,14 +436,14 @@ const JobBoard = () => {
                     placeholder="Search jobs..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 border-neutral-300 focus:border-primary-500 focus:ring-primary-500"
+                    className="pl-10 border-neutral-300"
                   />
                 </div>
                 
                 <select
                   value={selectedLocation}
                   onChange={(e) => setSelectedLocation(e.target.value)}
-                  className="px-3 py-2 border border-neutral-300 rounded-md text-neutral-700 focus:border-primary-500 focus:ring-primary-500"
+                  className="px-3 py-2 border border-neutral-300 rounded-md text-neutral-700"
                 >
                   {locations.map(location => (
                     <option key={location} value={location}>
@@ -216,7 +455,7 @@ const JobBoard = () => {
                 <select
                   value={selectedSkill}
                   onChange={(e) => setSelectedSkill(e.target.value)}
-                  className="px-3 py-2 border border-neutral-300 rounded-md text-neutral-700 focus:border-primary-500 focus:ring-primary-500"
+                  className="px-3 py-2 border border-neutral-300 rounded-md text-neutral-700"
                 >
                   {skills.map(skill => (
                     <option key={skill} value={skill}>
@@ -225,12 +464,10 @@ const JobBoard = () => {
                   ))}
                 </select>
 
-                <motion.div whileHover={{ scale: 1.05 }}>
-                  <Button className="w-full gradient-primary text-white">
-                    <Filter className="w-4 h-4 mr-2" />
-                    Apply Filters
-                  </Button>
-                </motion.div>
+                <Button className="w-full gradient-primary text-white">
+                  <Filter className="w-4 h-4 mr-2" />
+                  Apply Filters
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -256,14 +493,13 @@ const JobBoard = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              whileHover={{ scale: 1.02, y: -5 }}
               className="group"
             >
-              <Card className="glass-card hover:shadow-xl transition-all duration-300 group-hover:border-primary-300">
+              <Card className="glass-card shadow-lg border-primary-300">
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <div>
-                      <CardTitle className="text-2xl text-neutral-800 mb-2 group-hover:text-primary-700 transition-colors">{job.title}</CardTitle>
+                      <CardTitle className="text-2xl text-neutral-800 mb-2">{job.title}</CardTitle>
                       <div className="flex items-center space-x-4 text-neutral-600">
                         <div className="flex items-center">
                           <Building2 className="w-4 h-4 mr-1" />
@@ -315,17 +551,12 @@ const JobBoard = () => {
                       </div>
                     </div>
                     
-                    <motion.div
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                    <Button 
+                      onClick={() => handleApply(job.id, job.title)}
+                      className="gradient-primary text-white px-8"
                     >
-                      <Button 
-                        onClick={() => handleApply(job.id, job.title)}
-                        className="gradient-primary text-white px-8"
-                      >
-                        Apply Now
-                      </Button>
-                    </motion.div>
+                      Apply Now
+                    </Button>
                   </div>
                 </CardContent>
               </Card>

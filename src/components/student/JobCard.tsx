@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import { Building2, MapPin, DollarSign, Clock, Bookmark } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -41,20 +42,19 @@ export const JobCard = ({ job, index, onApply }: JobCardProps) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1 }}
-      whileHover={{ scale: 1.02, y: -5 }}
       className="group"
     >
-      <Card className="glass-card hover:shadow-xl transition-all duration-300 group-hover:border-primary-300">
+      <Card className="glass-card shadow-lg border-primary-300">
         <CardContent className="p-6">
           <div className="flex justify-between items-start mb-4">
             <div className="flex-1">
               <div className="flex items-start justify-between mb-2">
-                <h3 className="text-xl font-bold text-neutral-800 group-hover:text-primary-700 transition-colors">{job.title}</h3>
+                <h3 className="text-xl font-bold text-neutral-800">{job.title}</h3>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={handleSaveToggle}
-                  className={`p-2 ${isSaved ? 'text-yellow-500 hover:text-yellow-600' : 'text-gray-400 hover:text-yellow-500'} transition-colors`}
+                  className={`p-2 ${isSaved ? 'text-yellow-500' : 'text-gray-400'}`}
                 >
                   <Bookmark className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
                 </Button>
@@ -84,7 +84,7 @@ export const JobCard = ({ job, index, onApply }: JobCardProps) => {
                   <Badge 
                     key={skillIndex}
                     variant="outline" 
-                    className="border-accent-300 text-accent-700 bg-accent-50 hover:bg-accent-100 transition-colors"
+                    className="border-accent-300 text-accent-700 bg-accent-50"
                   >
                     {skill}
                   </Badge>
@@ -97,14 +97,12 @@ export const JobCard = ({ job, index, onApply }: JobCardProps) => {
           </div>
           <div className="flex justify-between items-center">
             <span className="text-neutral-500 text-sm">Posted {job.posted}</span>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button 
-                onClick={() => onApply(job)}
-                className="gradient-primary text-white hover:opacity-90 transition-opacity"
-              >
-                Apply Now
-              </Button>
-            </motion.div>
+            <Button 
+              onClick={() => onApply(job)}
+              className="gradient-primary text-white"
+            >
+              Apply Now
+            </Button>
           </div>
         </CardContent>
       </Card>

@@ -69,7 +69,7 @@ body {
   font-family: "Inter", sans-serif;
 }
 
-/* Custom CSS classes */
+/* Custom CSS classes - HOVER EFFECTS REMOVED */
 .gradient-primary {
   background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
 }
@@ -79,20 +79,11 @@ body {
 }
 
 .hover-card {
-  transition: all 0.3s ease;
-}
-
-.hover-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  transition: none; /* Removed hover transition */
 }
 
 .hover-button {
-  transition: all 0.2s ease;
-}
-
-.hover-button:hover {
-  @apply scale-105;
+  transition: none; /* Removed hover transition */
 }
 
 .text-primary-700 {
@@ -155,10 +146,6 @@ body {
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background-color: #cbd5e1;
   border-radius: 3px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: #94a3b8;
 }
 
 .hero-gradient {
