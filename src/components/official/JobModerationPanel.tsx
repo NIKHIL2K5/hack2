@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Briefcase, CheckCircle, XCircle, AlertTriangle, Eye, Flag, MapPin, Calendar, Users, Mail } from 'lucide-react';
@@ -126,6 +127,14 @@ export const JobModerationPanel = () => {
     
     setJobPostings(updatedJobs);
     toast.success(`Job posting ${action === 'approve' ? 'approved' : 'rejected'} successfully!`);
+  };
+
+  const handleApproveJob = (jobId: string) => {
+    handleJobAction(jobId, 'approve');
+  };
+
+  const handleRejectJob = (jobId: string) => {
+    handleJobAction(jobId, 'reject');
   };
 
   const handleFlagJob = (jobId: string) => {
@@ -425,8 +434,8 @@ export const JobModerationPanel = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         job={selectedJob}
-        onApprove={handleJobAction}
-        onReject={handleJobAction}
+        onApprove={handleApproveJob}
+        onReject={handleRejectJob}
         onFlag={handleFlagJob}
         onSendEmail={handleSendEmail}
       />
