@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Briefcase, CheckCircle, XCircle, AlertTriangle, Eye, Flag, MapPin, Calendar, Users } from 'lucide-react';
+import { Briefcase, CheckCircle, XCircle, AlertTriangle, Eye, Flag, MapPin, Calendar, Users, Mail } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
+import { JobDetailsModal } from './JobDetailsModal';
 
 interface JobPosting {
   id: string;
@@ -34,6 +34,8 @@ export const JobModerationPanel = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
+  const [selectedJob, setSelectedJob] = useState<JobPosting | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     // Initialize with sample job postings
@@ -45,7 +47,7 @@ export const JobModerationPanel = () => {
         location: 'Hyderabad',
         jobType: 'internship',
         stipend: '₹25,000/month',
-        description: 'Work on React-based web applications and learn modern frontend development practices.',
+        description: 'Work on React-based web applications and learn modern frontend development practices. You will be part of a dynamic team working on cutting-edge projects.',
         requirements: ['React', 'JavaScript', 'HTML/CSS', 'Git'],
         postedDate: '2024-01-15',
         applicationDeadline: '2024-02-15',
@@ -61,7 +63,7 @@ export const JobModerationPanel = () => {
         location: 'Warangal',
         jobType: 'full-time',
         stipend: '₹4,50,000/year',
-        description: 'Analyze business data and create insights for decision making.',
+        description: 'Analyze business data and create insights for decision making. Work with large datasets and present findings to stakeholders.',
         requirements: ['Python', 'SQL', 'Excel', 'Statistics'],
         postedDate: '2024-01-10',
         applicationDeadline: '2024-02-10',
@@ -144,22 +146,45 @@ export const JobModerationPanel = () => {
     toast.success(`Job posting ${!job.isFlagged ? 'flagged' : 'unflagged'} successfully!`);
   };
 
+  const handleViewDetails = (job: JobPosting) => {
+    setSelectedJob(job);
+    setIsModalOpen(true);
+  };
+
+  const handleSendEmail = (jobId: string, companyEmail: string) => {
+    // Get profile data to check email configuration
+    const profileData = localStorage.getItem('officialProfile');
+    if (!profileData) {
+      toast.error("Please configure your profile first");
+      return;
+    }
+
+    const profile = JSON.parse(profileData);
+    if (!profile.emailApiKey && !profile.smtpUsername) {
+      toast.error("Please configure email settings in your profile");
+      return;
+    }
+
+    // Simulate email sending
+    toast.success(`Email sent to ${companyEmail} regarding job posting`);
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'approved': return 'bg-green-100 text-green-700';
-      case 'pending': return 'bg-yellow-100 text-yellow-700';
-      case 'rejected': return 'bg-red-100 text-red-700';
-      default: return 'bg-gray-100 text-gray-700';
+      case 'approved': return 'bg-green-100 text-green-800 border-green-200';
+      case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'rejected': return 'bg-red-100 text-red-800 border-red-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
   const getJobTypeColor = (type: string) => {
     switch (type) {
-      case 'internship': return 'bg-blue-100 text-blue-700';
-      case 'full-time': return 'bg-green-100 text-green-700';
-      case 'part-time': return 'bg-purple-100 text-purple-700';
-      case 'contract': return 'bg-orange-100 text-orange-700';
-      default: return 'bg-gray-100 text-gray-700';
+      case 'internship': return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'full-time': return 'bg-green-100 text-green-800 border-green-200';
+      case 'part-time': return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'contract': return 'bg-orange-100 text-orange-800 border-orange-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
@@ -173,7 +198,7 @@ export const JobModerationPanel = () => {
         </div>
       </div>
 
-      {/* Summary Cards */}
+      {/* Summary Cards - Fixed alignment */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {[
           { title: 'Total Jobs', value: jobPostings.length.toString(), color: 'bg-blue-500' },
@@ -184,11 +209,13 @@ export const JobModerationPanel = () => {
           <Card key={stat.title} className="bg-white/10 backdrop-blur-lg border-white/20">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-white/80 text-sm">{stat.title}</p>
-                  <p className="text-2xl font-bold text-white">{stat.value}</p>
+                <div className="flex-1">
+                  <p className="text-white/80 text-sm font-medium">{stat.title}</p>
+                  <div className="flex items-center space-x-2 mt-1">
+                    <p className="text-2xl font-bold text-white">{stat.value}</p>
+                  </div>
                 </div>
-                <div className={`w-10 h-10 rounded-lg ${stat.color} flex items-center justify-center`}>
+                <div className={`w-10 h-10 rounded-lg ${stat.color} flex items-center justify-center flex-shrink-0`}>
                   <Briefcase className="w-5 h-5 text-white" />
                 </div>
               </div>
@@ -207,7 +234,7 @@ export const JobModerationPanel = () => {
                 placeholder="Search by title or company..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="bg-white/10 border-white/20 text-white"
+                className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
               />
             </div>
             
@@ -257,37 +284,37 @@ export const JobModerationPanel = () => {
             <Card className={`bg-white/10 backdrop-blur-lg border-white/20 ${job.isFlagged ? 'ring-2 ring-red-500/50' : ''}`}>
               <CardHeader>
                 <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-3 mb-2">
-                      <CardTitle className="text-xl text-white">{job.title}</CardTitle>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center flex-wrap gap-2 mb-2">
+                      <CardTitle className="text-xl text-white truncate">{job.title}</CardTitle>
                       {job.isFlagged && (
-                        <Badge className="bg-red-100 text-red-700">
+                        <Badge className="bg-red-100 text-red-700 border border-red-300 flex-shrink-0">
                           <AlertTriangle className="w-3 h-3 mr-1" />
                           FLAGGED
                         </Badge>
                       )}
-                      <Badge className={getStatusColor(job.status)}>
+                      <Badge className={`${getStatusColor(job.status)} flex-shrink-0`}>
                         {job.status.toUpperCase()}
                       </Badge>
-                      <Badge className={getJobTypeColor(job.jobType)}>
+                      <Badge className={`${getJobTypeColor(job.jobType)} flex-shrink-0`}>
                         {job.jobType.toUpperCase()}
                       </Badge>
                     </div>
                     
-                    <p className="text-white/80 mb-3">{job.company}</p>
+                    <p className="text-white/80 mb-3 font-medium">{job.company}</p>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
-                      <div className="flex items-center text-white/80">
-                        <MapPin className="w-4 h-4 mr-2" />
-                        <span className="text-sm">{job.location}</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-3">
+                      <div className="flex items-center text-white/80 text-sm">
+                        <MapPin className="w-4 h-4 mr-2 flex-shrink-0" />
+                        <span className="truncate">{job.location}</span>
                       </div>
-                      <div className="flex items-center text-white/80">
-                        <Calendar className="w-4 h-4 mr-2" />
-                        <span className="text-sm">Posted: {new Date(job.postedDate).toLocaleDateString()}</span>
+                      <div className="flex items-center text-white/80 text-sm">
+                        <Calendar className="w-4 h-4 mr-2 flex-shrink-0" />
+                        <span className="truncate">Posted: {new Date(job.postedDate).toLocaleDateString()}</span>
                       </div>
-                      <div className="flex items-center text-white/80">
-                        <Users className="w-4 h-4 mr-2" />
-                        <span className="text-sm">{job.applicationsCount} applications</span>
+                      <div className="flex items-center text-white/80 text-sm">
+                        <Users className="w-4 h-4 mr-2 flex-shrink-0" />
+                        <span className="truncate">{job.applicationsCount} applications</span>
                       </div>
                     </div>
 
@@ -308,7 +335,7 @@ export const JobModerationPanel = () => {
                       <p className="text-white/80 text-sm mb-2">Requirements:</p>
                       <div className="flex flex-wrap gap-2">
                         {job.requirements.map((req, reqIndex) => (
-                          <Badge key={reqIndex} variant="outline" className="border-blue-300 text-blue-200 bg-blue-500/20">
+                          <Badge key={reqIndex} variant="outline" className="border-blue-300 text-blue-200 bg-blue-500/20 text-xs">
                             {req}
                           </Badge>
                         ))}
@@ -316,11 +343,12 @@ export const JobModerationPanel = () => {
                     </div>
                   </div>
                   
-                  <div className="flex space-x-2 ml-4">
+                  <div className="flex flex-col gap-2 ml-4 flex-shrink-0">
                     <Button
+                      onClick={() => handleViewDetails(job)}
                       variant="outline"
                       size="sm"
-                      className="bg-white/10 border-white/20 text-white"
+                      className="bg-white/10 border-white/20 text-white hover:bg-white/20"
                     >
                       <Eye className="w-4 h-4 mr-1" />
                       View Details
@@ -331,8 +359,8 @@ export const JobModerationPanel = () => {
                       variant="outline"
                       size="sm"
                       className={job.isFlagged 
-                        ? "bg-green-500/20 border-green-500/50 text-green-200"
-                        : "bg-red-500/20 border-red-500/50 text-red-200"
+                        ? "bg-green-500/20 border-green-500/50 text-green-200 hover:bg-green-500/30"
+                        : "bg-red-500/20 border-red-500/50 text-red-200 hover:bg-red-500/30"
                       }
                     >
                       <Flag className="w-4 h-4 mr-1" />
@@ -356,25 +384,33 @@ export const JobModerationPanel = () => {
                   </div>
                   <div className="bg-white/5 rounded-lg p-3">
                     <p className="text-white/70 text-sm">Contact</p>
-                    <p className="text-sm text-white/80">{job.contactEmail}</p>
+                    <p className="text-sm text-white/80 truncate">{job.contactEmail}</p>
                   </div>
                 </div>
 
                 {job.status === 'pending' && (
-                  <div className="flex space-x-3">
+                  <div className="flex flex-wrap gap-2">
                     <Button
                       onClick={() => handleJobAction(job.id, 'approve')}
-                      className="bg-green-600 text-white"
+                      className="bg-green-600 hover:bg-green-700 text-white"
                     >
                       <CheckCircle className="w-4 h-4 mr-2" />
-                      Approve Job Posting
+                      Approve
                     </Button>
                     <Button
                       onClick={() => handleJobAction(job.id, 'reject')}
-                      className="bg-red-600 text-white"
+                      className="bg-red-600 hover:bg-red-700 text-white"
                     >
                       <XCircle className="w-4 h-4 mr-2" />
-                      Reject Job Posting
+                      Reject
+                    </Button>
+                    <Button
+                      onClick={() => handleSendEmail(job.id, job.contactEmail)}
+                      variant="outline"
+                      className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                    >
+                      <Mail className="w-4 h-4 mr-2" />
+                      Email Company
                     </Button>
                   </div>
                 )}
@@ -383,6 +419,17 @@ export const JobModerationPanel = () => {
           </motion.div>
         ))}
       </div>
+
+      {/* Job Details Modal */}
+      <JobDetailsModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        job={selectedJob}
+        onApprove={handleJobAction}
+        onReject={handleJobAction}
+        onFlag={handleFlagJob}
+        onSendEmail={handleSendEmail}
+      />
     </div>
   );
 };

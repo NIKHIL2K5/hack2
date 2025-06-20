@@ -13,7 +13,8 @@ import {
   Building2,
   CheckCircle,
   AlertTriangle,
-  TrendingUp
+  TrendingUp,
+  User
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -28,12 +29,14 @@ import { PolicyPlanningTools } from '@/components/official/PolicyPlanningTools';
 import { NotificationCenter } from '@/components/official/NotificationCenter';
 import { DocumentManagement } from '@/components/official/DocumentManagement';
 import { RoleManagement } from '@/components/official/RoleManagement';
+import { OfficialProfile } from '@/components/official/OfficialProfile';
 
 const DashboardOfficial = () => {
   const [activeTab, setActiveTab] = useState('overview');
 
   const navigationItems = [
     { id: 'overview', label: 'Overview', icon: BarChart3 },
+    { id: 'profile', label: 'Profile Settings', icon: User },
     { id: 'schemes', label: 'Scheme Management', icon: FileText },
     { id: 'startups', label: 'Startup Monitoring', icon: Building2 },
     { id: 'jobs', label: 'Job Moderation', icon: Users },
@@ -55,6 +58,8 @@ const DashboardOfficial = () => {
 
   const renderContent = () => {
     switch (activeTab) {
+      case 'profile':
+        return <OfficialProfile />;
       case 'schemes':
         return <SchemeManagementPanel />;
       case 'startups':
@@ -78,7 +83,7 @@ const DashboardOfficial = () => {
       default:
         return (
           <div className="space-y-6">
-            {/* Overview Stats */}
+            {/* Overview Stats - Fixed alignment */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {overviewStats.map((stat, index) => (
                 <motion.div
@@ -90,16 +95,16 @@ const DashboardOfficial = () => {
                   <Card className="bg-white/10 backdrop-blur-lg border-white/20">
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-white/80 text-sm font-medium">{stat.title}</p>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-white/80 text-sm font-medium mb-1">{stat.title}</p>
                           <div className="flex items-center space-x-2">
                             <p className="text-3xl font-bold text-white">{stat.value}</p>
-                            <Badge className="bg-green-100 text-green-700">
+                            <Badge className="bg-green-100 text-green-700 text-xs">
                               {stat.change}
                             </Badge>
                           </div>
                         </div>
-                        <div className={`w-12 h-12 rounded-lg ${stat.color} flex items-center justify-center`}>
+                        <div className={`w-12 h-12 rounded-lg ${stat.color} flex items-center justify-center flex-shrink-0`}>
                           <stat.icon className="w-6 h-6 text-white" />
                         </div>
                       </div>
@@ -123,11 +128,11 @@ const DashboardOfficial = () => {
                     { action: 'Compliance report submitted', detail: 'Q4 compliance by DataFlow Systems', time: '3 hours ago' }
                   ].map((activity, index) => (
                     <div key={index} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
-                      <div>
-                        <p className="text-white font-medium">{activity.action}</p>
-                        <p className="text-white/70 text-sm">{activity.detail}</p>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-white font-medium truncate">{activity.action}</p>
+                        <p className="text-white/70 text-sm truncate">{activity.detail}</p>
                       </div>
-                      <span className="text-white/60 text-xs">{activity.time}</span>
+                      <span className="text-white/60 text-xs flex-shrink-0 ml-2">{activity.time}</span>
                     </div>
                   ))}
                 </div>
@@ -152,11 +157,16 @@ const DashboardOfficial = () => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <Button variant="outline" className="bg-white/10 border-white/20 text-white">
+              <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
                 <Bell className="w-4 h-4 mr-2" />
                 Notifications
               </Button>
-              <Button variant="outline" className="bg-white/10 border-white/20 text-white">
+              <Button 
+                variant="outline" 
+                className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                onClick={() => setActiveTab('profile')}
+              >
+                <User className="w-4 h-4 mr-2" />
                 Profile
               </Button>
             </div>
@@ -176,14 +186,14 @@ const DashboardOfficial = () => {
                       key={item.id}
                       onClick={() => setActiveTab(item.id)}
                       variant={activeTab === item.id ? "default" : "ghost"}
-                      className={`w-full justify-start ${
+                      className={`w-full justify-start text-left ${
                         activeTab === item.id 
-                          ? 'bg-blue-500 text-white' 
-                          : 'text-white/80 bg-transparent'
+                          ? 'bg-blue-500 text-white hover:bg-blue-600' 
+                          : 'text-white/80 bg-transparent hover:bg-white/10'
                       }`}
                     >
-                      <item.icon className="w-4 h-4 mr-2" />
-                      {item.label}
+                      <item.icon className="w-4 h-4 mr-2 flex-shrink-0" />
+                      <span className="truncate">{item.label}</span>
                     </Button>
                   ))}
                 </nav>
