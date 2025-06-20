@@ -1,133 +1,209 @@
 
-import { motion } from "framer-motion";
-import { Shield, Users, FileCheck, TrendingUp, LogOut, Building2, Mail } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Link } from "react-router-dom";
-import { useOfficialData } from "@/hooks/useOfficialData";
-import { ApplicationsTable } from "@/components/official/ApplicationsTable";
-import { ApplicationStats } from "@/components/official/ApplicationStats";
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { 
+  BarChart3, 
+  FileText, 
+  Users, 
+  MapPin, 
+  MessageSquare, 
+  Shield, 
+  Bell, 
+  Settings,
+  Building2,
+  CheckCircle,
+  AlertTriangle,
+  TrendingUp
+} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { SchemeManagementPanel } from '@/components/official/SchemeManagementPanel';
+import { StartupMonitoringPanel } from '@/components/official/StartupMonitoringPanel';
+import { JobModerationPanel } from '@/components/official/JobModerationPanel';
+import { DistrictAnalytics } from '@/components/official/DistrictAnalytics';
+import { FeedbackAnalytics } from '@/components/official/FeedbackAnalytics';
+import { UserVerificationPanel } from '@/components/official/UserVerificationPanel';
+import { PolicyPlanningTools } from '@/components/official/PolicyPlanningTools';
+import { NotificationCenter } from '@/components/official/NotificationCenter';
+import { DocumentManagement } from '@/components/official/DocumentManagement';
+import { RoleManagement } from '@/components/official/RoleManagement';
 
 const DashboardOfficial = () => {
-  const { officialUser, applications, getApplicationStats } = useOfficialData();
-  const stats = getApplicationStats();
+  const [activeTab, setActiveTab] = useState('overview');
 
-  if (!officialUser) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-indigo-700 to-indigo-500 flex items-center justify-center">
-        <Card className="bg-white/10 backdrop-blur-lg border-white/20 p-8">
-          <CardContent className="text-center text-white">
-            <Shield className="w-16 h-16 mx-auto mb-4 text-red-300" />
-            <h2 className="text-2xl font-bold mb-2">Access Denied</h2>
-            <p className="text-white/70 mb-4">Please log in as an authorized official</p>
-            <Link to="/login/official">
-              <Button className="bg-indigo-600 hover:bg-indigo-700">
-                Go to Login
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  const navigationItems = [
+    { id: 'overview', label: 'Overview', icon: BarChart3 },
+    { id: 'schemes', label: 'Scheme Management', icon: FileText },
+    { id: 'startups', label: 'Startup Monitoring', icon: Building2 },
+    { id: 'jobs', label: 'Job Moderation', icon: Users },
+    { id: 'analytics', label: 'District Analytics', icon: MapPin },
+    { id: 'feedback', label: 'Feedback Analytics', icon: MessageSquare },
+    { id: 'verification', label: 'User Verification', icon: Shield },
+    { id: 'policy', label: 'Policy Planning', icon: TrendingUp },
+    { id: 'notifications', label: 'Notifications', icon: Bell },
+    { id: 'documents', label: 'Document Management', icon: FileText },
+    { id: 'roles', label: 'Role Management', icon: Settings }
+  ];
 
-  const getOrgTypeColor = (type: string) => {
-    switch (type) {
-      case 'corporate': return 'bg-blue-100 text-blue-700 border-blue-300';
-      case 'government': return 'bg-green-100 text-green-700 border-green-300';
-      case 'educational': return 'bg-purple-100 text-purple-700 border-purple-300';
-      case 'research': return 'bg-orange-100 text-orange-700 border-orange-300';
-      default: return 'bg-gray-100 text-gray-700 border-gray-300';
+  const overviewStats = [
+    { title: 'Active Schemes', value: '24', change: '+3', icon: FileText, color: 'bg-blue-500' },
+    { title: 'Registered Startups', value: '1,847', change: '+156', icon: Building2, color: 'bg-green-500' },
+    { title: 'Job Posts Pending', value: '43', change: '-12', icon: AlertTriangle, color: 'bg-yellow-500' },
+    { title: 'Districts Covered', value: '33', change: '+0', icon: MapPin, color: 'bg-purple-500' }
+  ];
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'schemes':
+        return <SchemeManagementPanel />;
+      case 'startups':
+        return <StartupMonitoringPanel />;
+      case 'jobs':
+        return <JobModerationPanel />;
+      case 'analytics':
+        return <DistrictAnalytics />;
+      case 'feedback':
+        return <FeedbackAnalytics />;
+      case 'verification':
+        return <UserVerificationPanel />;
+      case 'policy':
+        return <PolicyPlanningTools />;
+      case 'notifications':
+        return <NotificationCenter />;
+      case 'documents':
+        return <DocumentManagement />;
+      case 'roles':
+        return <RoleManagement />;
+      default:
+        return (
+          <div className="space-y-6">
+            {/* Overview Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {overviewStats.map((stat, index) => (
+                <motion.div
+                  key={stat.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Card className="bg-white/10 backdrop-blur-lg border-white/20">
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-white/80 text-sm font-medium">{stat.title}</p>
+                          <div className="flex items-center space-x-2">
+                            <p className="text-3xl font-bold text-white">{stat.value}</p>
+                            <Badge className="bg-green-100 text-green-700">
+                              {stat.change}
+                            </Badge>
+                          </div>
+                        </div>
+                        <div className={`w-12 h-12 rounded-lg ${stat.color} flex items-center justify-center`}>
+                          <stat.icon className="w-6 h-6 text-white" />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Recent Activities */}
+            <Card className="bg-white/10 backdrop-blur-lg border-white/20">
+              <CardHeader>
+                <CardTitle className="text-white">Recent Activities</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {[
+                    { action: 'New startup registered', detail: 'TechVenture Solutions from Hyderabad', time: '2 minutes ago' },
+                    { action: 'Scheme application approved', detail: 'Startup Funding Scheme for GreenTech Innovations', time: '15 minutes ago' },
+                    { action: 'Job post flagged for review', detail: 'Software Developer position with unusually low stipend', time: '1 hour ago' },
+                    { action: 'Compliance report submitted', detail: 'Q4 compliance by DataFlow Systems', time: '3 hours ago' }
+                  ].map((activity, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                      <div>
+                        <p className="text-white font-medium">{activity.action}</p>
+                        <p className="text-white/70 text-sm">{activity.detail}</p>
+                      </div>
+                      <span className="text-white/60 text-xs">{activity.time}</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        );
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-indigo-700 to-indigo-500 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-teal-900">
+      {/* Header */}
       <header className="bg-white/5 backdrop-blur-lg border-b border-white/10">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-indigo-700 rounded-xl flex items-center justify-center">
-                <Building2 className="w-7 h-7 text-white" />
-              </div>
+              <Shield className="w-8 h-8 text-white" />
               <div>
-                <div className="flex items-center gap-3 mb-1">
-                  <h1 className="text-2xl font-bold">{officialUser.organization.name}</h1>
-                  <Badge className={getOrgTypeColor(officialUser.organization.type)}>
-                    {officialUser.organization.type}
-                  </Badge>
-                </div>
-                <div className="flex items-center text-white/60 text-sm">
-                  <Mail className="w-4 h-4 mr-2" />
-                  {officialUser.email} • {officialUser.department}
-                </div>
+                <h1 className="text-2xl font-bold text-white">Government Official Dashboard</h1>
+                <p className="text-white/70">Telangana State Administration</p>
               </div>
             </div>
-            
             <div className="flex items-center space-x-4">
-              <span className="text-white/80">Welcome, {officialUser.name}</span>
-              <Link to="/">
-                <Button variant="outline" className="bg-red-500/20 border-red-500/50 text-red-200 hover:bg-red-500/30">
-                  <LogOut className="w-4 h-4" />
-                </Button>
-              </Link>
+              <Button variant="outline" className="bg-white/10 border-white/20 text-white">
+                <Bell className="w-4 h-4 mr-2" />
+                Notifications
+              </Button>
+              <Button variant="outline" className="bg-white/10 border-white/20 text-white">
+                Profile
+              </Button>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-6 py-8">
-        <ApplicationStats stats={stats} />
-        
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-          <Link to="/schemes">
-            <motion.div whileHover={{ scale: 1.02 }}>
-              <Card className="bg-white/10 backdrop-blur-lg border-white/20 hover:border-white/40 transition-all">
-                <CardContent className="p-6 text-center">
-                  <FileCheck className="w-10 h-10 text-indigo-300 mx-auto mb-3" />
-                  <h3 className="text-lg font-bold text-white mb-1">Manage Jobs</h3>
-                  <p className="text-white/70 text-sm">Post & edit job listings</p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </Link>
+      <div className="container mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+          {/* Sidebar Navigation */}
+          <div className="lg:col-span-1">
+            <Card className="bg-white/10 backdrop-blur-lg border-white/20">
+              <CardContent className="p-4">
+                <nav className="space-y-2">
+                  {navigationItems.map((item) => (
+                    <Button
+                      key={item.id}
+                      onClick={() => setActiveTab(item.id)}
+                      variant={activeTab === item.id ? "default" : "ghost"}
+                      className={`w-full justify-start ${
+                        activeTab === item.id 
+                          ? 'bg-blue-500 text-white' 
+                          : 'text-white/80 bg-transparent'
+                      }`}
+                    >
+                      <item.icon className="w-4 h-4 mr-2" />
+                      {item.label}
+                    </Button>
+                  ))}
+                </nav>
+              </CardContent>
+            </Card>
+          </div>
 
-          <Link to="/analytics">
-            <motion.div whileHover={{ scale: 1.02 }}>
-              <Card className="bg-white/10 backdrop-blur-lg border-white/20 hover:border-white/40 transition-all">
-                <CardContent className="p-6 text-center">
-                  <TrendingUp className="w-10 h-10 text-indigo-300 mx-auto mb-3" />
-                  <h3 className="text-lg font-bold text-white mb-1">Analytics</h3>
-                  <p className="text-white/70 text-sm">View hiring insights</p>
-                </CardContent>
-              </Card>
+          {/* Main Content */}
+          <div className="lg:col-span-4">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {renderContent()}
             </motion.div>
-          </Link>
-
-          <Link to="/feedback">
-            <motion.div whileHover={{ scale: 1.02 }}>
-              <Card className="bg-white/10 backdrop-blur-lg border-white/20 hover:border-white/40 transition-all">
-                <CardContent className="p-6 text-center">
-                  <Users className="w-10 h-10 text-indigo-300 mx-auto mb-3" />
-                  <h3 className="text-lg font-bold text-white mb-1">Feedback</h3>
-                  <p className="text-white/70 text-sm">Candidate reviews</p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </Link>
-
-          <Card className="bg-white/10 backdrop-blur-lg border-white/20">
-            <CardContent className="p-6 text-center">
-              <Shield className="w-10 h-10 text-indigo-300 mx-auto mb-3" />
-              <h3 className="text-lg font-bold text-white mb-1">Settings</h3>
-              <p className="text-white/70 text-sm">Organization config</p>
-            </CardContent>
-          </Card>
+          </div>
         </div>
-
-        <ApplicationsTable applications={applications} />
-      </main>
+      </div>
     </div>
   );
 };
