@@ -1,4 +1,3 @@
-
 export interface JobApplicationData {
   id: number;
   studentName: string;
