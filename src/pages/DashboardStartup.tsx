@@ -8,10 +8,13 @@ import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { useOfficialData } from "@/hooks/useOfficialData";
 import { Scene3D } from "@/components/3d/Scene3D";
+import { JobPostingModal } from "@/components/official/JobPostingModal";
+import { JobManagement } from "@/components/official/JobManagement";
 
 const DashboardStartup = () => {
   const [activeTab, setActiveTab] = useState("overview");
-  const { getApplicationStats } = useOfficialData();
+  const [isJobModalOpen, setIsJobModalOpen] = useState(false);
+  const { getApplicationStats, officialUser } = useOfficialData();
   const stats = getApplicationStats();
 
   const dashboardStats = [
@@ -29,7 +32,7 @@ const DashboardStartup = () => {
   ];
 
   const handlePostJob = () => {
-    toast.success("Job posting form opened!");
+    setIsJobModalOpen(true);
   };
 
   return (
@@ -52,7 +55,7 @@ const DashboardStartup = () => {
                 <Building2 className="w-7 h-7 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold">Partner Organization Dashboard</h1>
+                <h1 className="text-2xl font-bold">{officialUser?.organization.name || 'Partner Organization'} Dashboard</h1>
                 <p className="text-white/60">Manage applications and job postings</p>
               </div>
             </motion.div>
@@ -87,111 +90,187 @@ const DashboardStartup = () => {
         </div>
       </header>
 
+      {/* Navigation Tabs */}
+      <div className="relative z-10 container mx-auto px-6 py-4">
+        <div className="flex space-x-4 mb-6">
+          {[
+            { id: "overview", label: "Overview" },
+            { id: "jobs", label: "Job Postings" },
+            { id: "applications", label: "Applications" }
+          ].map((tab) => (
+            <motion.button
+              key={tab.id}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+                activeTab === tab.id
+                  ? "bg-gradient-to-r from-blue-500 to-teal-500 text-white"
+                  : "bg-white/10 text-white/70 hover:bg-white/20"
+              }`}
+            >
+              {tab.label}
+            </motion.button>
+          ))}
+        </div>
+      </div>
+
       {/* Main Content */}
-      <main className="relative z-10 container mx-auto px-6 py-8">
-        {/* Stats Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
-        >
-          {dashboardStats.map((stat, index) => (
+      <main className="relative z-10 container mx-auto px-6 pb-8">
+        {activeTab === "overview" && (
+          <>
+            {/* Stats Grid */}
             <motion.div
-              key={stat.title}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ scale: 1.05, y: -5 }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
             >
-              <Card className="bg-white/5 backdrop-blur-lg border-white/10 hover:border-white/20 transition-all duration-300">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-white/70 text-sm">{stat.title}</p>
-                      <p className="text-3xl font-bold text-white">{stat.value}</p>
-                    </div>
-                    <div className={`p-3 rounded-xl bg-gradient-to-r from-white/10 to-white/5`}>
-                      <stat.icon className={`w-6 h-6 ${stat.color}`} />
-                    </div>
+              {dashboardStats.map((stat, index) => (
+                <motion.div
+                  key={stat.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                >
+                  <Card className="bg-white/5 backdrop-blur-lg border-white/10 hover:border-white/20 transition-all duration-300">
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-white/70 text-sm">{stat.title}</p>
+                          <p className="text-3xl font-bold text-white">{stat.value}</p>
+                        </div>
+                        <div className={`p-3 rounded-xl bg-gradient-to-r from-white/10 to-white/5`}>
+                          <stat.icon className={`w-6 h-6 ${stat.color}`} />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* Action Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
+            >
+              <motion.div whileHover={{ scale: 1.02 }}>
+                <Button
+                  onClick={handlePostJob}
+                  className="w-full h-20 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white text-lg font-semibold"
+                >
+                  <Plus className="w-6 h-6 mr-3" />
+                  Post New Job
+                </Button>
+              </motion.div>
+              
+              <Link to="/applications">
+                <motion.div whileHover={{ scale: 1.02 }}>
+                  <Button className="w-full h-20 bg-gradient-to-r from-teal-500 to-teal-700 hover:from-teal-600 hover:to-teal-800 text-white text-lg font-semibold">
+                    <Users className="w-6 h-6 mr-3" />
+                    Manage Applications
+                  </Button>
+                </motion.div>
+              </Link>
+              
+              <Link to="/compliance">
+                <motion.div whileHover={{ scale: 1.02 }}>
+                  <Button className="w-full h-20 bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 text-white text-lg font-semibold">
+                    <CheckCircle className="w-6 h-6 mr-3" />
+                    Compliance Tracker
+                  </Button>
+                </motion.div>
+              </Link>
+            </motion.div>
+
+            {/* Recent Jobs */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              <Card className="bg-white/5 backdrop-blur-lg border-white/10">
+                <CardHeader>
+                  <CardTitle className="text-white text-xl">Recent Job Postings & Applications</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {recentJobs.map((job, index) => (
+                      <motion.div
+                        key={index}
+                        whileHover={{ x: 5 }}
+                        className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10 hover:border-white/20 transition-all"
+                      >
+                        <div>
+                          <h3 className="text-white font-semibold">{job.title}</h3>
+                          <p className="text-white/60">{job.applications} applications received</p>
+                        </div>
+                        <span className={`px-3 py-1 rounded-full text-sm ${
+                          job.status === "Active" 
+                            ? "bg-green-500/20 text-green-300" 
+                            : "bg-gray-500/20 text-gray-300"
+                        }`}>
+                          {job.status}
+                        </span>
+                      </motion.div>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
             </motion.div>
-          ))}
-        </motion.div>
+          </>
+        )}
 
-        {/* Action Buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
-        >
-          <motion.div whileHover={{ scale: 1.02 }}>
-            <Button
-              onClick={handlePostJob}
-              className="w-full h-20 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white text-lg font-semibold"
-            >
-              <Plus className="w-6 h-6 mr-3" />
-              Post New Job
-            </Button>
+        {activeTab === "jobs" && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            <div className="flex justify-between items-center">
+              <h2 className="text-3xl font-bold text-white">Job Management</h2>
+              <Button
+                onClick={handlePostJob}
+                className="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white"
+              >
+                <Plus className="w-5 h-5 mr-2" />
+                Post New Job
+              </Button>
+            </div>
+            <JobManagement organizationName={officialUser?.organization.name || 'Unknown Organization'} />
           </motion.div>
-          
-          <Link to="/applications">
-            <motion.div whileHover={{ scale: 1.02 }}>
-              <Button className="w-full h-20 bg-gradient-to-r from-teal-500 to-teal-700 hover:from-teal-600 hover:to-teal-800 text-white text-lg font-semibold">
-                <Users className="w-6 h-6 mr-3" />
-                Manage Applications
-              </Button>
-            </motion.div>
-          </Link>
-          
-          <Link to="/compliance">
-            <motion.div whileHover={{ scale: 1.02 }}>
-              <Button className="w-full h-20 bg-gradient-to-r from-purple-500 to-purple-700 hover:from-purple-600 hover:to-purple-800 text-white text-lg font-semibold">
-                <CheckCircle className="w-6 h-6 mr-3" />
-                Compliance Tracker
-              </Button>
-            </motion.div>
-          </Link>
-        </motion.div>
+        )}
 
-        {/* Recent Jobs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-        >
-          <Card className="bg-white/5 backdrop-blur-lg border-white/10">
-            <CardHeader>
-              <CardTitle className="text-white text-xl">Recent Job Postings & Applications</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {recentJobs.map((job, index) => (
-                  <motion.div
-                    key={index}
-                    whileHover={{ x: 5 }}
-                    className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10 hover:border-white/20 transition-all"
-                  >
-                    <div>
-                      <h3 className="text-white font-semibold">{job.title}</h3>
-                      <p className="text-white/60">{job.applications} applications received</p>
-                    </div>
-                    <span className={`px-3 py-1 rounded-full text-sm ${
-                      job.status === "Active" 
-                        ? "bg-green-500/20 text-green-300" 
-                        : "bg-gray-500/20 text-gray-300"
-                    }`}>
-                      {job.status}
-                    </span>
-                  </motion.div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+        {activeTab === "applications" && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-3xl font-bold text-white">Application Management</h2>
+              <Link to="/applications">
+                <Button className="bg-gradient-to-r from-teal-500 to-teal-700 hover:from-teal-600 hover:to-teal-800 text-white">
+                  <Users className="w-5 h-5 mr-2" />
+                  View All Applications
+                </Button>
+              </Link>
+            </div>
+            <p className="text-white/60 text-lg">
+              Click "View All Applications" to access the full application management system.
+            </p>
+          </motion.div>
+        )}
       </main>
+
+      {/* Job Posting Modal */}
+      <JobPostingModal
+        isOpen={isJobModalOpen}
+        onClose={() => setIsJobModalOpen(false)}
+        organizationName={officialUser?.organization.name || 'Unknown Organization'}
+      />
     </div>
   );
 };
