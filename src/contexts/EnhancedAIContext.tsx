@@ -215,48 +215,6 @@ export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     return null;
   };
 
-  // Function to check if message matches any FAQ
-  const findFAQAnswer = (message: string): string | null => {
-    const lowerMessage = message.toLowerCase();
-    
-    for (const [key, answer] of Object.entries(STUDENT_FAQ)) {
-      if (key.split(' ').every(keyword => lowerMessage.includes(keyword))) {
-        return answer;
-      }
-    }
-    
-    // Additional pattern matching for common variations
-    if (lowerMessage.includes('how') && (lowerMessage.includes('apply') || lowerMessage.includes('job'))) {
-      return STUDENT_FAQ['apply job internship'];
-    }
-    
-    if (lowerMessage.includes('track') && lowerMessage.includes('application')) {
-      return STUDENT_FAQ['track application'];
-    }
-    
-    if (lowerMessage.includes('save') && lowerMessage.includes('job')) {
-      return STUDENT_FAQ['save jobs later'];
-    }
-    
-    if (lowerMessage.includes('resume') && (lowerMessage.includes('upload') || lowerMessage.includes('update'))) {
-      return STUDENT_FAQ['upload resume multiple update'];
-    }
-    
-    if (lowerMessage.includes('notification') || lowerMessage.includes('email')) {
-      return STUDENT_FAQ['email notifications'];
-    }
-    
-    if (lowerMessage.includes('telugu') || lowerMessage.includes('language')) {
-      return STUDENT_FAQ['telugu language switch'];
-    }
-    
-    if (lowerMessage.includes('free') || lowerMessage.includes('cost') || lowerMessage.includes('price')) {
-      return STUDENT_FAQ['platform free students'];
-    }
-    
-    return null;
-  };
-
   const generateJobRecommendations = (userRole: string, context: string) => {
     const jobs = JSON.parse(localStorage.getItem('platform_job_postings') || '[]');
     const studentJobs = [
@@ -493,22 +451,22 @@ export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         } else if (lowerMessage.includes('profile')) {
           response = `Your student profile shows you're actively seeking opportunities. To improve your chances:\n\n• Keep your skills section updated\n• Add relevant projects to your portfolio\n• Write compelling cover letters\n• Follow up on applications professionally\n\nWould you like specific advice on any of these areas?`;
         } else {
-          response = `As a student on our platform, I can help you with:\n\n• Finding relevant job opportunities\n• Application tracking and status\n• Career guidance and skill development\n• Interview preparation tips\n• Resume optimization\n• Government schemes for students\n\nWhat specific assistance do you need today?`;
+          response = `As a student on our platform, I can help you with:\n\n• Finding relevant job opportunities\n\n• Application tracking and status\n\n• Career guidance and skill development\n\n• Interview preparation tips\n\n• Resume optimization\n\n• Government schemes for students\n\nWhat specific assistance do you need today?`;
         }
       } else if (userInfo.role === 'startup') {
         if (lowerMessage.includes('hiring') || lowerMessage.includes('recruit')) {
           const userActions = dataSyncService.getActionsByUser(userInfo.email);
           const jobPostings = userActions.filter(a => a.action === 'job_posted').length;
-          response = `You've posted ${jobPostings} job(s) so far. Here are some hiring best practices:\n\n• Write clear, detailed job descriptions\n• Specify required skills and experience\n• Offer competitive compensation\n• Respond to applications promptly\n• Provide feedback to candidates\n\nNeed help optimizing your job postings?`;
+          response = `You've posted ${jobPostings} job(s) so far. Here are some hiring best practices:\n\n• Write clear, detailed job descriptions\n\n• Specify required skills and experience\n\n• Offer competitive compensation\n\n• Respond to applications promptly\n\n• Provide feedback to candidates\n\nNeed help optimizing your job postings?`;
         } else if (lowerMessage.includes('funding') || lowerMessage.includes('scheme')) {
-          response = `As a startup, you have access to various funding opportunities:\n\n• T-Hub Incubation Program\n• Telangana State Innovation Cell (TSIC)\n• MSME Development Schemes\n• Angel Tax Exemption\n• Startup India initiatives\n\nI can provide detailed information about eligibility and application processes for any of these schemes.`;
+          response = `As a startup, you have access to various funding opportunities:\n\n• T-Hub Incubation Program\n\n• Telangana State Innovation Cell (TSIC)\n\n• MSME Development Schemes\n\n• Angel Tax Exemption\n\n• Startup India initiatives\n\nI can provide detailed information about eligibility and application processes for any of these schemes.`;
         } else {
-          response = `As a startup on our platform, I can assist you with:\n\n• Posting and managing job openings\n• Reviewing candidate applications\n• Accessing government funding schemes\n• Compliance requirements\n• Hiring best practices\n• Market insights and analytics\n\nWhat would you like to know more about?`;
+          response = `As a startup on our platform, I can assist you with:\n\n• Posting and managing job openings\n\n• Reviewing candidate applications\n\n• Accessing government funding schemes\n\n• Compliance requirements\n\n• Hiring best practices\n\n• Market insights and analytics\n\nWhat would you like to know more about?`;
         }
       } else if (userInfo.role === 'official') {
-        response = `As a government official, I can help you with:\n\n• Managing government schemes and programs\n• Monitoring application processes\n• Tracking scheme effectiveness\n• Policy implementation guidance\n• Startup ecosystem analytics\n• Compliance monitoring\n\nHow can I assist you with your administrative duties today?`;
+        response = `As a government official, I can help you with:\n\n• Managing government schemes and programs\n\n• Monitoring application processes\n\n• Tracking scheme effectiveness\n\n• Policy implementation guidance\n\n• Startup ecosystem analytics\n\n• Compliance monitoring\n\nHow can I assist you with your administrative duties today?`;
       } else {
-        response = `Welcome to our comprehensive career and startup platform! I can help you with:\n\n• Job search and career guidance\n• Startup funding and schemes\n• Application tracking\n• Market insights\n• Skill development advice\n\nPlease let me know what you'd like to explore!`;
+        response = `Welcome to our comprehensive career and startup platform! I can help you with:\n\n• Job search and career guidance\n\n• Startup funding and schemes\n\n• Application tracking\n\n• Market insights\n\n• Skill development advice\n\nPlease let me know what you'd like to explore!`;
       }
 
       return {
