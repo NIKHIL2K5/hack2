@@ -88,7 +88,7 @@ export const NotificationCreationForm = ({ onClose }: NotificationCreationFormPr
         </div>
       </CardHeader>
       <CardContent className="space-y-6 pt-6">
-        <div>
+        <div className="form-spacing">
           <label className="text-gray-800 text-sm font-medium block mb-2">Notification Title</label>
           <Input
             value={messageTitle}
@@ -98,7 +98,7 @@ export const NotificationCreationForm = ({ onClose }: NotificationCreationFormPr
           />
         </div>
         
-        <div>
+        <div className="form-spacing">
           <label className="text-gray-800 text-sm font-medium block mb-2">Message Content</label>
           <Textarea
             value={messageText}
@@ -109,29 +109,22 @@ export const NotificationCreationForm = ({ onClose }: NotificationCreationFormPr
           />
         </div>
         
-        <div>
+        <div className="form-spacing">
           <label className="text-gray-800 text-sm font-medium block mb-3 flex items-center">
             <Users className="w-4 h-4 mr-2 text-blue-600" />
             Target Audience
           </label>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div className="notification-form-grid">
             {audienceOptions.map((audience) => (
-              <Button
+              <button
                 key={audience.id}
-                size="sm"
-                variant={selectedAudience === audience.id ? "default" : "outline"}
+                type="button"
                 onClick={() => setSelectedAudience(audience.id)}
-                className={`justify-start text-left h-auto py-3 px-4 transition-all ${
-                  selectedAudience === audience.id ? 
-                  "bg-blue-600 hover:bg-blue-700 text-white border-blue-600 shadow-md" : 
-                  "bg-white hover:bg-blue-50 text-gray-700 border-gray-300 hover:border-blue-300"
-                }`}
+                className={`audience-button ${selectedAudience === audience.id ? 'selected' : ''}`}
               >
-                <div className="flex flex-col items-start w-full">
-                  <span className="font-medium text-sm">{audience.name}</span>
-                  <span className="text-xs opacity-75">({audience.count} users)</span>
-                </div>
-              </Button>
+                <span className="audience-name">{audience.name}</span>
+                <span className="audience-count">({audience.count} users)</span>
+              </button>
             ))}
           </div>
           {selectedAudienceData && (

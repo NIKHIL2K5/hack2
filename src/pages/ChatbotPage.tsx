@@ -49,6 +49,19 @@ const ChatbotPage = () => {
   const [inputMessage, setInputMessage] = useState("");
   const [language, setLanguage] = useState("english");
 
+  const handleBackNavigation = () => {
+    // Determine where to navigate based on user role
+    if (userInfo.role === 'student') {
+      navigate('/dashboard/student');
+    } else if (userInfo.role === 'startup') {
+      navigate('/dashboard/startup');
+    } else if (userInfo.role === 'official') {
+      navigate('/dashboard/official');
+    } else {
+      navigate('/');
+    }
+  };
+
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
 
@@ -86,19 +99,6 @@ const ChatbotPage = () => {
         timestamp: new Date().toLocaleTimeString()
       };
       setMessages(prev => [...prev, errorMessage]);
-    }
-  };
-
-  const handleBackNavigation = () => {
-    // Determine where to navigate based on user role
-    if (userInfo.role === 'student') {
-      navigate('/dashboard/student');
-    } else if (userInfo.role === 'startup') {
-      navigate('/dashboard/startup');
-    } else if (userInfo.role === 'official') {
-      navigate('/dashboard/official');
-    } else {
-      navigate('/');
     }
   };
 

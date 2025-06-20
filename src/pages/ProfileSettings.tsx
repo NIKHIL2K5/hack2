@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { ArrowLeft, User, Mail, Phone, MapPin, Building2, Save, Edit, X, Upload, Globe, Linkedin, Github } from "lucide-react";
+import { ArrowLeft, User, Mail, Phone, MapPin, Building2, Save, Edit, X, Upload, Globe, Linkedin, Github, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
