@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { UniversalAIChat } from "@/components/ai/UniversalAIChat";
 import Index from "./pages/Index";
 import LoginStudent from "./pages/LoginStudent";
 import LoginStartup from "./pages/LoginStartup";
@@ -17,6 +18,7 @@ import ProfileSettings from "./pages/ProfileSettings";
 import StartupProfileCreator from "./pages/StartupProfileCreator";
 import SchemeManager from "./pages/SchemeManager";
 import StudentList from "./pages/StudentList";
+import ChatbotPage from "./pages/ChatbotPage";
 
 const queryClient = new QueryClient();
 
@@ -40,7 +42,9 @@ const App = () => (
           <Route path="/startup-profile" element={<StartupProfileCreator />} />
           <Route path="/scheme-manager" element={<SchemeManager />} />
           <Route path="/student-list" element={<StudentList />} />
+          <Route path="/chatbot" element={<ChatbotPage />} />
         </Routes>
+        <UniversalAIChat />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
