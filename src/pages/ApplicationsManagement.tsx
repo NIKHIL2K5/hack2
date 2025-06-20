@@ -1,37 +1,16 @@
 
 import { motion } from "framer-motion";
-import { ArrowLeft, Search, Filter, Download, Eye, CheckCircle, XCircle, Clock, FileText, Mail, Calendar } from "lucide-react";
+import { ArrowLeft, Search, Filter, Download, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { Canvas } from "@react-three/fiber";
-import { Float } from "@react-three/drei";
 import { ApplicationStats } from "@/components/official/ApplicationStats";
 import { ApplicationsTable } from "@/components/official/ApplicationsTable";
 import { useOfficialData } from "@/hooks/useOfficialData";
-
-const FloatingShape = ({ position, color, shape = "box" }: any) => (
-  <Float speed={1} rotationIntensity={0.5} floatIntensity={1}>
-    <mesh position={position}>
-      {shape === "box" ? <boxGeometry args={[0.5, 0.5, 0.5]} /> : <sphereGeometry args={[0.3]} />}
-      <meshStandardMaterial color={color} />
-    </mesh>
-  </Float>
-);
-
-const Scene3D = () => (
-  <Canvas camera={{ position: [0, 0, 5] }}>
-    <ambientLight intensity={0.3} />
-    <directionalLight position={[5, 5, 5]} intensity={0.5} />
-    <FloatingShape position={[-2, 1, 0]} color="#3b82f6" shape="box" />
-    <FloatingShape position={[2, -1, 0]} color="#14b8a6" shape="sphere" />
-    <FloatingShape position={[0, 2, -1]} color="#6366f1" shape="box" />
-  </Canvas>
-);
+import { Scene3D } from "@/components/3d/Scene3D";
 
 const ApplicationsManagement = () => {
   const { applications, getApplicationStats } = useOfficialData();
