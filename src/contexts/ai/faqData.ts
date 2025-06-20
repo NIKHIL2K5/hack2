@@ -1,109 +1,146 @@
-
-// FAQ database with role-specific questions and answers
-export const STUDENT_FAQ = {
-  'apply job internship': '**How to Apply for Jobs/Internships:**\n\n➡️ Go to the Job Board, use filters, click "Apply," fill the form, and submit your resume.',
+// FAQ database with comprehensive answers to common questions
+export const FAQ_DATA = {
+  // General Platform Questions
+  'what is govstartup navigator': "GovStartup Navigator is Telangana's unified platform connecting startups, students, and government officials. It streamlines job searching, scheme discovery, compliance tracking, and ecosystem growth through AI-powered tools and analytics.",
   
-  'track application': '**Application Tracking:**\n\n➡️ Yes, use the Application Tracker to see statuses like Applied → Reviewed → Interview → Offer.',
+  'find internships': "To find internships: 1) Go to the Job Board section, 2) Use filters for 'Internship' type positions, 3) Browse listings matching your skills, 4) Click on any listing to view details, and 5) Use the 'Apply Now' button to submit your application.",
   
-  'smart job suggestion': '**Smart Job Suggestions:**\n\n➡️ It analyzes your profile, skills, and past activity to recommend personalized jobs.',
+  'apply for job': "To apply for a job: 1) Find a suitable position on the Job Board, 2) Click 'Apply Now', 3) Fill out the application form with your details, 4) Upload your resume, 5) Write a compelling cover letter, and 6) Submit your application. You'll receive a confirmation email.",
   
-  'upload resume multiple update': '**Resume Management:**\n\n➡️ Yes. Visit your Profile page and upload a new resume anytime.',
+  'track job application': "Track your job applications through the Application Tracker (accessible from your dashboard or via the 'Track Applications' button). It shows real-time status updates for all your applications, including 'Applied', 'Under Review', 'Interview Scheduled', and 'Decision Made'.",
   
-  'verified jobs': '**Job Verification:**\n\n➡️ Yes. All jobs are verified by our team or posted by registered startups.',
+  'upload resume': "To upload your resume: 1) Go to your Profile page by clicking your profile icon, 2) Navigate to the 'Links & Resume' section, 3) Click the 'Upload Resume' button, 4) Select your PDF/DOC file (max 5MB), and 5) Save your changes. Your resume will be stored and used for applications.",
   
-  'save jobs later': '**Save Jobs Feature:**\n\n➡️ Yes. Click "Save Job" and check your saved section under Job Board.',
+  'kyc complete': "KYC (Know Your Customer) verification confirms your identity and legitimacy. To complete it: 1) Go to your Profile settings, 2) Navigate to the 'Verification' tab, 3) Upload required documents (ID proof, address proof, and registration certificates for startups), 4) Submit for verification, and 5) Wait for approval (usually 1-2 business days).",
   
-  'login issues': '**Login Troubleshooting:**\n\n➡️ Try resetting your password. If the issue persists, contact support.',
+  'register startup': "To register your startup: 1) Create an account using your official email, 2) Complete your organization profile with details like registration number and sector, 3) Upload required documents (DPIIT/MSME certificates, GST registration, etc.), 4) Submit for verification, and 5) Once approved, you'll gain access to the full startup dashboard.",
   
-  'delete account': '**Account Deletion:**\n\n➡️ Yes. Go to Profile > Settings and request account deletion.',
+  'check gst verified': "To check if your GST is verified: 1) Go to your Startup Dashboard, 2) Navigate to the 'Compliance Tracker' section, 3) Look for the GST Registration status indicator, 4) Green means verified, Yellow means pending, and Red means action required. You can also see the last verification date and next renewal deadline.",
   
-  'email notifications': '**Email Notifications:**\n\n➡️ Yes. You\'ll receive alerts for interview calls, status changes, and new matches.',
+  'apply government schemes': "To apply for government schemes: 1) Go to your dashboard, 2) Navigate to the 'Schemes' section, 3) Browse available schemes or use filters to find relevant ones, 4) Click on a scheme to view details and eligibility criteria, 5) Click 'Apply Now', 6) Complete the application form with required information, and 7) Submit your application.",
   
-  'telugu language switch': '**Language Switch:**\n\n➡️ Use the toggle in the top-right corner to change between English and Telugu.',
+  'schemes telangana startups': "Telangana offers several schemes for startups including: 1) T-Hub Incubation Program (mentorship and funding up to ₹25 lakhs), 2) TSIC Innovation Challenge (competitions with prizes up to ₹10 lakhs), 3) WE-Hub for women entrepreneurs (funding up to ₹25 lakhs), 4) MSME Development Schemes (subsidies and loans up to ₹1 crore), and 5) Seed Fund Scheme (early-stage funding of ₹20-50 lakhs).",
   
-  'platform free students': '**Platform Cost:**\n\n➡️ Yes. GovStartup Navigator is completely free for students.',
+  'msme compliance': "MSME compliance involves: 1) Valid MSME registration certificate, 2) Timely renewal of registration, 3) Annual financial statement filing, 4) GST registration and returns, 5) Labor law compliance if applicable, and 6) Environmental clearances if required. The Compliance Tracker on your dashboard shows your current status and upcoming deadlines.",
   
-  'contact startup after applying': '**Contacting Startups:**\n\n➡️ Once shortlisted, you\'ll get their contact info or a direct interview link.',
+  'switch language telugu': "To switch to Telugu: 1) Click on the language selector (globe icon) in the top-right corner of any page, 2) Select 'తెలుగు' from the dropdown menu. The entire interface, including menus, buttons, and content will switch to Telugu. You can switch back to English using the same menu.",
   
-  'what kind jobs posted': '**Types of Jobs:**\n\n➡️ Internships, Full-time, Research, and Part-time jobs across tech and non-tech sectors.',
+  'edit profile': "To edit your profile: 1) Click on your profile picture or the User icon in the top-right corner, 2) Select 'Profile Settings', 3) Update your information in the various sections (Personal Info, Professional Info, Links & Resume), 4) Make sure to click 'Update Profile' after making changes to save them.",
   
-  'job board updated': '**Job Board Updates:**\n\n➡️ Daily. New opportunities are added by startups and officials.',
+  'good resume format': "A good resume format includes: 1) Clear contact information at the top, 2) A concise professional summary, 3) Skills section with relevant keywords, 4) Experience section with bullet points highlighting achievements, 5) Education details, and 6) Additional sections like certifications or projects. Keep it to 1-2 pages with consistent formatting and use action verbs.",
   
-  'feedback profile': '**Profile Feedback:**\n\n➡️ Yes. Use the AI assistant or ask mentors for suggestions via chatbot.',
+  'apply multiple jobs': "Yes, you can apply for multiple jobs! There's no limit to how many positions you can apply for. Each application is tracked separately in your Application Tracker. We recommend tailoring your resume and cover letter for each position to increase your chances of success.",
   
-  'application history': '**Application History:**\n\n➡️ Yes, the Application Tracker maintains all your past job records.',
+  'job remote onsite': "To know if a job is remote or on-site: 1) Check the job listing details where the location information is displayed, 2) Look for tags like 'Remote', 'On-site', or 'Hybrid', 3) If not explicitly stated, check the 'Location' field - physical addresses indicate on-site work, 4) You can also filter jobs by work mode using the filters on the Job Board.",
   
-  'export application data': '**Data Export:**\n\n➡️ Not yet, but we are working on a PDF download feature.',
+  'minimum stipend': "There is no platform-enforced minimum stipend, but most internships offer between ₹10,000-₹25,000 per month, while entry-level positions typically start from ₹25,000 per month. You can use the salary filter on the Job Board to find opportunities matching your compensation requirements.",
   
-  'improve selection chances': '**Improve Selection Chances:**\n\n➡️ Fill your profile completely, upload a clean resume, and tailor your cover letters.',
+  'skills ai internships': "For AI internships, the most sought-after skills include: 1) Programming in Python, 2) Machine Learning frameworks (TensorFlow, PyTorch), 3) Data preprocessing and analysis, 4) Understanding of neural networks and deep learning concepts, 5) Natural Language Processing, 6) Computer Vision, 7) Mathematics (statistics, linear algebra), and 8) Problem-solving abilities.",
   
-  'resume template': '**Resume Templates:**\n\n➡️ Yes, visit the Resources section for resume samples and templates.',
+  'application tracker': "The Application Tracker is accessible from your dashboard via the 'Track Applications' button or directly at /application-tracker. It provides a comprehensive view of all your job applications, their current status, timeline of events, and next steps. You can also see interviewer feedback when available.",
   
-  'ai career guidance': '**AI Career Guidance:**\n\n➡️ Yes. Our AI assistant is trained to give basic guidance and tips.'
+  'stages application status': "The different stages in application status are: 1) Applied - initial submission received, 2) Under Review - your application is being evaluated, 3) Shortlisted - selected for next steps, 4) Interview Scheduled - time set for interview, 5) Interview Completed - awaiting decision, 6) Offer Extended - you've been selected, 7) Accepted/Rejected - final outcome, and 8) Onboarding - post-acceptance process.",
+  
+  'report issue job': "To report an issue with a job: 1) Navigate to the job listing, 2) Click the 'Report' or flag icon usually located near the job title, 3) Select the issue type (suspicious, misleading, inappropriate, etc.), 4) Provide details about the problem, and 5) Submit your report. Our team will review it promptly.",
+  
+  'delete account': "To delete your account: 1) Go to Profile Settings, 2) Scroll to the bottom and find the 'Account Management' section, 3) Click 'Delete Account', 4) Confirm your decision by entering your password, 5) Select a reason for leaving (optional), and 6) Click 'Permanently Delete'. Note that this action cannot be undone and all your data will be removed.",
+  
+  'save jobs later': "Yes, you can save jobs for later! On any job listing, click the bookmark icon to save it. Access your saved jobs through the Saved Jobs widget that appears at the bottom-right of your dashboard. This feature helps you keep track of interesting opportunities without immediately applying.",
+  
+  'view applied jobs': "To view your applied jobs: 1) Go to your dashboard, 2) Click on 'My Applications' button, or 3) Navigate directly to /my-applications. This page shows all jobs you've applied for, along with their status, application date, and company information.",
+  
+  'cover letter need': "A cover letter is a personalized document explaining why you're a good fit for a specific position. While not always mandatory, it significantly improves your chances of getting noticed. It should highlight relevant skills, explain your interest in the role, and demonstrate how you can add value to the organization. Keep it concise (250-400 words) and tailored to each application.",
+  
+  'view feedback': "To view feedback on your applications: 1) Go to the Application Tracker, 2) Select the application you want to check, 3) Look for the 'Feedback' section which appears once the employer provides comments. Not all employers provide detailed feedback, but when available, it can offer valuable insights for improvement.",
+  
+  'green yellow red tags analytics': "In analytics, color tags indicate status levels: Green tags represent positive metrics, successful outcomes, or completed tasks. Yellow tags indicate caution, pending items, or metrics that need attention. Red tags highlight critical issues, failed processes, or metrics below acceptable thresholds. These visual indicators help quickly identify areas requiring attention.",
+  
+  'download application history': "To download your application history: 1) Go to the Application Tracker, 2) Look for the 'Export' or 'Download' button (usually in the top-right corner), 3) Select your preferred format (PDF or CSV), 4) Click 'Download'. The file will contain details of all your applications, including status, timeline, and company information.",
+  
+  'sentiment analysis': "Sentiment analysis uses AI to analyze feedback and comments to determine if they're positive, negative, or neutral. On this platform, it helps officials understand user satisfaction, identify pain points, and improve services. For startups, it provides insights into applicant experiences and platform perception. The system automatically tags feedback with sentiment indicators for easy filtering and analysis.",
+  
+  'get help official': "To get help from an official: 1) Use the 'Contact Support' option in the footer menu, 2) Select 'Request Official Assistance' from the dropdown, 3) Specify your query category and details, 4) Submit your request. You'll receive a ticket number and officials typically respond within 1-2 business days. For urgent matters, use the emergency contact information provided.",
+  
+  'jobs updated': "Jobs are updated in real-time as soon as employers post them. New opportunities appear immediately on the Job Board. Most employers post new positions on weekdays, with Tuesday and Wednesday being the most active days. You can set up job alerts to be notified when new positions matching your criteria are posted.",
+  
+  'types jobs posted': "The platform hosts various job types including: 1) Internships (3-6 months), 2) Full-time positions, 3) Part-time roles, 4) Contract work, 5) Remote opportunities, 6) Research positions, 7) Government roles, and 8) Freelance projects. Each listing clearly indicates the job type, and you can filter by these categories on the Job Board.",
+  
+  'job location filter': "The job location filter allows you to narrow down opportunities by geographic area. You can select specific districts in Telangana (like Hyderabad, Warangal, etc.) or choose 'Remote' for location-independent work. This helps you find positions within your preferred commuting distance or in areas where you plan to relocate.",
+  
+  'startup compliance status': "To view startup compliance status: 1) Go to the Startup Dashboard, 2) Navigate to the 'Compliance Tracker' section, 3) You'll see a comprehensive overview of all compliance requirements with color-coded status indicators (green for compliant, yellow for pending, red for overdue). Each item includes deadlines, required actions, and document upload options.",
+  
+  'job fake': "If you suspect a job is fake: 1) Click the 'Report' button on the job listing, 2) Select 'Suspicious or Fraudulent Job' as the reason, 3) Provide details about why you think it's fake, 4) Submit the report. Our team will investigate promptly. Meanwhile, be cautious of jobs requiring payment, requesting sensitive information, or offering unrealistic compensation.",
+  
+  'chatbot do': "The chatbot (Sethu) provides instant assistance with: 1) Answering platform-related questions, 2) Helping with job searches and applications, 3) Providing guidance on government schemes, 4) Offering career advice and resume tips, 5) Assisting with compliance requirements, 6) Troubleshooting common issues, and 7) Connecting you with human support when needed. It's available 24/7 and becomes more personalized as you interact with it.",
+  
+  'talk chatbot': "To talk to the chatbot: 1) Click the chat icon in the bottom-right corner of any page, 2) Type your question or request in the message box, 3) Press Enter or click the Send button. You can also upload images for analysis by clicking the attachment icon. The chatbot responds instantly and maintains context throughout your conversation.",
+  
+  'speak telugu ai': "Yes, you can speak Telugu to the AI! To do so: 1) Open the chatbot, 2) Click the language selector (globe icon) and choose 'తెలుగు', 3) Type or speak your questions in Telugu. The AI will respond in Telugu and understand Telugu queries. You can switch back to English anytime using the same language selector.",
+  
+  'create portfolio': "To create a portfolio: 1) Go to your Profile Settings, 2) Navigate to the 'Links & Resume' section, 3) Add your portfolio URL if you already have one, or 4) Use our built-in portfolio creator by clicking 'Create New Portfolio', 5) Add projects, skills, and work samples, 6) Customize the design and layout, 7) Publish your portfolio and share the link with potential employers.",
+  
+  'add certificates profile': "Yes, you can add certificates to your profile! 1) Go to Profile Settings, 2) Navigate to the 'Certifications' section, 3) Click 'Add Certificate', 4) Enter details like certificate name, issuing organization, date, and credential ID, 5) Upload an image of your certificate (optional), 6) Add a URL link if available, 7) Save changes. Certificates will be visible to employers viewing your profile.",
+  
+  'deadline applications': "Application deadlines are set by employers and clearly displayed on each job listing. Once a deadline passes, the 'Apply' button is replaced with 'Deadline Passed' and you can no longer submit applications. Some employers may extend deadlines, which will be reflected in the listing with an 'Extended' tag.",
+  
+  'in review mean': "'In Review' status means your application has been received and is currently being evaluated by the employer. During this stage, hiring managers are reviewing your resume, cover letter, and other submitted materials to determine if you're a good fit for the position. This process typically takes 1-2 weeks, but can vary depending on the company and position.",
+  
+  'startups post job': "Startups can post jobs by: 1) Logging into their Startup Dashboard, 2) Clicking the 'Post New Job' button, 3) Filling out the job details form (title, description, requirements, etc.), 4) Setting application parameters (deadline, required documents), 5) Reviewing and publishing the listing. The job will immediately appear on the platform for students to view and apply.",
+  
+  'startups chat applicants': "Yes, startups can chat with applicants after they've been shortlisted. From the Applications Management page, select a candidate and click 'Message' to start a conversation. This built-in messaging system keeps all communication secure and organized within the platform, eliminating the need for external email exchanges during initial screening.",
+  
+  'heatmap dashboard': "The heatmap in the dashboard visualizes data density across Telangana's districts. For officials, it shows startup activity, job creation, and scheme utilization. For startups, it displays talent availability and competitor density. For students, it indicates job opportunity concentration. Darker colors represent higher activity or density in that region.",
+  
+  'get sentiment feedback users': "To get sentiment feedback from users: 1) Go to the Feedback section in your dashboard, 2) Create a new feedback request by clicking 'Request Feedback', 3) Select the target audience and customize questions, 4) Send the request to users via email or in-app notification. The system automatically analyzes responses using sentiment analysis and provides visual reports of positive, neutral, and negative feedback.",
+  
+  'export job data': "To export job data: 1) Go to your dashboard, 2) Navigate to the Jobs or Applications section, 3) Look for the 'Export' or 'Download' button (usually represented by a download icon), 4) Select your preferred format (CSV, Excel, or PDF), 5) Choose what data to include, 6) Click 'Export'. The file will be generated and downloaded to your device.",
+  
+  'difference intern full time': "The key differences between internships and full-time positions are: 1) Duration - internships typically last 3-6 months while full-time positions are ongoing, 2) Purpose - internships focus on learning and skill development while full-time roles expect productivity and results, 3) Compensation - internships usually offer stipends while full-time positions provide salaries and benefits, 4) Responsibilities - interns have limited responsibilities while full-time employees have comprehensive duties.",
+  
+  'chatgpt powered assistant': "The ChatGPT-powered assistant (Sethu) is an AI tool that provides personalized guidance across the platform. It uses advanced natural language processing to understand your queries, offer tailored advice, answer questions, and help navigate features. It's continuously learning from interactions to improve its responses and can assist with everything from job searches to compliance requirements to scheme applications.",
+  
+  'reset password': "To reset your password: 1) Go to the login page, 2) Click 'Forgot Password' below the login form, 3) Enter your registered email address, 4) Check your email for a password reset link, 5) Click the link and create a new password (must be at least 8 characters with a mix of letters, numbers, and symbols), 6) Log in with your new password. For security, reset links expire after 24 hours."
 };
 
-export const STARTUP_FAQ = {
-  'post job internship': '**Posting Jobs:**\n\n➡️ Click "Post Job" in your dashboard and fill out the form.',
+// Function to find the best matching answer for a question
+export const findFAQAnswer = (question: string): string | null => {
+  if (!question) return null;
   
-  'see applicants': '**View Applicants:**\n\n➡️ Go to "Applications" under the Job section to view candidates and resumes.',
+  const normalizedQuestion = question.toLowerCase().trim();
   
-  'compliance checklist': '**Compliance Checklist:**\n\n➡️ Yes, use the Compliance Tracker in your dashboard to track legal requirements.',
+  // Direct match first
+  for (const [key, answer] of Object.entries(FAQ_DATA)) {
+    if (normalizedQuestion.includes(key)) {
+      return answer;
+    }
+  }
   
-  'edit remove job posting': '**Edit/Remove Jobs:**\n\n➡️ Click on the posted job and select Edit or Delete from the options.',
+  // Keyword matching for more flexible matching
+  const questionWords = normalizedQuestion.split(/\s+/);
   
-  'track startup performance': '**Performance Tracking:**\n\n➡️ Yes, see analytics and stats in your Startup Insights widget.',
+  // Score each FAQ entry based on matching keywords
+  const scores = Object.entries(FAQ_DATA).map(([key, answer]) => {
+    const keyWords = key.split(/\s+/);
+    let score = 0;
+    
+    // Count matching words
+    for (const word of questionWords) {
+      if (word.length <= 2) continue; // Skip very short words
+      if (keyWords.some(kw => kw.includes(word) || word.includes(kw))) {
+        score += 1;
+      }
+    }
+    
+    return { key, answer, score };
+  });
   
-  'chatbot discover schemes': '**Discover Schemes:**\n\n➡️ Ask it things like "Show me MSME schemes for food startups."',
+  // Sort by score and get the best match
+  scores.sort((a, b) => b.score - a.score);
   
-  'chatbot multilingual': '**Multilingual Support:**\n\n➡️ Yes. It works in English and Telugu.',
+  // Return the best match if it has a reasonable score (at least 2 matching keywords)
+  if (scores.length > 0 && scores[0].score >= 2) {
+    return scores[0].answer;
+  }
   
-  'complete compliance faster': '**Faster Compliance:**\n\n➡️ Follow the visual checklist, and you\'ll get automated alerts and suggestions.',
-  
-  'upload company documents': '**Document Upload:**\n\n➡️ Yes. Go to Profile > Uploads and submit GST, MSME, PAN, etc.',
-  
-  'sentiment analysis work': '**Sentiment Analysis:**\n\n➡️ We use AI to analyze feedback and assign sentiment tags like Positive/Negative.',
-  
-  'contact shortlisted students': '**Contact Students:**\n\n➡️ Yes. You\'ll receive contact info once you shortlist or schedule interviews.',
-  
-  'pay post jobs': '**Posting Fees:**\n\n➡️ No. It\'s free for verified startups under Telangana Govt. programs.',
-  
-  'startup data secure': '**Data Security:**\n\n➡️ We use secure encrypted storage and token-based access.',
-  
-  'post telugu': '**Telugu Posting:**\n\n➡️ Yes. Use the language toggle when creating your job or scheme.',
-  
-  'track applications status': '**Application Status:**\n\n➡️ Yes. You\'ll see a progress bar showing how many students applied, are shortlisted, etc.'
-};
-
-export const OFFICIAL_FAQ = {
-  'add new scheme': '**Add Scheme:**\n\n➡️ Go to Scheme Management and click "Add Scheme."',
-  
-  'edit delete schemes': '**Edit/Delete Schemes:**\n\n➡️ Yes. Click on any scheme to edit or remove it.',
-  
-  'monitor startups': '**Startup Monitoring:**\n\n➡️ Visit the Startup Monitoring Table for a list of all registered startups with KYC status.',
-  
-  'heatmap show': '**Heatmap Information:**\n\n➡️ It visualizes startup activity and job stats across Telangana districts.',
-  
-  'sentiment analysis help': '**Sentiment Analysis Benefits:**\n\n➡️ It flags feedback trends to help you improve schemes and services.',
-  
-  'export startup job data': '**Data Export:**\n\n➡️ Yes. Go to Analytics and click "Export CSV."',
-  
-  'verify startup compliance': '**Compliance Verification:**\n\n➡️ Check the Compliance Tracker for document status and alerts.',
-  
-  'switch language telugu': '**Language Switch:**\n\n➡️ Yes. Use the toggle at the top of your dashboard.',
-  
-  'assign mentor startups': '**Mentor Assignment:**\n\n➡️ Currently manual; a future update will allow assigning mentors via the dashboard.',
-  
-  'contact startups directly': '**Contact Startups:**\n\n➡️ Yes. You\'ll find contact details in their profile section.'
-};
-
-export const GENERAL_FAQ = {
-  'what govstartup navigator': '**About GovStartup Navigator:**\n\n➡️ It\'s a unified platform connecting students, startups, and officials in Telangana for jobs, internships, and innovation.',
-  
-  'data safe secure': '**Data Safety:**\n\n➡️ Yes. We use secure authentication, encrypted storage, and token-based access.',
-  
-  'change role signup': '**Role Changes:**\n\n➡️ No, but you can create a new account or request role change via support.',
-  
-  'contact support': '**Support Contact:**\n\n➡️ Click "Help" or use the chatbot to raise a support request.',
-  
-  'platform expand states': '**Platform Expansion:**\n\n➡️ Yes. Telangana is the pilot, but expansion is planned for other regions.'
+  return null;
 };

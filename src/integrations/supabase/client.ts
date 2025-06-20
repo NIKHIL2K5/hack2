@@ -19,6 +19,20 @@ const mockSupabase = {
       if (functionName === 'chat-with-ai') {
         const { message, userRole, userName } = options.body;
         
+        // Try to find a matching FAQ answer first
+        try {
+          // Dynamically import to avoid circular dependencies
+          const { findFAQAnswer } = await import('../contexts/ai/faqData');
+          const faqAnswer = findFAQAnswer(message);
+          
+          if (faqAnswer) {
+            return { data: { content: faqAnswer } };
+          }
+        } catch (error) {
+          console.error("Error importing FAQ data:", error);
+        }
+        
+        // Fallback to generic responses if no FAQ match
         let response = `Hi ${userName || 'there'}! I'm Sethu, your AI assistant. `;
         
         if (message.toLowerCase().includes("job")) {

@@ -3,6 +3,7 @@ import { AnimatePresence } from 'framer-motion';
 import { useEnhancedAI } from '@/contexts/EnhancedAIContext';
 import { ChatToggleButton } from './chat/ChatToggleButton';
 import { ChatWindow } from './chat/ChatWindow';
+import { findFAQAnswer } from '@/contexts/ai/faqData';
 
 interface Message {
   id: number;
@@ -63,7 +64,7 @@ export const UniversalAIChat: React.FC = () => {
     const userMessage: Message = {
       id: messages.length + 1,
       text: inputMessage || (selectedImage ? `[Shared image: ${selectedImage.name}]` : ''),
-      sender: 'user',
+      sender: "user",
       timestamp: new Date().toLocaleTimeString(),
       image: selectedImage || undefined,
       imageName: selectedImage?.name
@@ -77,25 +78,42 @@ export const UniversalAIChat: React.FC = () => {
     setSelectedImage(null);
 
     try {
-      const currentPage = window.location.pathname;
-      const context = `Current page: ${currentPage}, User role: ${userRole}`;
-      const aiResponse = await askEnhancedAI(currentMessage, context, currentImage || undefined);
+      // First check if we have a direct FAQ match
+      const faqAnswer = findFAQAnswer(currentMessage);
       
-      const aiMessage: Message = {
-        id: messages.length + 2,
-        text: aiResponse.content,
-        sender: 'ai',
-        timestamp: new Date().toLocaleTimeString(),
-        responseData: aiResponse
-      };
+      if (faqAnswer) {
+        // If we have a direct FAQ match, use it
+        const aiMessage: Message = {
+          id: messages.length + 2,
+          text: faqAnswer,
+          sender: "ai",
+          timestamp: new Date().toLocaleTimeString(),
+          responseData: { type: 'text', content: faqAnswer }
+        };
+        
+        setMessages(prev => [...prev, aiMessage]);
+      } else {
+        // Otherwise, use the AI service
+        const currentPage = window.location.pathname;
+        const context = `Current page: ${currentPage}, User role: ${userRole}`;
+        const aiResponse = await askEnhancedAI(currentMessage, context, currentImage || undefined);
+        
+        const aiMessage: Message = {
+          id: messages.length + 2,
+          text: aiResponse.content,
+          sender: "ai",
+          timestamp: new Date().toLocaleTimeString(),
+          responseData: aiResponse
+        };
 
-      setMessages(prev => [...prev, aiMessage]);
+        setMessages(prev => [...prev, aiMessage]);
+      }
     } catch (error) {
       console.error("AI Chat Error:", error);
       const errorMessage: Message = {
         id: messages.length + 2,
         text: "I apologize, but I'm having trouble processing your request right now. Please try again, and I'll do my best to provide comprehensive assistance.",
-        sender: 'ai',
+        sender: "ai",
         timestamp: new Date().toLocaleTimeString()
       };
       setMessages(prev => [...prev, errorMessage]);
