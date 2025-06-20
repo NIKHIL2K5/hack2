@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FileText, User, Eye, Briefcase, AlertCircle, Calendar, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -12,6 +11,7 @@ import { JobSearchFilters } from "@/components/student/JobSearchFilters";
 import { JobCard } from "@/components/student/JobCard";
 import { StudentProfileModal } from "@/components/student/StudentProfileModal";
 import { JobApplicationModal } from "@/components/student/JobApplicationModal";
+import { saveUserData, loadUserData } from "@/utils/userStorage";
 
 const DashboardStudent = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -41,7 +41,7 @@ const DashboardStudent = () => {
     resumeFile: null
   });
 
-  // Enhanced student profile data - no prefilled data
+  // Enhanced student profile data - will be loaded from storage
   const [profile, setProfile] = useState({
     name: "",
     email: "",
@@ -59,8 +59,8 @@ const DashboardStudent = () => {
     joinedDate: "2024-01-15"
   });
 
-  // Applied jobs data
-  const [appliedJobs] = useState([
+  // Applied jobs data - will be loaded from storage
+  const [appliedJobs, setAppliedJobs] = useState([
     {
       id: 1,
       title: "Frontend Developer Intern",
@@ -96,7 +96,175 @@ const DashboardStudent = () => {
     }
   ]);
 
-  // Expanded jobs data with more locations
+  // Load user data on component mount
+  useEffect(() => {
+    const savedUserData = loadUserData();
+    if (savedUserData) {
+      setProfile({
+        name: savedUserData.name || "",
+        email: savedUserData.email || "",
+        phone: savedUserData.phone || "",
+        location: savedUserData.location || "",
+        skills: savedUserData.skills || [],
+        education: savedUserData.education || "",
+        experience: savedUserData.experience || "",
+        resume: "",
+        bio: savedUserData.bio || "",
+        profilePicture: "",
+        portfolioUrl: savedUserData.portfolioUrl || "",
+        githubUrl: savedUserData.githubUrl || "",
+        linkedinUrl: savedUserData.linkedinUrl || "",
+        joinedDate: "2024-01-15"
+      });
+      
+      if (savedUserData.appliedJobs && savedUserData.appliedJobs.length > 0) {
+        setAppliedJobs(savedUserData.appliedJobs);
+      }
+      
+      toast.success(`Welcome back, ${savedUserData.name || 'User'}!`);
+    }
+  }, []);
+
+  // Filter jobs based on search criteria
+  const filteredJobs = jobs.filter(job => {
+    const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         job.company.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesLocation = !locationFilter || job.location.toLowerCase().includes(locationFilter.toLowerCase());
+    const matchesSkill = !skillFilter || job.skills.some(skill => 
+      skill.toLowerCase().includes(skillFilter.toLowerCase())
+    );
+    
+    return matchesSearch && matchesLocation && matchesSkill;
+  });
+
+  const handleApplyJob = (job) => {
+    setSelectedJob(job);
+    setShowJobApplication(true);
+  };
+
+  const handleInputChange = (field, value) => {
+    setApplicationData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    setApplicationData(prev => ({
+      ...prev,
+      resumeFile: file
+    }));
+  };
+
+  const handleSubmitApplication = (e) => {
+    e.preventDefault();
+    
+    // Basic validation
+    if (!applicationData.fullName || !applicationData.email || !applicationData.phone) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+    
+    if (!applicationData.coverLetter) {
+      toast.error("Cover letter is required");
+      return;
+    }
+
+    // Add new application to the list
+    const newApplication = {
+      id: appliedJobs.length + 1,
+      title: selectedJob.title,
+      company: selectedJob.company,
+      appliedDate: new Date().toISOString().split('T')[0],
+      status: "Under Review",
+      statusColor: "bg-yellow-100 text-yellow-800",
+      icon: AlertCircle,
+      location: selectedJob.location,
+      stipend: selectedJob.stipend
+    };
+
+    const updatedAppliedJobs = [...appliedJobs, newApplication];
+    setAppliedJobs(updatedAppliedJobs);
+
+    // Save to localStorage
+    const currentUserData = loadUserData() || {
+      name: profile.name,
+      email: profile.email,
+      phone: profile.phone,
+      location: profile.location,
+      skills: profile.skills,
+      education: profile.education,
+      experience: profile.experience,
+      bio: profile.bio,
+      portfolioUrl: profile.portfolioUrl,
+      githubUrl: profile.githubUrl,
+      linkedinUrl: profile.linkedinUrl,
+      appliedJobs: [],
+      lastLogin: new Date().toISOString()
+    };
+
+    saveUserData({
+      ...currentUserData,
+      appliedJobs: updatedAppliedJobs
+    });
+
+    toast.success(`Application submitted successfully for ${selectedJob.title}!`);
+    setShowJobApplication(false);
+    setSelectedJob(null);
+    
+    // Reset form
+    setApplicationData({
+      fullName: "",
+      email: "",
+      phone: "",
+      location: "",
+      education: "",
+      experience: "",
+      skills: "",
+      coverLetter: "",
+      portfolioUrl: "",
+      githubUrl: "",
+      linkedinUrl: "",
+      expectedSalary: "",
+      availableFrom: "",
+      workMode: "hybrid",
+      additionalInfo: "",
+      resumeFile: null
+    });
+  };
+
+  const handleUpdateProfile = (e) => {
+    e.preventDefault();
+    
+    // Save profile data to localStorage
+    const userData = {
+      name: profile.name,
+      email: profile.email,
+      phone: profile.phone,
+      location: profile.location,
+      skills: profile.skills,
+      education: profile.education,
+      experience: profile.experience,
+      bio: profile.bio,
+      portfolioUrl: profile.portfolioUrl,
+      githubUrl: profile.githubUrl,
+      linkedinUrl: profile.linkedinUrl,
+      appliedJobs: appliedJobs,
+      lastLogin: new Date().toISOString()
+    };
+
+    saveUserData(userData);
+    toast.success("Profile updated successfully!");
+    setShowProfile(false);
+  };
+
+  const stats = [
+    { title: "Applications Sent", value: appliedJobs.length.toString(), icon: FileText },
+    { title: "Jobs Viewed", value: "45", icon: Eye },
+    { title: "Profile Views", value: "23", icon: User }
+  ];
+
   const jobs = [
     {
       id: 1,
@@ -219,89 +387,6 @@ const DashboardStudent = () => {
       type: "Full-time"
     }
   ];
-
-  const stats = [
-    { title: "Applications Sent", value: appliedJobs.length.toString(), icon: FileText },
-    { title: "Jobs Viewed", value: "45", icon: Eye },
-    { title: "Profile Views", value: "23", icon: User }
-  ];
-
-  // Filter jobs based on search criteria
-  const filteredJobs = jobs.filter(job => {
-    const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         job.company.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesLocation = !locationFilter || job.location.toLowerCase().includes(locationFilter.toLowerCase());
-    const matchesSkill = !skillFilter || job.skills.some(skill => 
-      skill.toLowerCase().includes(skillFilter.toLowerCase())
-    );
-    
-    return matchesSearch && matchesLocation && matchesSkill;
-  });
-
-  const handleApplyJob = (job) => {
-    setSelectedJob(job);
-    setShowJobApplication(true);
-  };
-
-  const handleInputChange = (field, value) => {
-    setApplicationData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    setApplicationData(prev => ({
-      ...prev,
-      resumeFile: file
-    }));
-  };
-
-  const handleSubmitApplication = (e) => {
-    e.preventDefault();
-    
-    // Basic validation
-    if (!applicationData.fullName || !applicationData.email || !applicationData.phone) {
-      toast.error("Please fill in all required fields");
-      return;
-    }
-    
-    if (!applicationData.coverLetter) {
-      toast.error("Cover letter is required");
-      return;
-    }
-
-    toast.success(`Application submitted successfully for ${selectedJob.title}!`);
-    setShowJobApplication(false);
-    setSelectedJob(null);
-    
-    // Reset form
-    setApplicationData({
-      fullName: "",
-      email: "",
-      phone: "",
-      location: "",
-      education: "",
-      experience: "",
-      skills: "",
-      coverLetter: "",
-      portfolioUrl: "",
-      githubUrl: "",
-      linkedinUrl: "",
-      expectedSalary: "",
-      availableFrom: "",
-      workMode: "hybrid",
-      additionalInfo: "",
-      resumeFile: null
-    });
-  };
-
-  const handleUpdateProfile = (e) => {
-    e.preventDefault();
-    toast.success("Profile updated successfully!");
-    setShowProfile(false);
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-neutral-100 to-neutral-200">

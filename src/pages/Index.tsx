@@ -80,14 +80,7 @@ const Index = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <motion.div
-              animate={{ 
-                rotate: [0, 5, 0, -5, 0],
-                scale: [1, 1.02, 1]
-              }}
-              transition={{ duration: 6, repeat: Infinity }}
-              className="inline-flex items-center mb-8"
-            >
+            <div className="inline-flex items-center mb-8">
               <Sparkles className="w-8 h-8 text-yellow-500 mr-4" />
               <h1 className="text-6xl md:text-7xl font-bold text-gray-900 leading-tight">
                 Empowering{" "}
@@ -97,7 +90,7 @@ const Index = () => {
                 {" "}in Telangana
               </h1>
               <Sparkles className="w-8 h-8 text-yellow-500 ml-4" />
-            </motion.div>
+            </div>
             
             <motion.p 
               initial={{ opacity: 0 }}
