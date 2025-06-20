@@ -1,7 +1,7 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Building2, Plus, Users, FileText, Bot, Settings, LogOut, Briefcase, CheckCircle } from "lucide-react";
+import { Building2, Plus, Users, FileText, Bot, Settings, LogOut, Briefcase, CheckCircle, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
@@ -10,6 +10,7 @@ import { useOfficialData } from "@/hooks/useOfficialData";
 import { Scene3D } from "@/components/3d/Scene3D";
 import { JobPostingModal } from "@/components/official/JobPostingModal";
 import { JobManagement } from "@/components/official/JobManagement";
+import { StartupProfile } from "@/components/official/StartupProfile";
 
 const DashboardStartup = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -95,6 +96,7 @@ const DashboardStartup = () => {
         <div className="flex space-x-4 mb-6">
           {[
             { id: "overview", label: "Overview" },
+            { id: "profile", label: "Profile", icon: User },
             { id: "jobs", label: "Job Postings" },
             { id: "applications", label: "Applications" }
           ].map((tab) => (
@@ -103,12 +105,13 @@ const DashboardStartup = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+              className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center ${
                 activeTab === tab.id
                   ? "bg-gradient-to-r from-blue-500 to-teal-500 text-white"
                   : "bg-white/10 text-white/70 hover:bg-white/20"
               }`}
             >
+              {tab.icon && <tab.icon className="w-4 h-4 mr-2" />}
               {tab.label}
             </motion.button>
           ))}
@@ -222,6 +225,18 @@ const DashboardStartup = () => {
               </Card>
             </motion.div>
           </>
+        )}
+
+        {activeTab === "profile" && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <StartupProfile 
+              userEmail={officialUser?.email || ''} 
+              organizationName={officialUser?.organization.name || 'Unknown Organization'} 
+            />
+          </motion.div>
         )}
 
         {activeTab === "jobs" && (

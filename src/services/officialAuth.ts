@@ -121,12 +121,22 @@ export const OFFICIAL_ORGANIZATIONS: OfficialOrganization[] = [
 ];
 
 export const isValidOfficialEmail = (email: string): boolean => {
+  // First check if email ends with "org.in"
+  if (!email.toLowerCase().endsWith('org.in')) {
+    return false;
+  }
+  
+  // Then check if it's in the allowed organizations list
   return OFFICIAL_ORGANIZATIONS.some(org => 
     org.allowedEmails.includes(email.toLowerCase())
   );
 };
 
 export const getOrganizationByEmail = (email: string): OfficialOrganization | null => {
+  if (!isValidOfficialEmail(email)) {
+    return null;
+  }
+  
   return OFFICIAL_ORGANIZATIONS.find(org => 
     org.allowedEmails.includes(email.toLowerCase())
   ) || null;

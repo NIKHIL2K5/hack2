@@ -40,8 +40,21 @@ const LoginStartup = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Validate that email ends with "org.in"
+    if (!formData.email.toLowerCase().endsWith('org.in')) {
+      toast.error("Only official organization emails ending with 'org.in' are allowed!");
+      return;
+    }
+
     if (!isLogin && formData.password !== formData.confirmPassword) {
       toast.error("Passwords don't match!");
+      return;
+    }
+
+    // Check if email is from an allowed organization
+    const { isValidOfficialEmail } = require('@/services/officialAuth');
+    if (!isValidOfficialEmail(formData.email)) {
+      toast.error("This email is not registered as an official organization partner. Please contact support if you believe this is an error.");
       return;
     }
 
@@ -129,6 +142,9 @@ const LoginStartup = () => {
               <p className="text-white/80 text-lg">
                 {isLogin ? "Sign in to your startup dashboard" : "Create your startup founder account"}
               </p>
+              <p className="text-yellow-300 text-sm mt-2 font-medium">
+                Only official organization emails ending with "org.in" are accepted
+              </p>
             </CardHeader>
             
             <CardContent className="space-y-6 px-8 pb-8">
@@ -168,17 +184,20 @@ const LoginStartup = () => {
                 )}
                 
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-white font-medium">Email</Label>
+                  <Label htmlFor="email" className="text-white font-medium">Official Email</Label>
                   <motion.div whileFocus={{ scale: 1.02 }}>
                     <Input 
                       id="email" 
                       type="email" 
                       value={formData.email}
                       onChange={handleInputChange}
-                      placeholder="founder@startup.com" 
+                      placeholder="founder@company.org.in" 
                       className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-blue-400 focus:ring-blue-400/50 h-12 text-lg"
                     />
                   </motion.div>
+                  <p className="text-xs text-yellow-200 mt-1">
+                    Must end with "org.in" and be from a registered organization
+                  </p>
                 </div>
                 
                 <div className="space-y-2">
