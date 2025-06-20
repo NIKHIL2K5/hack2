@@ -409,7 +409,7 @@ export const RoleManagement = () => {
                         </div>
                         <div className="flex-1 min-w-0">
                           <h4 className="text-white font-medium text-sm truncate">{user.name}</h4>
-                          <Badge className={getStatusColor(user.status)} size="sm">
+                          <Badge className={getStatusColor(user.status)}>
                             {user.status}
                           </Badge>
                         </div>
