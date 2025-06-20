@@ -48,10 +48,6 @@ const DashboardStartup = () => {
     toast.success("Job posting form opened!");
   };
 
-  const handleViewApplications = () => {
-    toast.info("Viewing applications...");
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-teal-900 text-white">
       {/* 3D Background */}
@@ -157,15 +153,14 @@ const DashboardStartup = () => {
             </Button>
           </motion.div>
           
-          <motion.div whileHover={{ scale: 1.02 }}>
-            <Button
-              onClick={handleViewApplications}
-              className="w-full h-20 bg-gradient-to-r from-teal-500 to-teal-700 hover:from-teal-600 hover:to-teal-800 text-white text-lg font-semibold"
-            >
-              <Users className="w-6 h-6 mr-3" />
-              View Applications
-            </Button>
-          </motion.div>
+          <Link to="/applications">
+            <motion.div whileHover={{ scale: 1.02 }}>
+              <Button className="w-full h-20 bg-gradient-to-r from-teal-500 to-teal-700 hover:from-teal-600 hover:to-teal-800 text-white text-lg font-semibold">
+                <Users className="w-6 h-6 mr-3" />
+                View Applications
+              </Button>
+            </motion.div>
+          </Link>
           
           <Link to="/compliance">
             <motion.div whileHover={{ scale: 1.02 }}>

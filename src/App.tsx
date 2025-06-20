@@ -11,6 +11,7 @@ import LoginOfficial from "./pages/LoginOfficial";
 import DashboardStartup from "./pages/DashboardStartup";
 import DashboardStudent from "./pages/DashboardStudent";
 import DashboardOfficial from "./pages/DashboardOfficial";
+import ApplicationsManagement from "./pages/ApplicationsManagement";
 import JobBoard from "./pages/JobBoard";
 import MyApplications from "./pages/MyApplications";
 import ComplianceTracker from "./pages/ComplianceTracker";
@@ -41,6 +42,7 @@ const App = () => (
               <Route path="/dashboard/startup" element={<DashboardStartup />} />
               <Route path="/dashboard/student" element={<DashboardStudent />} />
               <Route path="/dashboard/official" element={<DashboardOfficial />} />
+              <Route path="/applications" element={<ApplicationsManagement />} />
               <Route path="/jobs" element={<JobBoard />} />
               <Route path="/my-applications" element={<MyApplications />} />
               <Route path="/compliance" element={<ComplianceTracker />} />
