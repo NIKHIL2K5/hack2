@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bot, Send, X, MessageSquare, Sparkles } from 'lucide-react';
+import { Bot, Send, X, MessageSquare, Sparkles, Paperclip, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAI } from '@/contexts/AIContext';
@@ -11,13 +11,17 @@ interface Message {
   text: string;
   sender: 'user' | 'ai';
   timestamp: string;
+  image?: File;
+  imageName?: string;
 }
 
 export const UniversalAIChat: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { askAI, isAIThinking, userRole, userName } = useAI();
 
   const scrollToBottom = () => {
@@ -33,7 +37,7 @@ export const UniversalAIChat: React.FC = () => {
     if (messages.length === 0) {
       const welcomeMessage = {
         id: 1,
-        text: `Hi ${userName || 'there'}! I'm your AI assistant. I know everything about this platform and can help you with questions about ${userRole === 'student' ? 'jobs, applications, and career guidance' : userRole === 'startup' ? 'government schemes, funding, and business guidance' : userRole === 'official' ? 'scheme management and monitoring' : 'navigating the platform'}. How can I assist you today?`,
+        text: `Hi ${userName || 'there'}! I'm your comprehensive AI assistant with deep knowledge of this platform. I can help you with detailed guidance on ${userRole === 'student' ? 'job searches, career planning, skill development, and interview preparation' : userRole === 'startup' ? 'funding opportunities, government schemes, hiring strategies, and business growth' : userRole === 'official' ? 'scheme management, policy implementation, and ecosystem monitoring' : 'navigating the platform and maximizing your opportunities'}. I provide precise, actionable advice tailored to your specific situation. You can also share images for visual analysis. How can I assist you today?`,
         sender: 'ai' as const,
         timestamp: new Date().toLocaleTimeString()
       };
@@ -41,24 +45,58 @@ export const UniversalAIChat: React.FC = () => {
     }
   }, [userName, userRole]);
 
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please upload only image files');
+        return;
+      }
+      
+      // Validate file size (max 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        alert('Please upload images smaller than 10MB');
+        return;
+      }
+      
+      setSelectedImage(file);
+    }
+  };
+
+  const removeSelectedImage = () => {
+    setSelectedImage(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
   const handleSendMessage = async () => {
-    if (!inputMessage.trim()) return;
+    if (!inputMessage.trim() && !selectedImage) return;
 
     const userMessage: Message = {
       id: messages.length + 1,
-      text: inputMessage,
+      text: inputMessage || (selectedImage ? `[Shared image: ${selectedImage.name}]` : ''),
       sender: 'user',
-      timestamp: new Date().toLocaleTimeString()
+      timestamp: new Date().toLocaleTimeString(),
+      image: selectedImage || undefined,
+      imageName: selectedImage?.name
     };
 
     setMessages(prev => [...prev, userMessage]);
     const currentMessage = inputMessage;
+    const currentImage = selectedImage;
+    
     setInputMessage('');
+    setSelectedImage(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
 
     try {
       const currentPage = window.location.pathname;
       const context = `Current page: ${currentPage}, User role: ${userRole}`;
-      const aiResponse = await askAI(currentMessage, context);
+      const aiResponse = await askAI(currentMessage, context, currentImage || undefined);
       
       const aiMessage: Message = {
         id: messages.length + 2,
@@ -71,7 +109,7 @@ export const UniversalAIChat: React.FC = () => {
     } catch (error) {
       const errorMessage: Message = {
         id: messages.length + 2,
-        text: "I apologize, but I'm having trouble responding right now. Please try again.",
+        text: "I apologize, but I'm having trouble processing your request right now. Please try again, and I'll do my best to provide comprehensive assistance.",
         sender: 'ai',
         timestamp: new Date().toLocaleTimeString()
       };
@@ -100,6 +138,7 @@ export const UniversalAIChat: React.FC = () => {
           />
         ))}
       </div>
+      <span className="text-xs text-gray-500">Analyzing your question...</span>
     </motion.div>
   );
 
@@ -156,8 +195,8 @@ export const UniversalAIChat: React.FC = () => {
                     <Bot className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">AI Assistant</h3>
-                    <p className="text-xs opacity-80">Always ready to help</p>
+                    <h3 className="font-semibold">Comprehensive AI Assistant</h3>
+                    <p className="text-xs opacity-80">Expert guidance & image analysis</p>
                   </div>
                 </div>
                 <motion.div whileHover={{ rotate: 180 }}>
@@ -180,6 +219,12 @@ export const UniversalAIChat: React.FC = () => {
                       ? 'bg-blue-500 text-white'
                       : 'bg-gray-100 text-gray-800'
                   }`}>
+                    {message.imageName && (
+                      <div className="flex items-center space-x-2 mb-2 p-2 bg-white/10 rounded">
+                        <ImageIcon className="w-4 h-4" />
+                        <span className="text-xs">{message.imageName}</span>
+                      </div>
+                    )}
                     <p className="text-sm whitespace-pre-wrap">{message.text}</p>
                     <p className="text-xs opacity-60 mt-1">{message.timestamp}</p>
                   </div>
@@ -189,20 +234,56 @@ export const UniversalAIChat: React.FC = () => {
               <div ref={messagesEndRef} />
             </div>
 
+            {/* Image Preview */}
+            {selectedImage && (
+              <div className="px-4 py-2 border-t border-gray-200 bg-gray-50">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <ImageIcon className="w-4 h-4 text-gray-500" />
+                    <span className="text-sm text-gray-600 truncate max-w-48">{selectedImage.name}</span>
+                  </div>
+                  <Button
+                    onClick={removeSelectedImage}
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 w-6 p-0"
+                  >
+                    <X className="w-3 h-3" />
+                  </Button>
+                </div>
+              </div>
+            )}
+
             {/* Input */}
             <div className="p-4 border-t border-gray-200">
               <div className="flex space-x-2">
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleImageUpload}
+                  accept="image/*"
+                  className="hidden"
+                />
+                <Button
+                  onClick={() => fileInputRef.current?.click()}
+                  variant="outline"
+                  size="sm"
+                  className="hover-button"
+                  disabled={isAIThinking}
+                >
+                  <Paperclip className="w-4 h-4" />
+                </Button>
                 <Input
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                  placeholder="Ask me anything about the platform..."
+                  placeholder="Ask me anything about the platform or share an image..."
                   className="flex-1"
                   disabled={isAIThinking}
                 />
                 <Button
                   onClick={handleSendMessage}
-                  disabled={isAIThinking || !inputMessage.trim()}
+                  disabled={isAIThinking || (!inputMessage.trim() && !selectedImage)}
                   className="hover-button"
                 >
                   <Send className="w-4 h-4" />

@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { Shield, ArrowLeft, Eye, EyeOff, Lock } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -35,12 +34,38 @@ const LoginOfficial = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.email.endsWith('@telangana.gov.in')) {
-      toast.error("Please use your official @telangana.gov.in email address");
+    // Validate official email domain
+    if (!formData.email.endsWith('@org.in')) {
+      toast.error("Please use your official @org.in email address");
       return;
     }
     
-    toast.success(isLogin ? "Secure access granted!" : "Official account created!");
+    // Additional validation for registration
+    if (!isLogin) {
+      if (!formData.name.trim()) {
+        toast.error("Please enter your full name");
+        return;
+      }
+      if (!formData.department.trim()) {
+        toast.error("Please enter your department");
+        return;
+      }
+      if (!formData.employeeId.trim()) {
+        toast.error("Please enter your employee ID");
+        return;
+      }
+      if (formData.password !== formData.confirmPassword) {
+        toast.error("Passwords do not match");
+        return;
+      }
+    }
+    
+    if (formData.password.length < 8) {
+      toast.error("Password must be at least 8 characters long");
+      return;
+    }
+    
+    toast.success(isLogin ? "Secure access granted!" : "Official account created successfully!");
     setTimeout(() => navigate("/dashboard/official"), 1500);
   };
 
@@ -139,19 +164,19 @@ const LoginOfficial = () => {
                 )}
                 
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-white font-medium">Government Email</Label>
+                  <Label htmlFor="email" className="text-white font-medium">Official Email</Label>
                   <motion.div whileFocus={{ scale: 1.02 }}>
                     <Input 
                       id="email" 
                       type="email" 
                       value={formData.email}
                       onChange={handleInputChange}
-                      placeholder="official@telangana.gov.in" 
-                      pattern=".*@telangana\.gov\.in$"
+                      placeholder="official@organization.org.in" 
+                      pattern=".*@.*\.org\.in$"
                       className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-indigo-400 focus:ring-indigo-400/50 h-12 text-lg"
                     />
                   </motion.div>
-                  <p className="text-xs text-white/50">Must use @telangana.gov.in email domain</p>
+                  <p className="text-xs text-white/50">Must use official @org.in email domain (e.g., @telangana.org.in, @india.org.in)</p>
                 </div>
                 
                 <div className="space-y-2">
