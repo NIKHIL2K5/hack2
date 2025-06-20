@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { GraduationCap, ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -44,7 +43,7 @@ const LoginStudent = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-900 via-teal-700 to-teal-500 flex items-center justify-center p-6 relative overflow-hidden">
       <div className="absolute inset-0 opacity-20">
-        <Canvas>
+        <Canvas camera={{ position: [0, 0, 5] }}>
           <ambientLight intensity={0.5} />
           <directionalLight position={[10, 10, 5]} intensity={1} />
           <AnimatedTorus />
