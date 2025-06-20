@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Building2, Plus, Users, FileText, Bot, Settings, LogOut, Briefcase, CheckCircle, User, AlertTriangle } from "lucide-react";
@@ -13,6 +12,7 @@ import { JobPostingModal } from "@/components/official/JobPostingModal";
 import { JobManagement } from "@/components/official/JobManagement";
 import { StartupProfile } from "@/components/official/StartupProfile";
 import { isValidOfficialEmail } from "@/services/officialAuth";
+import { dataSyncService } from "@/services/dataSync";
 
 const DashboardStartup = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -32,6 +32,15 @@ const DashboardStartup = () => {
       
       if (isValidOfficialEmail(email)) {
         setHasValidAccess(true);
+        
+        // Track dashboard access
+        dataSyncService.trackAction(
+          email,
+          'startup',
+          'dashboard_access',
+          { timestamp: new Date().toISOString() },
+          user.organization?.name
+        );
       } else {
         setHasValidAccess(false);
       }
@@ -39,6 +48,36 @@ const DashboardStartup = () => {
       setHasValidAccess(false);
     }
   }, []);
+
+  // Track tab changes
+  const handleTabChange = (tabId: string) => {
+    setActiveTab(tabId);
+    
+    if (officialUser) {
+      dataSyncService.trackAction(
+        officialUser.email,
+        'startup',
+        'tab_change',
+        { tab: tabId },
+        officialUser.organization.name
+      );
+    }
+  };
+
+  // Track job posting modal
+  const handlePostJob = () => {
+    setIsJobModalOpen(true);
+    
+    if (officialUser) {
+      dataSyncService.trackAction(
+        officialUser.email,
+        'startup',
+        'job_posting_modal_opened',
+        {},
+        officialUser.organization.name
+      );
+    }
+  };
 
   // If user doesn't have valid access, show access denied message
   if (!hasValidAccess) {
@@ -111,10 +150,6 @@ const DashboardStartup = () => {
     { title: "Backend Developer", applications: stats.rejected + 2, status: "Closed" }
   ];
 
-  const handlePostJob = () => {
-    setIsJobModalOpen(true);
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-teal-900 text-white">
       {/* 3D Background */}
@@ -183,7 +218,7 @@ const DashboardStartup = () => {
               key={tab.id}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
               className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center ${
                 activeTab === tab.id
                   ? "bg-gradient-to-r from-blue-500 to-teal-500 text-white"

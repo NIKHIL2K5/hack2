@@ -1,14 +1,16 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { X, Plus, Trash2, Briefcase } from "lucide-react";
+import { X, Plus, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { dataSyncService } from "@/services/dataSync";
 
 interface JobPostingModalProps {
   isOpen: boolean;
@@ -32,67 +34,87 @@ export const JobPostingModal = ({ isOpen, onClose, organizationName }: JobPostin
     deadline: ""
   });
 
-  const addField = (field: keyof typeof formData) => {
-    if (Array.isArray(formData[field])) {
-      setFormData(prev => ({
-        ...prev,
-        [field]: [...prev[field] as string[], ""]
-      }));
-    }
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
-  const removeField = (field: keyof typeof formData, index: number) => {
-    if (Array.isArray(formData[field])) {
-      setFormData(prev => ({
-        ...prev,
-        [field]: (prev[field] as string[]).filter((_, i) => i !== index)
-      }));
-    }
+  const handleArrayField = (field: string, index: number, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: prev[field as keyof typeof prev].map((item: string, i: number) => 
+        i === index ? value : item
+      )
+    }));
   };
 
-  const updateField = (field: keyof typeof formData, index: number, value: string) => {
-    if (Array.isArray(formData[field])) {
-      setFormData(prev => ({
-        ...prev,
-        [field]: (prev[field] as string[]).map((item, i) => i === index ? value : item)
-      }));
-    }
+  const addArrayItem = (field: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: [...prev[field as keyof typeof prev], ""]
+    }));
+  };
+
+  const removeArrayItem = (field: string, index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: prev[field as keyof typeof prev].filter((_: string, i: number) => i !== index)
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate required fields
-    if (!formData.title || !formData.department || !formData.description) {
+    if (!formData.title || !formData.description) {
       toast.error("Please fill in all required fields");
       return;
     }
 
-    // Filter out empty array items
+    // Clean up empty array items
     const cleanedData = {
       ...formData,
-      responsibilities: formData.responsibilities.filter(item => item.trim()),
-      requirements: formData.requirements.filter(item => item.trim()),
-      skills: formData.skills.filter(item => item.trim()),
-      benefits: formData.benefits.filter(item => item.trim())
+      responsibilities: formData.responsibilities.filter(item => item.trim() !== ""),
+      requirements: formData.requirements.filter(item => item.trim() !== ""),
+      skills: formData.skills.filter(item => item.trim() !== ""),
+      benefits: formData.benefits.filter(item => item.trim() !== "")
     };
 
-    // Save job posting (you can integrate with your data management here)
-    const jobPosting = {
+    // Save to localStorage
+    const existingJobs = JSON.parse(localStorage.getItem('job_postings') || '[]');
+    const newJob = {
       id: Date.now(),
       ...cleanedData,
       organizationName,
       postedAt: new Date().toISOString(),
-      status: "active"
+      status: 'active'
     };
-
-    // Store in localStorage for now
-    const existingJobs = JSON.parse(localStorage.getItem('job_postings') || '[]');
-    existingJobs.push(jobPosting);
+    
+    existingJobs.push(newJob);
     localStorage.setItem('job_postings', JSON.stringify(existingJobs));
 
-    toast.success("Job posted successfully!");
-    onClose();
+    // Sync to global job postings for student dashboard
+    dataSyncService.syncJobPosting(cleanedData, organizationName);
+
+    // Track job posting action
+    const officialUser = JSON.parse(localStorage.getItem('officialUser') || '{}');
+    if (officialUser.email) {
+      dataSyncService.trackAction(
+        officialUser.email,
+        'startup',
+        'job_posted',
+        {
+          jobTitle: cleanedData.title,
+          department: cleanedData.department,
+          jobType: cleanedData.jobType,
+          skills: cleanedData.skills
+        },
+        organizationName
+      );
+    }
+
+    toast.success("Job posted successfully and synced to student dashboard!");
     
     // Reset form
     setFormData({
@@ -109,189 +131,179 @@ export const JobPostingModal = ({ isOpen, onClose, organizationName }: JobPostin
       benefits: [""],
       deadline: ""
     });
+    
+    onClose();
   };
+
+  const renderArrayField = (label: string, field: string, placeholder: string) => (
+    <div className="space-y-2">
+      <Label className="text-white">{label}</Label>
+      {formData[field as keyof typeof formData].map((item: string, index: number) => (
+        <div key={index} className="flex gap-2">
+          <Input
+            value={item}
+            onChange={(e) => handleArrayField(field, index, e.target.value)}
+            placeholder={placeholder}
+            className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+          />
+          {formData[field as keyof typeof formData].length > 1 && (
+            <Button
+              type="button"
+              onClick={() => removeArrayItem(field, index)}
+              variant="outline"
+              size="sm"
+              className="bg-red-500/20 border-red-500/50 text-red-200 hover:bg-red-500/30"
+            >
+              <Minus className="w-4 h-4" />
+            </Button>
+          )}
+        </div>
+      ))}
+      <Button
+        type="button"
+        onClick={() => addArrayItem(field)}
+        variant="outline"
+        size="sm"
+        className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+      >
+        <Plus className="w-4 h-4 mr-2" />
+        Add {label.slice(0, -1)}
+      </Button>
+    </div>
+  );
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.9 }}
-        className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+        className="bg-gradient-to-br from-gray-900 via-blue-900 to-teal-900 rounded-xl border border-white/20 w-full max-w-4xl max-h-[90vh] overflow-y-auto"
       >
-        <Card className="border-0">
-          <CardHeader className="bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-t-lg">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-2xl flex items-center">
-                <Briefcase className="w-6 h-6 mr-2" />
-                Post New Job - {organizationName}
-              </CardTitle>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={onClose}
-                className="text-white hover:bg-white/20"
-              >
-                <X className="w-5 h-5" />
-              </Button>
-            </div>
+        <Card className="bg-transparent border-none">
+          <CardHeader className="flex flex-row items-center justify-between border-b border-white/20">
+            <CardTitle className="text-2xl font-bold text-white">Post New Job</CardTitle>
+            <Button
+              onClick={onClose}
+              variant="ghost"
+              size="sm"
+              className="text-white hover:bg-white/10"
+            >
+              <X className="w-5 h-5" />
+            </Button>
           </CardHeader>
           
           <CardContent className="p-6">
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Basic Information */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="title">Job Title *</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <Label className="text-white">Job Title *</Label>
                   <Input
-                    id="title"
                     value={formData.title}
-                    onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                    placeholder="e.g. Frontend Developer"
+                    onChange={(e) => handleInputChange('title', e.target.value)}
+                    placeholder="e.g., Frontend Developer"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
                     required
                   />
                 </div>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="department">Department *</Label>
+                <div>
+                  <Label className="text-white">Department</Label>
                   <Input
-                    id="department"
                     value={formData.department}
-                    onChange={(e) => setFormData(prev => ({ ...prev, department: e.target.value }))}
-                    placeholder="e.g. Engineering"
-                    required
+                    onChange={(e) => handleInputChange('department', e.target.value)}
+                    placeholder="e.g., Engineering"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
                   />
                 </div>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="location">Location</Label>
+                <div>
+                  <Label className="text-white">Location</Label>
                   <Input
-                    id="location"
                     value={formData.location}
-                    onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-                    placeholder="e.g. Bangalore, India"
+                    onChange={(e) => handleInputChange('location', e.target.value)}
+                    placeholder="e.g., Hyderabad, Telangana"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
                   />
                 </div>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="jobType">Job Type</Label>
-                  <Select value={formData.jobType} onValueChange={(value) => setFormData(prev => ({ ...prev, jobType: value }))}>
-                    <SelectTrigger>
+                <div>
+                  <Label className="text-white">Job Type</Label>
+                  <Select value={formData.jobType} onValueChange={(value) => handleInputChange('jobType', value)}>
+                    <SelectTrigger className="bg-white/10 border-white/20 text-white">
                       <SelectValue placeholder="Select job type" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="full-time">Full Time</SelectItem>
-                      <SelectItem value="part-time">Part Time</SelectItem>
+                      <SelectItem value="full-time">Full-time</SelectItem>
+                      <SelectItem value="part-time">Part-time</SelectItem>
                       <SelectItem value="contract">Contract</SelectItem>
                       <SelectItem value="internship">Internship</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="experience">Experience Level</Label>
-                  <Select value={formData.experience} onValueChange={(value) => setFormData(prev => ({ ...prev, experience: value }))}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select experience level" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="entry">Entry Level (0-2 years)</SelectItem>
-                      <SelectItem value="mid">Mid Level (2-5 years)</SelectItem>
-                      <SelectItem value="senior">Senior Level (5+ years)</SelectItem>
-                    </SelectContent>
-                  </Select>
+                <div>
+                  <Label className="text-white">Experience Required</Label>
+                  <Input
+                    value={formData.experience}
+                    onChange={(e) => handleInputChange('experience', e.target.value)}
+                    placeholder="e.g., 2-3 years or Fresher"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
+                  />
                 </div>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="salary">Salary Range</Label>
+                <div>
+                  <Label className="text-white">Salary/Stipend</Label>
                   <Input
-                    id="salary"
                     value={formData.salary}
-                    onChange={(e) => setFormData(prev => ({ ...prev, salary: e.target.value }))}
-                    placeholder="e.g. ₹8-12 LPA"
+                    onChange={(e) => handleInputChange('salary', e.target.value)}
+                    placeholder="e.g., ₹25,000 per month"
+                    className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
                   />
                 </div>
               </div>
 
-              {/* Description */}
-              <div className="space-y-2">
-                <Label htmlFor="description">Job Description *</Label>
+              <div>
+                <Label className="text-white">Job Description *</Label>
                 <Textarea
-                  id="description"
                   value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                  placeholder="Describe the role, company culture, and what makes this opportunity exciting..."
-                  rows={4}
+                  onChange={(e) => handleInputChange('description', e.target.value)}
+                  placeholder="Describe the role, what the candidate will do, and what makes this opportunity exciting..."
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/50 min-h-[100px]"
                   required
                 />
               </div>
 
-              {/* Dynamic Array Fields */}
-              {[
-                { key: 'responsibilities', label: 'Key Responsibilities', placeholder: 'Add a responsibility...' },
-                { key: 'requirements', label: 'Requirements', placeholder: 'Add a requirement...' },
-                { key: 'skills', label: 'Required Skills', placeholder: 'Add a skill...' },
-                { key: 'benefits', label: 'Benefits & Perks', placeholder: 'Add a benefit...' }
-              ].map(({ key, label, placeholder }) => (
-                <div key={key} className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label>{label}</Label>
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="outline"
-                      onClick={() => addField(key as keyof typeof formData)}
-                    >
-                      <Plus className="w-4 h-4 mr-1" />
-                      Add {label.split(' ')[1] || label}
-                    </Button>
-                  </div>
-                  {(formData[key as keyof typeof formData] as string[]).map((item, index) => (
-                    <div key={index} className="flex gap-2">
-                      <Input
-                        value={item}
-                        onChange={(e) => updateField(key as keyof typeof formData, index, e.target.value)}
-                        placeholder={placeholder}
-                      />
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="outline"
-                        onClick={() => removeField(key as keyof typeof formData, index)}
-                        disabled={(formData[key as keyof typeof formData] as string[]).length === 1}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              ))}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {renderArrayField("Responsibilities", "responsibilities", "Enter a responsibility")}
+                {renderArrayField("Requirements", "requirements", "Enter a requirement")}
+                {renderArrayField("Required Skills", "skills", "Enter a skill")}
+                {renderArrayField("Benefits", "benefits", "Enter a benefit")}
+              </div>
 
-              {/* Application Deadline */}
-              <div className="space-y-2">
-                <Label htmlFor="deadline">Application Deadline</Label>
+              <div>
+                <Label className="text-white">Application Deadline</Label>
                 <Input
-                  id="deadline"
                   type="date"
                   value={formData.deadline}
-                  onChange={(e) => setFormData(prev => ({ ...prev, deadline: e.target.value }))}
+                  onChange={(e) => handleInputChange('deadline', e.target.value)}
+                  className="bg-white/10 border-white/20 text-white"
                 />
               </div>
 
-              {/* Submit Buttons */}
-              <div className="flex justify-end space-x-4 pt-6 border-t">
+              <div className="flex justify-end space-x-4 pt-6 border-t border-white/20">
                 <Button
                   type="button"
-                  variant="outline"
                   onClick={onClose}
+                  variant="outline"
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20"
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-gradient-to-r from-blue-600 to-teal-600 hover:from-blue-700 hover:to-teal-700"
+                  className="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white"
                 >
                   Post Job
                 </Button>
