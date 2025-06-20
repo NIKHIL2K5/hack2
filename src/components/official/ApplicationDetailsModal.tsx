@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { JobApplication } from '@/hooks/useOfficialData';
-import { applicationSyncService, toast } from '@/services';
+import { applicationSyncService } from '@/services/applicationSync';
+import { toast } from 'sonner';
 
 interface ApplicationDetailsModalProps {
   application: JobApplication | null;

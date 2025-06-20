@@ -14,14 +14,14 @@ export interface JobApplicationData {
   skills: string[];
   fullName: string;
   phone?: string;
-  portfolio?: string;
+  portfolioUrl?: string;
 }
 
 class ApplicationSyncService {
   private storageKey = 'global_job_applications';
 
   // Submit application and sync to company
-  submitApplication(applicationData: Partial<JobApplicationData>, job: any, studentProfile: any): JobApplicationData {
+  submitApplication(applicationData: any, job: any, studentProfile: any): JobApplicationData {
     const newApplication: JobApplicationData = {
       id: Date.now(),
       studentName: applicationData.fullName || studentProfile.name,
@@ -34,10 +34,10 @@ class ApplicationSyncService {
       status: 'pending',
       resumeUrl: applicationData.resumeUrl,
       coverLetter: applicationData.coverLetter || '',
-      skills: applicationData.skills || [],
+      skills: typeof applicationData.skills === 'string' ? applicationData.skills.split(',').map(s => s.trim()) : applicationData.skills || [],
       fullName: applicationData.fullName || studentProfile.name,
       phone: applicationData.phone,
-      portfolio: applicationData.portfolio
+      portfolioUrl: applicationData.portfolioUrl
     };
 
     // Save to global applications storage

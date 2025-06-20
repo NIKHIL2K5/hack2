@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getOrganizationByEmail, OfficialOrganization } from '@/services/officialAuth';
+import { applicationSyncService } from '@/services/applicationSync';
 
 export interface OfficialUser {
   email: string;

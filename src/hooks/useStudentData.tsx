@@ -1,7 +1,10 @@
+
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { AlertCircle } from "lucide-react";
 import { saveUserData, loadUserData } from "@/utils/userStorage";
+import { applicationSyncService } from "@/services/applicationSync";
+import { dataSyncService } from "@/services/dataSync";
 
 export const useStudentData = () => {
   const [profile, setProfile] = useState({
@@ -134,9 +137,18 @@ export const useStudentData = () => {
       fullName: "",
       email: "",
       phone: "",
-      coverLetter: "",
+      location: "",
+      education: "",
+      experience: "",
       skills: "",
-      portfolio: "",
+      coverLetter: "",
+      portfolioUrl: "",
+      githubUrl: "",
+      linkedinUrl: "",
+      expectedSalary: "",
+      availableFrom: "",
+      workMode: "hybrid",
+      additionalInfo: "",
       resumeFile: null
     });
 
