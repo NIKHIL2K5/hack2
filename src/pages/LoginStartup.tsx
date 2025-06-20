@@ -10,6 +10,7 @@ import { useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Float, Sphere, MeshDistortMaterial } from "@react-three/drei";
 import { toast } from "sonner";
+import { isValidOfficialEmail, getOrganizationByEmail } from "@/services/officialAuth";
 
 const AnimatedSphere = () => (
   <Float speed={2} rotationIntensity={1} floatIntensity={2}>
@@ -52,11 +53,30 @@ const LoginStartup = () => {
     }
 
     // Check if email is from an allowed organization
-    const { isValidOfficialEmail } = require('@/services/officialAuth');
     if (!isValidOfficialEmail(formData.email)) {
       toast.error("This email is not registered as an official organization partner. Please contact support if you believe this is an error.");
       return;
     }
+
+    // Get organization details
+    const organization = getOrganizationByEmail(formData.email);
+    if (!organization) {
+      toast.error("Unable to find organization details for this email.");
+      return;
+    }
+
+    // Create official user object and store it
+    const officialUser = {
+      email: formData.email,
+      name: formData.name || `${organization.name} User`,
+      organization: organization,
+      department: "HR/Recruitment",
+      employeeId: `EMP_${Date.now()}`,
+      registeredAt: new Date().toISOString()
+    };
+
+    // Store in localStorage
+    localStorage.setItem('officialUser', JSON.stringify(officialUser));
 
     // Simulate authentication
     toast.success(isLogin ? "Welcome back!" : "Account created successfully!");
@@ -169,13 +189,13 @@ const LoginStartup = () => {
                       </motion.div>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="startup" className="text-white font-medium">Startup Name</Label>
+                      <Label htmlFor="startup" className="text-white font-medium">Organization Name</Label>
                       <motion.div whileFocus={{ scale: 1.02 }}>
                         <Input 
                           id="startup" 
                           value={formData.startup}
                           onChange={handleInputChange}
-                          placeholder="Enter your startup name" 
+                          placeholder="Enter your organization name" 
                           className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-blue-400 focus:ring-blue-400/50 h-12 text-lg"
                         />
                       </motion.div>
@@ -191,7 +211,7 @@ const LoginStartup = () => {
                       type="email" 
                       value={formData.email}
                       onChange={handleInputChange}
-                      placeholder="founder@company.org.in" 
+                      placeholder="hiring@company.org.in" 
                       className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-blue-400 focus:ring-blue-400/50 h-12 text-lg"
                     />
                   </motion.div>
