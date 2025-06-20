@@ -5,8 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Send, Clock } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
 
-export const NotificationCreationForm = () => {
+interface NotificationCreationFormProps {
+  onClose?: () => void;
+}
+
+export const NotificationCreationForm = ({ onClose }: NotificationCreationFormProps) => {
   const [selectedAudience, setSelectedAudience] = useState('all');
   const [messageText, setMessageText] = useState('');
   const [messageTitle, setMessageTitle] = useState('');
@@ -19,6 +24,70 @@ export const NotificationCreationForm = () => {
     { id: 'district-hyderabad', name: 'Hyderabad District', count: 892 },
     { id: 'district-warangal', name: 'Warangal District', count: 234 }
   ];
+
+  const handleSendNow = () => {
+    if (!messageTitle.trim() || !messageText.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "Please fill in both title and message fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    console.log('Sending notification:', {
+      title: messageTitle,
+      message: messageText,
+      audience: selectedAudience,
+      timestamp: new Date().toISOString()
+    });
+
+    toast({
+      title: "Notification Sent",
+      description: `Successfully sent "${messageTitle}" to ${audienceOptions.find(a => a.id === selectedAudience)?.name}`,
+    });
+
+    // Reset form
+    setMessageTitle('');
+    setMessageText('');
+    setSelectedAudience('all');
+    
+    if (onClose) {
+      onClose();
+    }
+  };
+
+  const handleSchedule = () => {
+    if (!messageTitle.trim() || !messageText.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "Please fill in both title and message fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    console.log('Scheduling notification:', {
+      title: messageTitle,
+      message: messageText,
+      audience: selectedAudience,
+      status: 'scheduled'
+    });
+
+    toast({
+      title: "Notification Scheduled",
+      description: "Notification has been scheduled and will be sent at the specified time",
+    });
+
+    // Reset form
+    setMessageTitle('');
+    setMessageText('');
+    setSelectedAudience('all');
+    
+    if (onClose) {
+      onClose();
+    }
+  };
 
   return (
     <Card className="bg-white/10 backdrop-blur-lg border-white/20">
@@ -65,11 +134,18 @@ export const NotificationCreationForm = () => {
           </div>
         </div>
         <div className="flex space-x-2">
-          <Button className="bg-blue-500 hover:bg-blue-600 text-white flex-1">
+          <Button 
+            className="bg-blue-500 hover:bg-blue-600 text-white flex-1"
+            onClick={handleSendNow}
+          >
             <Send className="w-4 h-4 mr-2" />
             Send Now
           </Button>
-          <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
+          <Button 
+            variant="outline" 
+            className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+            onClick={handleSchedule}
+          >
             <Clock className="w-4 h-4 mr-2" />
             Schedule
           </Button>

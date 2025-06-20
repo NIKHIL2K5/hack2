@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Eye, Edit } from 'lucide-react';
+import { toast } from '@/hooks/use-toast';
 
 export const RecentNotificationsList = () => {
   const recentNotifications = [
@@ -62,6 +63,22 @@ export const RecentNotificationsList = () => {
     }
   };
 
+  const handleViewNotification = (notification: any) => {
+    console.log('Viewing notification:', notification);
+    toast({
+      title: "Viewing Notification",
+      description: `Opening details for "${notification.title}"`,
+    });
+  };
+
+  const handleEditNotification = (notification: any) => {
+    console.log('Editing notification:', notification);
+    toast({
+      title: "Edit Notification",
+      description: `Opening editor for "${notification.title}"`,
+    });
+  };
+
   return (
     <Card className="bg-white/10 backdrop-blur-lg border-white/20">
       <CardHeader>
@@ -104,10 +121,20 @@ export const RecentNotificationsList = () => {
                   </div>
                 </div>
                 <div className="flex space-x-2">
-                  <Button size="sm" variant="outline" className="bg-white/10 border-white/20 text-white">
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                    onClick={() => handleViewNotification(notification)}
+                  >
                     <Eye className="w-4 h-4" />
                   </Button>
-                  <Button size="sm" variant="outline" className="bg-white/10 border-white/20 text-white">
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                    onClick={() => handleEditNotification(notification)}
+                  >
                     <Edit className="w-4 h-4" />
                   </Button>
                 </div>
