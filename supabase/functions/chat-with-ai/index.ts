@@ -15,7 +15,15 @@ serve(async (req) => {
   }
 
   try {
+    console.log('OpenAI API Key exists:', !!openAIApiKey);
+    
     const { message, context, userRole, userName, hasImage } = await req.json();
+    console.log('Received request:', { message, userRole, userName });
+
+    if (!openAIApiKey) {
+      console.error('OpenAI API key not found');
+      throw new Error('OpenAI API key not configured');
+    }
 
     const systemPrompt = `You are Sethu, a comprehensive AI assistant for a government career and startup platform in Telangana, India. You help ${userRole}s with:
 
@@ -35,6 +43,8 @@ User Role: ${userRole || 'platform user'}
 User Name: ${userName || 'User'}
 ${hasImage ? 'Note: The user has shared an image for analysis.' : ''}`;
 
+    console.log('Making request to OpenAI...');
+    
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -52,11 +62,17 @@ ${hasImage ? 'Note: The user has shared an image for analysis.' : ''}`;
       }),
     });
 
+    console.log('OpenAI response status:', response.status);
+
     if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status}`);
+      const errorText = await response.text();
+      console.error('OpenAI API error:', response.status, errorText);
+      throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();
+    console.log('OpenAI response received successfully');
+    
     const aiResponse = data.choices[0].message.content;
 
     return new Response(JSON.stringify({ 
@@ -68,7 +84,7 @@ ${hasImage ? 'Note: The user has shared an image for analysis.' : ''}`;
   } catch (error) {
     console.error('Error in chat-with-ai function:', error);
     return new Response(JSON.stringify({ 
-      error: 'I apologize for the technical difficulty. Please try again or rephrase your question.' 
+      error: error.message || 'I apologize for the technical difficulty. Please try again or rephrase your question.' 
     }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

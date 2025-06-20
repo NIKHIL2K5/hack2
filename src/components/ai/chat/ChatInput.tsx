@@ -44,6 +44,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
           variant="outline"
           size="sm"
           disabled={isAIThinking}
+          className="shrink-0"
         >
           <Paperclip className="w-4 h-4" />
         </Button>
@@ -58,6 +59,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
         <Button
           onClick={onSendMessage}
           disabled={isAIThinking || (!inputMessage.trim() && !hasSelectedImage)}
+          className="shrink-0 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
         >
           <Send className="w-4 h-4" />
         </Button>
