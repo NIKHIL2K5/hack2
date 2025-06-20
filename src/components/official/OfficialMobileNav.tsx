@@ -36,22 +36,27 @@ export const OfficialMobileNav = ({ activeTab, setActiveTab }: OfficialMobileNav
     { id: 'roles', label: 'Roles', icon: Settings }
   ];
 
+  const handleTabClick = (tabId: string) => {
+    console.log('Mobile nav tab clicked:', tabId);
+    setActiveTab(tabId);
+  };
+
   return (
     <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/10 backdrop-blur-lg border-t border-white/20 z-50">
       <div className="grid grid-cols-4 gap-1 p-2">
         {navigationItems.slice(0, 8).map((item) => (
           <Button
             key={item.id}
-            onClick={() => setActiveTab(item.id)}
+            onClick={() => handleTabClick(item.id)}
             variant="ghost"
-            className={`flex flex-col items-center space-y-1 p-2 h-auto text-xs ${
+            className={`flex flex-col items-center space-y-1 p-2 h-auto text-xs transition-all duration-200 ${
               activeTab === item.id 
-                ? 'bg-blue-500/20 text-blue-300' 
+                ? 'bg-blue-500/30 text-blue-200 border border-blue-400/30' 
                 : 'text-white/70 hover:text-white hover:bg-white/10'
             }`}
           >
             <item.icon className="w-4 h-4" />
-            <span className="truncate max-w-full">{item.label}</span>
+            <span className="truncate max-w-full leading-tight">{item.label}</span>
           </Button>
         ))}
       </div>
@@ -60,16 +65,16 @@ export const OfficialMobileNav = ({ activeTab, setActiveTab }: OfficialMobileNav
           {navigationItems.slice(8).map((item) => (
             <Button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => handleTabClick(item.id)}
               variant="ghost"
-              className={`flex flex-col items-center space-y-1 p-2 h-auto text-xs ${
+              className={`flex flex-col items-center space-y-1 p-2 h-auto text-xs transition-all duration-200 ${
                 activeTab === item.id 
-                  ? 'bg-blue-500/20 text-blue-300' 
+                  ? 'bg-blue-500/30 text-blue-200 border border-blue-400/30' 
                   : 'text-white/70 hover:text-white hover:bg-white/10'
               }`}
             >
               <item.icon className="w-4 h-4" />
-              <span className="truncate max-w-full">{item.label}</span>
+              <span className="truncate max-w-full leading-tight">{item.label}</span>
             </Button>
           ))}
         </div>

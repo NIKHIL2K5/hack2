@@ -58,7 +58,14 @@ const DashboardOfficial = () => {
     { title: 'Districts Covered', value: '33', change: '+0', icon: MapPin, color: 'bg-purple-500' }
   ];
 
+  const handleDesktopNavClick = (tabId: string) => {
+    console.log('Desktop nav clicked:', tabId);
+    setActiveTab(tabId);
+  };
+
   const renderContent = () => {
+    console.log('Rendering content for tab:', activeTab);
+    
     switch (activeTab) {
       case 'profile':
         return <OfficialProfile />;
@@ -159,14 +166,18 @@ const DashboardOfficial = () => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
+              <Button 
+                variant="outline" 
+                className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                onClick={() => handleDesktopNavClick('notifications')}
+              >
                 <Bell className="w-4 h-4 mr-2" />
                 Notifications
               </Button>
               <Button 
                 variant="outline" 
                 className="bg-white/10 border-white/20 text-white hover:bg-white/20"
-                onClick={() => setActiveTab('profile')}
+                onClick={() => handleDesktopNavClick('profile')}
               >
                 <User className="w-4 h-4 mr-2" />
                 Profile
@@ -189,7 +200,7 @@ const DashboardOfficial = () => {
                   {navigationItems.map((item) => (
                     <Button
                       key={item.id}
-                      onClick={() => setActiveTab(item.id)}
+                      onClick={() => handleDesktopNavClick(item.id)}
                       variant={activeTab === item.id ? "default" : "ghost"}
                       className={`w-full justify-start text-left ${
                         activeTab === item.id 

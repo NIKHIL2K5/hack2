@@ -28,6 +28,16 @@ export const OfficialMobileHeader = ({ activeTab, setActiveTab, onMenuToggle }: 
     return titles[tab] || 'Government Dashboard';
   };
 
+  const handleNotificationClick = () => {
+    console.log('Mobile header notifications clicked');
+    setActiveTab('notifications');
+  };
+
+  const handleProfileClick = () => {
+    console.log('Mobile header profile clicked');
+    setActiveTab('profile');
+  };
+
   return (
     <header className="lg:hidden bg-white/5 backdrop-blur-lg border-b border-white/10 sticky top-0 z-40">
       <div className="flex items-center justify-between p-4">
@@ -42,16 +52,16 @@ export const OfficialMobileHeader = ({ activeTab, setActiveTab, onMenuToggle }: 
           <Button 
             variant="outline" 
             size="sm"
-            className="bg-white/10 border-white/20 text-white"
-            onClick={() => setActiveTab('notifications')}
+            className="bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-200"
+            onClick={handleNotificationClick}
           >
             <Bell className="w-4 h-4" />
           </Button>
           <Button 
             variant="outline" 
             size="sm"
-            className="bg-white/10 border-white/20 text-white"
-            onClick={() => setActiveTab('profile')}
+            className="bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-200"
+            onClick={handleProfileClick}
           >
             <User className="w-4 h-4" />
           </Button>
