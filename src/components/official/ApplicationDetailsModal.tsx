@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { X, User, Mail, Calendar, FileText, Award, MapPin, Phone, Building2, Download, MessageSquare } from 'lucide-react';
@@ -6,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { JobApplication } from '@/hooks/useOfficialData';
-import { applicationSyncService } from '@/services/applicationSync';
+import { applicationSyncService, JobApplicationData } from '@/services/applicationSync';
 import { toast } from 'sonner';
 
 interface ApplicationDetailsModalProps {
@@ -56,13 +57,36 @@ export const ApplicationDetailsModal = ({
     ]
   };
 
+  // Convert JobApplication to JobApplicationData format
+  const convertToJobApplicationData = (app: JobApplication): JobApplicationData => {
+    return {
+      id: app.id,
+      studentName: app.studentName,
+      studentEmail: app.studentEmail,
+      jobId: app.id, // Using application id as jobId fallback
+      jobTitle: app.jobTitle,
+      companyName: app.organizationId || 'Unknown Company',
+      organizationId: app.organizationId || '',
+      appliedAt: app.appliedAt,
+      status: app.status,
+      resumeUrl: app.resumeUrl,
+      coverLetter: app.coverLetter || '',
+      skills: app.skills,
+      fullName: app.studentName,
+      phone: mockAdditionalData.phone,
+      portfolioUrl: ''
+    };
+  };
+
   const handleDownloadResume = () => {
-    applicationSyncService.downloadResume(application);
+    const applicationData = convertToJobApplicationData(application);
+    applicationSyncService.downloadResume(applicationData);
     toast.success("Resume download started!");
   };
 
   const handleSendEmail = () => {
-    applicationSyncService.sendEmail(application, "Regarding Your Job Application");
+    const applicationData = convertToJobApplicationData(application);
+    applicationSyncService.sendEmail(applicationData, "Regarding Your Job Application");
     toast.success("Email client opened!");
   };
 
