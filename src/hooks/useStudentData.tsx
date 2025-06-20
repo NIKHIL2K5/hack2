@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { AlertCircle } from "lucide-react";
@@ -92,51 +91,41 @@ export const useStudentData = () => {
   const handleSubmitApplication = (e, selectedJob) => {
     e.preventDefault();
     
-    if (!applicationData.fullName || !applicationData.email || !applicationData.phone) {
+    if (!applicationData.fullName || !applicationData.email) {
       toast.error("Please fill in all required fields");
-      return;
-    }
-    
-    if (!applicationData.coverLetter) {
-      toast.error("Cover letter is required");
-      return;
+      return false;
     }
 
-    const newApplication = {
-      id: appliedJobs.length + 1,
-      title: selectedJob.title,
-      company: selectedJob.company,
-      appliedDate: new Date().toISOString().split('T')[0],
-      status: "Under Review",
-      statusColor: "bg-yellow-100 text-yellow-800",
-      icon: AlertCircle,
-      location: selectedJob.location,
-      stipend: selectedJob.stipend
-    };
+    // Create application using the sync service
+    const newApplication = applicationSyncService.submitApplication(
+      applicationData,
+      selectedJob,
+      profile
+    );
 
-    const updatedAppliedJobs = [...appliedJobs, newApplication];
+    // Track the application locally for the student
+    const updatedAppliedJobs = [...appliedJobs, selectedJob.id];
     setAppliedJobs(updatedAppliedJobs);
+    localStorage.setItem('appliedJobs', JSON.stringify(updatedAppliedJobs));
 
-    const currentUserData = loadUserData() || {
-      name: profile.name,
-      email: profile.email,
-      phone: profile.phone,
-      location: profile.location,
-      skills: profile.skills,
-      education: profile.education,
-      experience: profile.experience,
-      bio: profile.bio,
-      portfolioUrl: profile.portfolioUrl,
-      githubUrl: profile.githubUrl,
-      linkedinUrl: profile.linkedinUrl,
-      appliedJobs: [],
-      lastLogin: new Date().toISOString()
-    };
-
-    saveUserData({
-      ...currentUserData,
-      appliedJobs: updatedAppliedJobs
-    });
+    // Track action for analytics
+    if (profile.email) {
+      dataSyncService.trackAction(
+        profile.email,
+        'student',
+        'job_application_submitted',
+        {
+          jobId: selectedJob.id,
+          jobTitle: selectedJob.title,
+          company: selectedJob.company,
+          applicationData: {
+            fullName: applicationData.fullName,
+            email: applicationData.email,
+            skills: applicationData.skills
+          }
+        }
+      );
+    }
 
     toast.success(`Application submitted successfully for ${selectedJob.title}!`);
     
@@ -145,22 +134,13 @@ export const useStudentData = () => {
       fullName: "",
       email: "",
       phone: "",
-      location: "",
-      education: "",
-      experience: "",
-      skills: "",
       coverLetter: "",
-      portfolioUrl: "",
-      githubUrl: "",
-      linkedinUrl: "",
-      expectedSalary: "",
-      availableFrom: "",
-      workMode: "hybrid",
-      additionalInfo: "",
+      skills: "",
+      portfolio: "",
       resumeFile: null
     });
 
-    return true; // Indicate successful submission
+    return true;
   };
 
   const handleUpdateProfile = (e) => {

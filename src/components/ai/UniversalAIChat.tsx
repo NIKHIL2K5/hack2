@@ -1,10 +1,10 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, Send, X, MessageSquare, Sparkles, Paperclip, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useAI } from '@/contexts/AIContext';
+import { useEnhancedAI } from '@/contexts/EnhancedAIContext';
+import { EnhancedAIResponse } from './EnhancedAIResponse';
 
 interface Message {
   id: number;
@@ -13,6 +13,7 @@ interface Message {
   timestamp: string;
   image?: File;
   imageName?: string;
+  responseData?: any;
 }
 
 export const UniversalAIChat: React.FC = () => {
@@ -22,7 +23,7 @@ export const UniversalAIChat: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { askAI, isAIThinking, userRole, userName } = useAI();
+  const { askEnhancedAI, isAIThinking, userRole, userName } = useEnhancedAI();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -96,13 +97,14 @@ export const UniversalAIChat: React.FC = () => {
     try {
       const currentPage = window.location.pathname;
       const context = `Current page: ${currentPage}, User role: ${userRole}`;
-      const aiResponse = await askAI(currentMessage, context, currentImage || undefined);
+      const aiResponse = await askEnhancedAI(currentMessage, context, currentImage || undefined);
       
       const aiMessage: Message = {
         id: messages.length + 2,
-        text: aiResponse,
+        text: aiResponse.content,
         sender: 'ai',
-        timestamp: new Date().toLocaleTimeString()
+        timestamp: new Date().toLocaleTimeString(),
+        responseData: aiResponse
       };
 
       setMessages(prev => [...prev, aiMessage]);
@@ -225,7 +227,11 @@ export const UniversalAIChat: React.FC = () => {
                         <span className="text-xs">{message.imageName}</span>
                       </div>
                     )}
-                    <p className="text-sm whitespace-pre-wrap">{message.text}</p>
+                    {message.sender === 'ai' && message.responseData ? (
+                      <EnhancedAIResponse response={message.responseData} userRole={userRole} />
+                    ) : (
+                      <p className="text-sm whitespace-pre-wrap">{message.text}</p>
+                    )}
                     <p className="text-xs opacity-60 mt-1">{message.timestamp}</p>
                   </div>
                 </motion.div>

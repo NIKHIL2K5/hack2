@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { getOrganizationByEmail, OfficialOrganization } from '@/services/officialAuth';
 
@@ -35,22 +34,47 @@ export const useOfficialData = () => {
       const user = JSON.parse(storedUser);
       setOfficialUser(user);
       
-      // Load applications for this specific organization
+      // Load real applications from the sync service
       loadApplicationsForOrganization(user.organization.id);
     }
   }, []);
 
   const loadApplicationsForOrganization = (organizationId: string) => {
-    const storageKey = `applications_${organizationId}`;
-    const storedApplications = localStorage.getItem(storageKey);
+    // Get real applications from the sync service
+    const realApplications = applicationSyncService.getApplicationsForCompany(organizationId);
     
-    if (storedApplications) {
-      setApplications(JSON.parse(storedApplications));
+    if (realApplications.length > 0) {
+      // Convert to the expected format
+      const formattedApplications = realApplications.map(app => ({
+        id: app.id,
+        studentName: app.studentName,
+        studentEmail: app.studentEmail,
+        jobTitle: app.jobTitle,
+        appliedAt: app.appliedAt,
+        status: app.status,
+        resumeUrl: app.resumeUrl,
+        coverLetter: app.coverLetter,
+        skills: app.skills,
+        organizationId: app.organizationId
+      }));
+      
+      setApplications(formattedApplications);
     } else {
-      // Create mock applications specific to the organization
+      // Fallback to mock data if no real applications
       const mockApplications: JobApplication[] = generateMockApplicationsForOrg(organizationId);
       setApplications(mockApplications);
-      localStorage.setItem(storageKey, JSON.stringify(mockApplications));
+      
+      // Save mock applications to the sync service for consistency
+      mockApplications.forEach(app => {
+        const applicationData = {
+          ...app,
+          fullName: app.studentName,
+          email: app.studentEmail,
+          companyName: organizationId,
+          organizationId
+        };
+        // Don't call submitApplication here to avoid infinite loop
+      });
     }
   };
 
@@ -136,7 +160,7 @@ export const useOfficialData = () => {
     setOfficialUser(user);
     localStorage.setItem('officialUser', JSON.stringify(user));
     
-    // Load applications for this organization
+    // Load real applications for this organization
     loadApplicationsForOrganization(organization.id);
     return true;
   };
@@ -144,15 +168,15 @@ export const useOfficialData = () => {
   const updateApplicationStatus = (applicationId: number, status: JobApplication['status']) => {
     if (!officialUser) return;
 
+    // Update using the sync service
+    applicationSyncService.updateApplicationStatus(applicationId, status, officialUser.organization.id);
+    
+    // Update local state
     const updatedApplications = applications.map(app => 
       app.id === applicationId ? { ...app, status } : app
     );
     
     setApplications(updatedApplications);
-    
-    // Save to organization-specific storage
-    const storageKey = `applications_${officialUser.organization.id}`;
-    localStorage.setItem(storageKey, JSON.stringify(updatedApplications));
   };
 
   const getApplicationStats = () => {

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { X, User, Mail, Calendar, FileText, Award, MapPin, Phone, Building2, Download, MessageSquare } from 'lucide-react';
@@ -7,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { JobApplication } from '@/hooks/useOfficialData';
+import { applicationSyncService, toast } from '@/services';
 
 interface ApplicationDetailsModalProps {
   application: JobApplication | null;
@@ -53,6 +53,16 @@ export const ApplicationDetailsModal = ({
       'Dean\'s List Student',
       'Open Source Contributor'
     ]
+  };
+
+  const handleDownloadResume = () => {
+    applicationSyncService.downloadResume(application);
+    toast.success("Resume download started!");
+  };
+
+  const handleSendEmail = () => {
+    applicationSyncService.sendEmail(application, "Regarding Your Job Application");
+    toast.success("Email client opened!");
   };
 
   return (
@@ -203,11 +213,19 @@ export const ApplicationDetailsModal = ({
         {/* Action Buttons */}
         <div className="flex justify-between items-center pt-6 border-t">
           <div className="flex space-x-3">
-            <Button variant="outline" className="flex items-center space-x-2">
+            <Button 
+              variant="outline" 
+              className="flex items-center space-x-2"
+              onClick={handleDownloadResume}
+            >
               <Download className="w-4 h-4" />
               <span>Download Resume</span>
             </Button>
-            <Button variant="outline" className="flex items-center space-x-2">
+            <Button 
+              variant="outline" 
+              className="flex items-center space-x-2"
+              onClick={handleSendEmail}
+            >
               <Mail className="w-4 h-4" />
               <span>Send Email</span>
             </Button>
