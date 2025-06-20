@@ -6,9 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Suspense } from "react";
 import Index from "./pages/Index";
-import LoginStartup from "./pages/LoginStartup";
-import LoginStudent from "./pages/LoginStudent";
-import LoginOfficial from "./pages/LoginOfficial";
+import Login from "./pages/Login";
 import DashboardStartup from "./pages/DashboardStartup";
 import DashboardStudent from "./pages/DashboardStudent";
 import DashboardOfficial from "./pages/DashboardOfficial";
@@ -20,6 +18,7 @@ import SchemeManager from "./pages/SchemeManager";
 import ProfileSettings from "./pages/ProfileSettings";
 import FeedbackSentiment from "./pages/FeedbackSentiment";
 import Analytics from "./pages/Analytics";
+import ApplicationTracker from "./pages/ApplicationTracker";
 import LoadingScreen from "./components/LoadingScreen";
 
 const queryClient = new QueryClient();
@@ -33,9 +32,7 @@ const App = () => (
         <Suspense fallback={<LoadingScreen />}>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/login/startup" element={<LoginStartup />} />
-            <Route path="/login/student" element={<LoginStudent />} />
-            <Route path="/login/official" element={<LoginOfficial />} />
+            <Route path="/login/:role" element={<Login />} />
             <Route path="/dashboard/startup" element={<DashboardStartup />} />
             <Route path="/dashboard/student" element={<DashboardStudent />} />
             <Route path="/dashboard/official" element={<DashboardOfficial />} />
@@ -47,6 +44,7 @@ const App = () => (
             <Route path="/profile" element={<ProfileSettings />} />
             <Route path="/feedback" element={<FeedbackSentiment />} />
             <Route path="/analytics" element={<Analytics />} />
+            <Route path="/application-tracker" element={<ApplicationTracker />} />
           </Routes>
         </Suspense>
       </BrowserRouter>
