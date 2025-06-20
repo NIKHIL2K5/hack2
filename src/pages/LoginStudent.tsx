@@ -6,17 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import { Canvas } from "@react-three/fiber";
-import { Float, Torus } from "@react-three/drei";
 import { toast } from "sonner";
 
-const AnimatedTorus = () => (
-  <Float speed={2} rotationIntensity={1} floatIntensity={2}>
-    <Torus args={[1, 0.4, 16, 100]}>
-      <meshStandardMaterial color="#14b8a6" />
-    </Torus>
-  </Float>
-);
+// Removed Canvas and Torus imports that were causing errors
 
 const LoginStudent = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -42,12 +34,30 @@ const LoginStudent = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-900 via-teal-700 to-teal-500 flex items-center justify-center p-6 relative overflow-hidden">
+      {/* Replaced 3D Canvas with a simple background gradient */}
       <div className="absolute inset-0 opacity-20">
-        <Canvas camera={{ position: [0, 0, 5] }}>
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[10, 10, 5]} intensity={1} />
-          <AnimatedTorus />
-        </Canvas>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-teal-400 to-teal-700"></div>
+        {/* Add some floating particles for visual effect */}
+        {[...Array(10)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-4 h-4 rounded-full bg-teal-300/30"
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              x: [0, Math.random() * 20 - 10, 0],
+              opacity: [0.2, 0.5, 0.2],
+            }}
+            transition={{
+              duration: 3 + Math.random() * 2,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+            }}
+          />
+        ))}
       </div>
 
       <motion.div

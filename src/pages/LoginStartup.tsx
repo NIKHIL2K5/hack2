@@ -1,10 +1,7 @@
-
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
-import { Canvas } from "@react-three/fiber";
-import { AnimatedSphere } from "@/components/startup/AnimatedSphere";
 import { FloatingParticles } from "@/components/startup/FloatingParticles";
 import { StartupLoginHeader } from "@/components/startup/StartupLoginHeader";
 import { StartupLoginForm } from "@/components/startup/StartupLoginForm";
@@ -23,13 +20,10 @@ const LoginStartup = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500 flex items-center justify-center p-6 relative overflow-hidden">
-      {/* 3D Background */}
+      {/* Background with gradient instead of 3D */}
       <div className="absolute inset-0 opacity-20">
-        <Canvas>
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[10, 10, 5]} intensity={1} />
-          <AnimatedSphere />
-        </Canvas>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
       </div>
 
       {/* Floating particles */}
