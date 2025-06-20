@@ -1,17 +1,15 @@
-import { useState, useEffect } from "react";
-import { FileText, User, Eye, Briefcase, AlertCircle, Calendar, XCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+
+import { useState } from "react";
+import { FileText, User, Eye } from "lucide-react";
 import { Dialog } from "@/components/ui/dialog";
-import { toast } from "sonner";
-import { motion } from "framer-motion";
 import { StudentHeader } from "@/components/student/StudentHeader";
 import { StudentStats } from "@/components/student/StudentStats";
 import { JobSearchFilters } from "@/components/student/JobSearchFilters";
-import { JobCard } from "@/components/student/JobCard";
 import { StudentProfileModal } from "@/components/student/StudentProfileModal";
 import { JobApplicationModal } from "@/components/student/JobApplicationModal";
-import { saveUserData, loadUserData } from "@/utils/userStorage";
+import { JobsSection } from "@/components/student/JobsSection";
+import { QuickActions } from "@/components/student/QuickActions";
+import { useStudentData } from "@/hooks/useStudentData";
 
 const DashboardStudent = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -21,7 +19,18 @@ const DashboardStudent = () => {
   const [showJobApplication, setShowJobApplication] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
 
-  // Jobs data - moved to top before being used
+  const {
+    profile,
+    setProfile,
+    appliedJobs,
+    applicationData,
+    handleInputChange,
+    handleFileUpload,
+    handleSubmitApplication,
+    handleUpdateProfile
+  } = useStudentData();
+
+  // Jobs data
   const jobs = [
     {
       id: 1,
@@ -145,79 +154,6 @@ const DashboardStudent = () => {
     }
   ];
 
-  // Application form state - no prefilled data
-  const [applicationData, setApplicationData] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    location: "",
-    education: "",
-    experience: "",
-    skills: "",
-    coverLetter: "",
-    portfolioUrl: "",
-    githubUrl: "",
-    linkedinUrl: "",
-    expectedSalary: "",
-    availableFrom: "",
-    workMode: "hybrid",
-    additionalInfo: "",
-    resumeFile: null
-  });
-
-  // Enhanced student profile data - will be loaded from storage
-  const [profile, setProfile] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    location: "",
-    skills: [],
-    education: "",
-    experience: "",
-    resume: "",
-    bio: "",
-    profilePicture: "",
-    portfolioUrl: "",
-    githubUrl: "",
-    linkedinUrl: "",
-    joinedDate: "2024-01-15"
-  });
-
-  // Applied jobs data - start empty, will be loaded from storage
-  const [appliedJobs, setAppliedJobs] = useState([]);
-
-  // Load user data on component mount
-  useEffect(() => {
-    const savedUserData = loadUserData();
-    if (savedUserData) {
-      setProfile({
-        name: savedUserData.name || "",
-        email: savedUserData.email || "",
-        phone: savedUserData.phone || "",
-        location: savedUserData.location || "",
-        skills: savedUserData.skills || [],
-        education: savedUserData.education || "",
-        experience: savedUserData.experience || "",
-        resume: "",
-        bio: savedUserData.bio || "",
-        profilePicture: "",
-        portfolioUrl: savedUserData.portfolioUrl || "",
-        githubUrl: savedUserData.githubUrl || "",
-        linkedinUrl: savedUserData.linkedinUrl || "",
-        joinedDate: "2024-01-15"
-      });
-      
-      // Only load applied jobs if they exist
-      if (savedUserData.appliedJobs && savedUserData.appliedJobs.length > 0) {
-        setAppliedJobs(savedUserData.appliedJobs);
-      }
-      
-      if (savedUserData.name) {
-        toast.success(`Welcome back, ${savedUserData.name}!`);
-      }
-    }
-  }, []);
-
   // Filter jobs based on search criteria
   const filteredJobs = jobs.filter(job => {
     const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -235,121 +171,12 @@ const DashboardStudent = () => {
     setShowJobApplication(true);
   };
 
-  const handleInputChange = (field, value) => {
-    setApplicationData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    setApplicationData(prev => ({
-      ...prev,
-      resumeFile: file
-    }));
-  };
-
-  const handleSubmitApplication = (e) => {
-    e.preventDefault();
-    
-    // Basic validation
-    if (!applicationData.fullName || !applicationData.email || !applicationData.phone) {
-      toast.error("Please fill in all required fields");
-      return;
+  const handleSubmitJobApplication = (e) => {
+    const success = handleSubmitApplication(e, selectedJob);
+    if (success) {
+      setShowJobApplication(false);
+      setSelectedJob(null);
     }
-    
-    if (!applicationData.coverLetter) {
-      toast.error("Cover letter is required");
-      return;
-    }
-
-    // Add new application to the list
-    const newApplication = {
-      id: appliedJobs.length + 1,
-      title: selectedJob.title,
-      company: selectedJob.company,
-      appliedDate: new Date().toISOString().split('T')[0],
-      status: "Under Review",
-      statusColor: "bg-yellow-100 text-yellow-800",
-      icon: AlertCircle,
-      location: selectedJob.location,
-      stipend: selectedJob.stipend
-    };
-
-    const updatedAppliedJobs = [...appliedJobs, newApplication];
-    setAppliedJobs(updatedAppliedJobs);
-
-    // Save to localStorage
-    const currentUserData = loadUserData() || {
-      name: profile.name,
-      email: profile.email,
-      phone: profile.phone,
-      location: profile.location,
-      skills: profile.skills,
-      education: profile.education,
-      experience: profile.experience,
-      bio: profile.bio,
-      portfolioUrl: profile.portfolioUrl,
-      githubUrl: profile.githubUrl,
-      linkedinUrl: profile.linkedinUrl,
-      appliedJobs: [],
-      lastLogin: new Date().toISOString()
-    };
-
-    saveUserData({
-      ...currentUserData,
-      appliedJobs: updatedAppliedJobs
-    });
-
-    toast.success(`Application submitted successfully for ${selectedJob.title}!`);
-    setShowJobApplication(false);
-    setSelectedJob(null);
-    
-    // Reset form
-    setApplicationData({
-      fullName: "",
-      email: "",
-      phone: "",
-      location: "",
-      education: "",
-      experience: "",
-      skills: "",
-      coverLetter: "",
-      portfolioUrl: "",
-      githubUrl: "",
-      linkedinUrl: "",
-      expectedSalary: "",
-      availableFrom: "",
-      workMode: "hybrid",
-      additionalInfo: "",
-      resumeFile: null
-    });
-  };
-
-  const handleUpdateProfile = (e) => {
-    e.preventDefault();
-    
-    // Save profile data to localStorage
-    const userData = {
-      name: profile.name,
-      email: profile.email,
-      phone: profile.phone,
-      location: profile.location,
-      skills: profile.skills,
-      education: profile.education,
-      experience: profile.experience,
-      bio: profile.bio,
-      portfolioUrl: profile.portfolioUrl,
-      githubUrl: profile.githubUrl,
-      linkedinUrl: profile.linkedinUrl,
-      appliedJobs: appliedJobs,
-      lastLogin: new Date().toISOString()
-    };
-
-    saveUserData(userData);
-    toast.success("Profile updated successfully!");
-    setShowProfile(false);
   };
 
   const stats = [
@@ -386,85 +213,21 @@ const DashboardStudent = () => {
           setSkillFilter={setSkillFilter}
         />
 
-        {/* Jobs Section */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <motion.h2 
-              className="text-2xl font-bold text-neutral-800"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-            >
-              Available Jobs ({filteredJobs.length})
-            </motion.h2>
-            <Link to="/jobs">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="outline" className="border-primary-300 text-primary-700 hover:bg-blue-100 hover:border-blue-400 hover-button">
-                  View All Jobs
-                </Button>
-              </motion.div>
-            </Link>
-          </div>
+        <JobsSection 
+          filteredJobs={filteredJobs}
+          onApply={handleApplyJob}
+        />
 
-          <div className="grid gap-6">
-            {filteredJobs.slice(0, 6).map((job, index) => (
-              <div key={job.id} className="hover-card">
-                <JobCard 
-                  job={job}
-                  index={index}
-                  onApply={handleApplyJob}
-                />
-              </div>
-            ))}
-          </div>
-
-          {filteredJobs.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-12"
-            >
-              <p className="text-neutral-600 text-xl">No jobs found matching your criteria.</p>
-              <p className="text-neutral-500 mt-2">Try adjusting your search filters.</p>
-            </motion.div>
-          )}
-        </div>
-
-        {/* Quick Actions */}
-        <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-        >
-          <Link to="/my-applications">
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Button className="w-full h-20 gradient-primary text-white text-lg shadow-lg hover:shadow-xl transition-shadow hover-button">
-                <FileText className="w-6 h-6 mr-3" />
-                My Applications
-              </Button>
-            </motion.div>
-          </Link>
-          
-          <Link to="/application-tracker">
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Button className="w-full h-20 bg-accent text-white text-lg shadow-lg hover:shadow-xl hover:bg-green-600 transition-all hover-button">
-                <Briefcase className="w-6 h-6 mr-3" />
-                Track Applications
-              </Button>
-            </motion.div>
-          </Link>
-        </motion.div>
+        <QuickActions />
       </main>
 
-      {/* Job Application Modal */}
       <Dialog open={showJobApplication} onOpenChange={setShowJobApplication}>
         <JobApplicationModal
           selectedJob={selectedJob}
           applicationData={applicationData}
           onInputChange={handleInputChange}
           onFileUpload={handleFileUpload}
-          onSubmit={handleSubmitApplication}
+          onSubmit={handleSubmitJobApplication}
         />
       </Dialog>
     </div>
