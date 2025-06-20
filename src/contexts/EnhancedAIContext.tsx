@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState } from 'react';
 import { dataSyncService } from '@/services/dataSync';
 import { applicationSyncService } from '@/services/applicationSync';
@@ -21,6 +20,49 @@ export const useEnhancedAI = () => {
   return context;
 };
 
+// Predefined answers for common student questions
+const STUDENT_FAQ = {
+  'apply job internship': '**How to Apply for Jobs/Internships:**\n\n1. Go to the **Job Board** from your dashboard\n2. Use **filters** to find relevant opportunities\n3. Click **"Apply"** on any job you like\n4. Fill the application form with your details\n5. Upload your **resume** and submit\n\n✅ Your application will be tracked automatically!',
+  
+  'track application': '**Application Tracking:**\n\nYes! Use the **Application Tracker** to monitor all your applications.\n\n📊 **Status Flow:**\nApplied → Reviewed → Interview → Offer/Rejection\n\n🔍 You can see:\n• Application date\n• Current status\n• Company responses\n• Interview schedules',
+  
+  'smart job suggestion': '**Smart Job Recommendations:**\n\n🤖 Our AI analyzes:\n• Your profile & skills\n• Past application history\n• Saved jobs & preferences\n• Academic background\n\n💡 It then suggests **personalized opportunities** that match your profile for higher success rates!',
+  
+  'upload resume': '**Resume Management:**\n\n✅ **Yes, you can:**\n• Upload multiple resume versions\n• Update your existing resume anytime\n• Download your uploaded resumes\n\n📝 **How to update:**\n1. Go to **Profile → Settings**\n2. Click **"Upload Resume"**\n3. Select your new file\n4. Save changes',
+  
+  'verified jobs': '**Job Verification:**\n\n✅ **All jobs are verified!**\n\n🔐 **Our verification process:**\n• Jobs reviewed by our team\n• Posted by registered startups only\n• Company credentials verified\n• Regular monitoring for authenticity\n\n🛡️ You can apply with confidence!',
+  
+  'save jobs': '**Save Jobs Feature:**\n\n✅ **Yes, you can save jobs!**\n\n📌 **How to save:**\n1. Click **"Save Job"** on any listing\n2. Access saved jobs in **Job Board → Saved**\n3. Apply to saved jobs anytime\n\n💡 **Tip:** Save interesting jobs to apply later when you have time to craft good applications!',
+  
+  'login issues': '**Login Troubleshooting:**\n\n🔧 **Try these steps:**\n1. **Reset Password** - Click "Forgot Password"\n2. **Clear browser cache** and cookies\n3. **Check email** for verification links\n4. **Try different browser** or incognito mode\n\n❌ **Still having issues?**\nContact our support team - we\'ll help you within 24 hours!',
+  
+  'delete account': '**Account Deletion:**\n\n✅ **Yes, you can delete your account.**\n\n⚠️ **Steps:**\n1. Go to **Profile → Settings**\n2. Scroll to **Account Management**\n3. Click **"Request Account Deletion"**\n4. Confirm your decision\n\n📧 **Note:** This action is permanent and cannot be undone. All your data will be removed.',
+  
+  'email notifications': '**Email Notifications:**\n\n✅ **Yes, you\'ll receive alerts for:**\n• 📧 Interview calls & schedules\n• 📈 Application status changes\n• 🎯 New job matches for your profile\n• 🔔 Important updates from companies\n\n⚙️ **Customize notifications** in Profile → Settings → Notifications',
+  
+  'telugu language': '**Language Switch:**\n\n🇮🇳 **Switch to Telugu:**\n1. Look for the **language toggle** in the top-right corner\n2. Click to switch between **English ↔ తెలుగు**\n3. The entire interface will change\n\n💡 **Note:** All job postings and applications support both languages!',
+  
+  'platform free': '**Platform Cost:**\n\n✅ **Completely FREE for students!**\n\n🎓 **What\'s included at no cost:**\n• Unlimited job applications\n• Profile creation & management\n• Application tracking\n• AI assistance & career guidance\n• Resume uploads & updates\n\n💰 **No hidden fees, no premium plans needed!**',
+  
+  'contact startup': '**Contacting Startups:**\n\n📞 **After applying:**\n1. Wait for **shortlisting notification**\n2. You\'ll receive **contact details** or **interview link**\n3. Some companies may **call directly**\n\n💼 **Professional tip:** Always be ready for unexpected interview calls!',
+  
+  'job types': '**Types of Jobs Available:**\n\n💼 **Job Categories:**\n• 🔬 **Internships** (3-6 months)\n• 💪 **Full-time positions**\n• 📚 **Research opportunities**\n• ⏰ **Part-time & flexible work**\n\n🎯 **Sectors:** Tech, Non-tech, Government, Startups, NGOs, and more!',
+  
+  'job board updates': '**Job Board Updates:**\n\n📅 **Updated daily!**\n\n🔄 **Fresh opportunities added by:**\n• Verified startups\n• Government officials\n• Partner organizations\n• Recruitment teams\n\n⏰ **Best time to check:** Morning hours for newest listings!',
+  
+  'profile feedback': '**Profile Feedback:**\n\n✅ **Get feedback through:**\n• 🤖 **AI Assistant** - Ask me for profile tips!\n• 👥 **Mentor consultations** via chatbot\n• 📊 **Profile completion score**\n• 💡 **Automated suggestions**\n\n💬 **Just ask:** "Review my profile" or "How to improve my chances?"',
+  
+  'application history': '**Application History:**\n\n✅ **Yes, full history available!**\n\n📊 **Application Tracker shows:**\n• All past applications\n• Application dates & status\n• Company responses\n• Interview records\n• Success/rejection reasons\n\n📈 **Use it to improve your future applications!**',
+  
+  'export data': '**Data Export:**\n\n🚧 **Coming Soon!**\n\nWe\'re working on a **PDF download feature** that will include:\n• Application history\n• Profile summary\n• Achievement records\n\n📧 **Stay tuned** for updates - this feature will be available soon!',
+  
+  'improve selection chances': '**Boost Your Selection Chances:**\n\n🎯 **Proven tips:**\n• ✅ **Complete profile 100%**\n• 📄 **Upload clean, ATS-friendly resume**\n• 📝 **Write tailored cover letters**\n• 🎯 **Apply to relevant jobs only**\n• 📞 **Follow up professionally**\n• 💼 **Highlight relevant skills & projects**',
+  
+  'resume template': '**Resume Templates:**\n\n✅ **Yes, templates available!**\n\n📄 **Access templates:**\n1. Go to **Resources** section\n2. Download **resume samples**\n3. Use **ATS-friendly formats**\n4. Follow **industry-specific templates**\n\n💡 **Pro tip:** Customize templates with your information for best results!',
+  
+  'career guidance ai': '**AI Career Guidance:**\n\n✅ **Absolutely! I can help with:**\n• 📈 **Career planning & roadmaps**\n• 📝 **Resume & interview tips**\n• 🎯 **Skill development advice**\n• 💼 **Job search strategies**\n• 📓 **Course & certification recommendations**\n\n💬 **Just ask specific questions** and I\'ll provide detailed, personalized guidance!'
+};
+
 export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAIThinking, setIsAIThinking] = useState(false);
 
@@ -41,6 +83,48 @@ export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   };
 
   const userInfo = getUserInfo();
+
+  // Function to check if message matches any FAQ
+  const findFAQAnswer = (message: string): string | null => {
+    const lowerMessage = message.toLowerCase();
+    
+    for (const [key, answer] of Object.entries(STUDENT_FAQ)) {
+      if (key.split(' ').every(keyword => lowerMessage.includes(keyword))) {
+        return answer;
+      }
+    }
+    
+    // Additional pattern matching for common variations
+    if (lowerMessage.includes('how') && (lowerMessage.includes('apply') || lowerMessage.includes('job'))) {
+      return STUDENT_FAQ['apply job internship'];
+    }
+    
+    if (lowerMessage.includes('track') && lowerMessage.includes('application')) {
+      return STUDENT_FAQ['track application'];
+    }
+    
+    if (lowerMessage.includes('save') && lowerMessage.includes('job')) {
+      return STUDENT_FAQ['save jobs'];
+    }
+    
+    if (lowerMessage.includes('resume') && (lowerMessage.includes('upload') || lowerMessage.includes('update'))) {
+      return STUDENT_FAQ['upload resume'];
+    }
+    
+    if (lowerMessage.includes('notification') || lowerMessage.includes('email')) {
+      return STUDENT_FAQ['email notifications'];
+    }
+    
+    if (lowerMessage.includes('telugu') || lowerMessage.includes('language')) {
+      return STUDENT_FAQ['telugu language'];
+    }
+    
+    if (lowerMessage.includes('free') || lowerMessage.includes('cost') || lowerMessage.includes('price')) {
+      return STUDENT_FAQ['platform free'];
+    }
+    
+    return null;
+  };
 
   const generateJobRecommendations = (userRole: string, context: string) => {
     const jobs = JSON.parse(localStorage.getItem('platform_job_postings') || '[]');
@@ -207,6 +291,17 @@ export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         context,
         timestamp: new Date().toISOString()
       });
+
+      // Check for FAQ answers first (especially for students)
+      if (userInfo.role === 'student') {
+        const faqAnswer = findFAQAnswer(message);
+        if (faqAnswer) {
+          return {
+            type: 'text',
+            content: faqAnswer
+          };
+        }
+      }
 
       const lowerMessage = message.toLowerCase();
       
