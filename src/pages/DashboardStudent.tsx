@@ -1,5 +1,6 @@
+
 import { useState } from "react";
-import { FileText, User, Eye, Briefcase } from "lucide-react";
+import { FileText, User, Eye, Briefcase, AlertCircle, Calendar, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Dialog } from "@/components/ui/dialog";
