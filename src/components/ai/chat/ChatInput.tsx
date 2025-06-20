@@ -43,6 +43,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
           onClick={() => fileInputRef.current?.click()}
           variant="outline"
           size="sm"
+          className="hover-button"
           disabled={isAIThinking}
         >
           <Paperclip className="w-4 h-4" />
@@ -58,6 +59,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
         <Button
           onClick={onSendMessage}
           disabled={isAIThinking || (!inputMessage.trim() && !hasSelectedImage)}
+          className="hover-button"
         >
           <Send className="w-4 h-4" />
         </Button>

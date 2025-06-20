@@ -43,8 +43,8 @@ const MyApplications = () => {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center space-x-4">
             <Link to="/dashboard/student">
-              <motion.div>
-                <Button variant="outline" className="bg-white/10 border-white/20 text-white">
+              <motion.div whileHover={{ scale: 1.1, x: -5 }}>
+                <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Back to Dashboard
                 </Button>
@@ -67,8 +67,9 @@ const MyApplications = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
+              whileHover={{ scale: 1.02, y: -5 }}
             >
-              <Card className="bg-white/10 backdrop-blur-lg border-white/20">
+              <Card className="bg-white/10 backdrop-blur-lg border-white/20 hover:border-white/40 transition-all duration-300">
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <div>

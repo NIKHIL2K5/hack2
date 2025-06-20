@@ -69,13 +69,21 @@ body {
   font-family: "Inter", sans-serif;
 }
 
-/* Custom CSS classes - ALL HOVER EFFECTS REMOVED */
+/* Custom CSS classes - HOVER EFFECTS REMOVED */
 .gradient-primary {
   background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
 }
 
 .gradient-secondary {
   background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+}
+
+.hover-card {
+  transition: none; /* Removed hover transition */
+}
+
+.hover-button {
+  transition: none; /* Removed hover transition */
 }
 
 .text-primary-700 {
@@ -151,18 +159,4 @@ body {
 
 .stats-card {
   background: linear-gradient(145deg, #f0f9ff 0%, #e0f2fe 100%);
-}
-
-/* Remove ALL hover effects globally */
-* {
-  transition: none !important;
-}
-
-*:hover {
-  transform: none !important;
-  scale: none !important;
-  background-color: inherit !important;
-  color: inherit !important;
-  border-color: inherit !important;
-  box-shadow: inherit !important;
 }
