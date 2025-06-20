@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ApplicationStats } from "@/components/official/ApplicationStats";
 import { ApplicationsTable } from "@/components/official/ApplicationsTable";
@@ -12,6 +12,7 @@ import { useOfficialData } from "@/hooks/useOfficialData";
 import { Scene3D } from "@/components/3d/Scene3D";
 
 const ApplicationsManagement = () => {
+  const navigate = useNavigate();
   const { applications, getApplicationStats } = useOfficialData();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");

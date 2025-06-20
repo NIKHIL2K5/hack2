@@ -13,7 +13,8 @@ import {
   CheckCircle,
   AlertTriangle,
   TrendingUp,
-  User
+  User,
+  LogOut
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -31,9 +32,11 @@ import { RoleManagement } from '@/components/official/RoleManagement';
 import { OfficialProfile } from '@/components/official/OfficialProfile';
 import { OfficialMobileNav } from '@/components/official/OfficialMobileNav';
 import { OfficialMobileHeader } from '@/components/official/OfficialMobileHeader';
+import { Link, useNavigate } from 'react-router-dom';
 
 const DashboardOfficial = () => {
   const [activeTab, setActiveTab] = useState('overview');
+  const navigate = useNavigate();
 
   // Initialize with overview tab and scroll to top on tab change
   useEffect(() => {
@@ -65,6 +68,13 @@ const DashboardOfficial = () => {
   const handleDesktopNavClick = (tabId: string) => {
     console.log('Desktop nav clicked:', tabId);
     setActiveTab(tabId);
+  };
+
+  const handleLogout = () => {
+    // Clear any stored user data
+    localStorage.removeItem('officialUser');
+    // Navigate to home page
+    navigate('/');
   };
 
   const renderContent = () => {
@@ -186,6 +196,13 @@ const DashboardOfficial = () => {
                 <User className="w-4 h-4 mr-2" />
                 Profile
               </Button>
+              <Button 
+                variant="outline" 
+                className="bg-red-500/20 border-red-500/50 text-red-200 hover:bg-red-500/30"
+                onClick={handleLogout}
+              >
+                <LogOut className="w-4 h-4" />
+              </Button>
             </div>
           </div>
         </div>
@@ -216,6 +233,14 @@ const DashboardOfficial = () => {
                       <span className="truncate">{item.label}</span>
                     </Button>
                   ))}
+                  <Button
+                    onClick={handleLogout}
+                    variant="ghost"
+                    className="w-full justify-start text-left text-red-300 hover:bg-red-500/20 hover:text-red-200"
+                  >
+                    <LogOut className="w-4 h-4 mr-2 flex-shrink-0" />
+                    <span className="truncate">Logout</span>
+                  </Button>
                 </nav>
               </CardContent>
             </Card>

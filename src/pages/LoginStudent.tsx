@@ -8,8 +8,6 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { toast } from "sonner";
 
-// Removed Canvas and Torus imports that were causing errors
-
 const LoginStudent = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);

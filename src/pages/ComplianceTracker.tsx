@@ -1,12 +1,13 @@
-
 import { motion } from "framer-motion";
 import { ArrowLeft, CheckCircle, AlertTriangle, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ComplianceTracker = () => {
+  const navigate = useNavigate();
+  
   const complianceItems = [
     { name: "MSME Registration", status: "completed", progress: 100 },
     { name: "GST Registration", status: "completed", progress: 100 },

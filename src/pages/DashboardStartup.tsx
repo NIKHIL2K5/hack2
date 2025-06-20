@@ -4,7 +4,7 @@ import { Building2, Plus, Users, FileText, Bot, Settings, LogOut, Briefcase, Che
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useOfficialData } from "@/hooks/useOfficialData";
 import { Scene3D } from "@/components/3d/Scene3D";
@@ -15,6 +15,7 @@ import { isValidOfficialEmail } from "@/services/officialAuth";
 import { dataSyncService } from "@/services/dataSync";
 
 const DashboardStartup = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
   const [hasValidAccess, setHasValidAccess] = useState(false);
@@ -185,7 +186,7 @@ const DashboardStartup = () => {
                 </motion.div>
               </Link>
               
-              <Link to="/profile">
+              <Link to="/profile-settings">
                 <motion.div whileHover={{ scale: 1.1 }}>
                   <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
                     <Settings className="w-4 h-4" />

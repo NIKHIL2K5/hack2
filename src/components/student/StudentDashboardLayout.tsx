@@ -1,4 +1,3 @@
-
 import { FileText, User, Eye } from "lucide-react";
 import { Dialog } from "@/components/ui/dialog";
 import { StudentHeader } from "@/components/student/StudentHeader";
@@ -9,6 +8,7 @@ import { JobApplicationModal } from "@/components/student/JobApplicationModal";
 import { JobsSection } from "@/components/student/JobsSection";
 import { QuickActions } from "@/components/student/QuickActions";
 import { SavedJobsWidget } from "@/components/student/SavedJobsWidget";
+import { useNavigate } from "react-router-dom";
 
 interface StudentDashboardLayoutProps {
   // State props
@@ -37,6 +37,7 @@ interface StudentDashboardLayoutProps {
   handleApplyJob: (job: any) => void;
   handleSubmitJobApplication: (e: React.FormEvent) => void;
   handleUpdateProfile: (e: React.FormEvent) => void;
+  onNavigate?: (path: string) => void;
 }
 
 export const StudentDashboardLayout = (props: StudentDashboardLayoutProps) => {
@@ -61,14 +62,25 @@ export const StudentDashboardLayout = (props: StudentDashboardLayoutProps) => {
     handleFileUpload,
     handleApplyJob,
     handleSubmitJobApplication,
-    handleUpdateProfile
+    handleUpdateProfile,
+    onNavigate
   } = props;
+
+  const navigate = useNavigate();
 
   const stats = [
     { title: "Applications Sent", value: appliedJobs.length.toString(), icon: FileText },
     { title: "Jobs Viewed", value: "45", icon: Eye },
     { title: "Profile Views", value: "23", icon: User }
   ];
+
+  const handleNavigation = (path: string) => {
+    if (onNavigate) {
+      onNavigate(path);
+    } else {
+      navigate(path);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-neutral-100 to-neutral-200">
@@ -105,7 +117,7 @@ export const StudentDashboardLayout = (props: StudentDashboardLayoutProps) => {
           onApply={handleApplyJob}
         />
 
-        <QuickActions />
+        <QuickActions onNavigate={handleNavigation} />
       </main>
 
       <SavedJobsWidget />

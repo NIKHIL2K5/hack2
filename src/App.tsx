@@ -1,9 +1,8 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { UniversalAIChat } from "@/components/ai/UniversalAIChat";
 import Index from "./pages/Index";
 import LoginStudent from "./pages/LoginStudent";
@@ -19,6 +18,12 @@ import StartupProfileCreator from "./pages/StartupProfileCreator";
 import SchemeManager from "./pages/SchemeManager";
 import StudentList from "./pages/StudentList";
 import ChatbotPage from "./pages/ChatbotPage";
+import ApplicationsManagement from "./pages/ApplicationsManagement";
+import ComplianceTracker from "./pages/ComplianceTracker";
+import JobBoard from "./pages/JobBoard";
+import Analytics from "./pages/Analytics";
+import FeedbackSentiment from "./pages/FeedbackSentiment";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +48,12 @@ const App = () => (
           <Route path="/scheme-manager" element={<SchemeManager />} />
           <Route path="/student-list" element={<StudentList />} />
           <Route path="/chatbot" element={<ChatbotPage />} />
+          <Route path="/applications" element={<ApplicationsManagement />} />
+          <Route path="/compliance" element={<ComplianceTracker />} />
+          <Route path="/jobs" element={<JobBoard />} />
+          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/feedback" element={<FeedbackSentiment />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <UniversalAIChat />
       </BrowserRouter>
