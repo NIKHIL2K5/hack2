@@ -1,4 +1,3 @@
-
 import React, { useRef } from 'react';
 import { Send, Paperclip } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -24,13 +23,14 @@ export const ChatInput: React.FC<ChatInputProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
       onSendMessage();
     }
   };
 
   return (
-    <div className="p-4 border-t border-gray-200">
+    <div className="p-3 border-t border-gray-200">
       <div className="flex space-x-2">
         <input
           type="file"
@@ -44,6 +44,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
           variant="outline"
           size="sm"
           disabled={isAIThinking}
+          className="h-10 w-10 p-0 flex-shrink-0"
         >
           <Paperclip className="w-4 h-4" />
         </Button>
@@ -58,6 +59,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
         <Button
           onClick={onSendMessage}
           disabled={isAIThinking || (!inputMessage.trim() && !hasSelectedImage)}
+          className="h-10 w-10 p-0 flex-shrink-0"
         >
           <Send className="w-4 h-4" />
         </Button>

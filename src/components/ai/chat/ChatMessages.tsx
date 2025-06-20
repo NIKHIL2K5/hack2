@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Image as ImageIcon } from 'lucide-react';
@@ -33,7 +32,7 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, isAIThinki
   }, [messages]);
 
   return (
-    <div className="flex-1 p-4 overflow-y-auto space-y-4">
+    <div className="flex-1 p-4 overflow-y-auto space-y-4 custom-scrollbar">
       {messages.map((message) => (
         <motion.div
           key={message.id}
@@ -41,7 +40,7 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, isAIThinki
           animate={{ opacity: 1, y: 0 }}
           className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
         >
-          <div className={`max-w-[80%] p-3 rounded-lg ${
+          <div className={`max-w-[85%] p-3 rounded-lg ${
             message.sender === 'user'
               ? 'bg-blue-500 text-white'
               : 'bg-gray-100 text-gray-800'
