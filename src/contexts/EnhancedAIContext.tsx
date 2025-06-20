@@ -20,47 +20,113 @@ export const useEnhancedAI = () => {
   return context;
 };
 
-// Predefined answers for common student questions
+// Comprehensive FAQ database with your provided Q&A
 const STUDENT_FAQ = {
-  'apply job internship': '**How to Apply for Jobs/Internships:**\n\n1. Go to the **Job Board** from your dashboard\n2. Use **filters** to find relevant opportunities\n3. Click **"Apply"** on any job you like\n4. Fill the application form with your details\n5. Upload your **resume** and submit\n\n✅ Your application will be tracked automatically!',
+  'apply job internship': '**How to Apply for Jobs/Internships:**\n\n➡️ Go to the Job Board, use filters, click "Apply," fill the form, and submit your resume.',
   
-  'track application': '**Application Tracking:**\n\nYes! Use the **Application Tracker** to monitor all your applications.\n\n📊 **Status Flow:**\nApplied → Reviewed → Interview → Offer/Rejection\n\n🔍 You can see:\n• Application date\n• Current status\n• Company responses\n• Interview schedules',
+  'track application': '**Application Tracking:**\n\n➡️ Yes, use the Application Tracker to see statuses like Applied → Reviewed → Interview → Offer.',
   
-  'smart job suggestion': '**Smart Job Recommendations:**\n\n🤖 Our AI analyzes:\n• Your profile & skills\n• Past application history\n• Saved jobs & preferences\n• Academic background\n\n💡 It then suggests **personalized opportunities** that match your profile for higher success rates!',
+  'smart job suggestion': '**Smart Job Suggestions:**\n\n➡️ It analyzes your profile, skills, and past activity to recommend personalized jobs.',
   
-  'upload resume': '**Resume Management:**\n\n✅ **Yes, you can:**\n• Upload multiple resume versions\n• Update your existing resume anytime\n• Download your uploaded resumes\n\n📝 **How to update:**\n1. Go to **Profile → Settings**\n2. Click **"Upload Resume"**\n3. Select your new file\n4. Save changes',
+  'upload resume multiple update': '**Resume Management:**\n\n➡️ Yes. Visit your Profile page and upload a new resume anytime.',
   
-  'verified jobs': '**Job Verification:**\n\n✅ **All jobs are verified!**\n\n🔐 **Our verification process:**\n• Jobs reviewed by our team\n• Posted by registered startups only\n• Company credentials verified\n• Regular monitoring for authenticity\n\n🛡️ You can apply with confidence!',
+  'verified jobs': '**Job Verification:**\n\n➡️ Yes. All jobs are verified by our team or posted by registered startups.',
   
-  'save jobs': '**Save Jobs Feature:**\n\n✅ **Yes, you can save jobs!**\n\n📌 **How to save:**\n1. Click **"Save Job"** on any listing\n2. Access saved jobs in **Job Board → Saved**\n3. Apply to saved jobs anytime\n\n💡 **Tip:** Save interesting jobs to apply later when you have time to craft good applications!',
+  'save jobs later': '**Save Jobs Feature:**\n\n➡️ Yes. Click "Save Job" and check your saved section under Job Board.',
   
-  'login issues': '**Login Troubleshooting:**\n\n🔧 **Try these steps:**\n1. **Reset Password** - Click "Forgot Password"\n2. **Clear browser cache** and cookies\n3. **Check email** for verification links\n4. **Try different browser** or incognito mode\n\n❌ **Still having issues?**\nContact our support team - we\'ll help you within 24 hours!',
+  'login issues': '**Login Troubleshooting:**\n\n➡️ Try resetting your password. If the issue persists, contact support.',
   
-  'delete account': '**Account Deletion:**\n\n✅ **Yes, you can delete your account.**\n\n⚠️ **Steps:**\n1. Go to **Profile → Settings**\n2. Scroll to **Account Management**\n3. Click **"Request Account Deletion"**\n4. Confirm your decision\n\n📧 **Note:** This action is permanent and cannot be undone. All your data will be removed.',
+  'delete account': '**Account Deletion:**\n\n➡️ Yes. Go to Profile > Settings and request account deletion.',
   
-  'email notifications': '**Email Notifications:**\n\n✅ **Yes, you\'ll receive alerts for:**\n• 📧 Interview calls & schedules\n• 📈 Application status changes\n• 🎯 New job matches for your profile\n• 🔔 Important updates from companies\n\n⚙️ **Customize notifications** in Profile → Settings → Notifications',
+  'email notifications': '**Email Notifications:**\n\n➡️ Yes. You\'ll receive alerts for interview calls, status changes, and new matches.',
   
-  'telugu language': '**Language Switch:**\n\n🇮🇳 **Switch to Telugu:**\n1. Look for the **language toggle** in the top-right corner\n2. Click to switch between **English ↔ తెలుగు**\n3. The entire interface will change\n\n💡 **Note:** All job postings and applications support both languages!',
+  'telugu language switch': '**Language Switch:**\n\n➡️ Use the toggle in the top-right corner to change between English and Telugu.',
   
-  'platform free': '**Platform Cost:**\n\n✅ **Completely FREE for students!**\n\n🎓 **What\'s included at no cost:**\n• Unlimited job applications\n• Profile creation & management\n• Application tracking\n• AI assistance & career guidance\n• Resume uploads & updates\n\n💰 **No hidden fees, no premium plans needed!**',
+  'platform free students': '**Platform Cost:**\n\n➡️ Yes. GovStartup Navigator is completely free for students.',
   
-  'contact startup': '**Contacting Startups:**\n\n📞 **After applying:**\n1. Wait for **shortlisting notification**\n2. You\'ll receive **contact details** or **interview link**\n3. Some companies may **call directly**\n\n💼 **Professional tip:** Always be ready for unexpected interview calls!',
+  'contact startup after applying': '**Contacting Startups:**\n\n➡️ Once shortlisted, you\'ll get their contact info or a direct interview link.',
   
-  'job types': '**Types of Jobs Available:**\n\n💼 **Job Categories:**\n• 🔬 **Internships** (3-6 months)\n• 💪 **Full-time positions**\n• 📚 **Research opportunities**\n• ⏰ **Part-time & flexible work**\n\n🎯 **Sectors:** Tech, Non-tech, Government, Startups, NGOs, and more!',
+  'what kind jobs posted': '**Types of Jobs:**\n\n➡️ Internships, Full-time, Research, and Part-time jobs across tech and non-tech sectors.',
   
-  'job board updates': '**Job Board Updates:**\n\n📅 **Updated daily!**\n\n🔄 **Fresh opportunities added by:**\n• Verified startups\n• Government officials\n• Partner organizations\n• Recruitment teams\n\n⏰ **Best time to check:** Morning hours for newest listings!',
+  'job board updated': '**Job Board Updates:**\n\n➡️ Daily. New opportunities are added by startups and officials.',
   
-  'profile feedback': '**Profile Feedback:**\n\n✅ **Get feedback through:**\n• 🤖 **AI Assistant** - Ask me for profile tips!\n• 👥 **Mentor consultations** via chatbot\n• 📊 **Profile completion score**\n• 💡 **Automated suggestions**\n\n💬 **Just ask:** "Review my profile" or "How to improve my chances?"',
+  'feedback profile': '**Profile Feedback:**\n\n➡️ Yes. Use the AI assistant or ask mentors for suggestions via chatbot.',
   
-  'application history': '**Application History:**\n\n✅ **Yes, full history available!**\n\n📊 **Application Tracker shows:**\n• All past applications\n• Application dates & status\n• Company responses\n• Interview records\n• Success/rejection reasons\n\n📈 **Use it to improve your future applications!**',
+  'application history': '**Application History:**\n\n➡️ Yes, the Application Tracker maintains all your past job records.',
   
-  'export data': '**Data Export:**\n\n🚧 **Coming Soon!**\n\nWe\'re working on a **PDF download feature** that will include:\n• Application history\n• Profile summary\n• Achievement records\n\n📧 **Stay tuned** for updates - this feature will be available soon!',
+  'export application data': '**Data Export:**\n\n➡️ Not yet, but we are working on a PDF download feature.',
   
-  'improve selection chances': '**Boost Your Selection Chances:**\n\n🎯 **Proven tips:**\n• ✅ **Complete profile 100%**\n• 📄 **Upload clean, ATS-friendly resume**\n• 📝 **Write tailored cover letters**\n• 🎯 **Apply to relevant jobs only**\n• 📞 **Follow up professionally**\n• 💼 **Highlight relevant skills & projects**',
+  'improve selection chances': '**Improve Selection Chances:**\n\n➡️ Fill your profile completely, upload a clean resume, and tailor your cover letters.',
   
-  'resume template': '**Resume Templates:**\n\n✅ **Yes, templates available!**\n\n📄 **Access templates:**\n1. Go to **Resources** section\n2. Download **resume samples**\n3. Use **ATS-friendly formats**\n4. Follow **industry-specific templates**\n\n💡 **Pro tip:** Customize templates with your information for best results!',
+  'resume template': '**Resume Templates:**\n\n➡️ Yes, visit the Resources section for resume samples and templates.',
   
-  'career guidance ai': '**AI Career Guidance:**\n\n✅ **Absolutely! I can help with:**\n• 📈 **Career planning & roadmaps**\n• 📝 **Resume & interview tips**\n• 🎯 **Skill development advice**\n• 💼 **Job search strategies**\n• 📓 **Course & certification recommendations**\n\n💬 **Just ask specific questions** and I\'ll provide detailed, personalized guidance!'
+  'ai career guidance': '**AI Career Guidance:**\n\n➡️ Yes. Our AI assistant is trained to give basic guidance and tips.'
+};
+
+const STARTUP_FAQ = {
+  'post job internship': '**Posting Jobs:**\n\n➡️ Click "Post Job" in your dashboard and fill out the form.',
+  
+  'see applicants': '**View Applicants:**\n\n➡️ Go to "Applications" under the Job section to view candidates and resumes.',
+  
+  'compliance checklist': '**Compliance Checklist:**\n\n➡️ Yes, use the Compliance Tracker in your dashboard to track legal requirements.',
+  
+  'edit remove job posting': '**Edit/Remove Jobs:**\n\n➡️ Click on the posted job and select Edit or Delete from the options.',
+  
+  'track startup performance': '**Performance Tracking:**\n\n➡️ Yes, see analytics and stats in your Startup Insights widget.',
+  
+  'chatbot discover schemes': '**Discover Schemes:**\n\n➡️ Ask it things like "Show me MSME schemes for food startups."',
+  
+  'chatbot multilingual': '**Multilingual Support:**\n\n➡️ Yes. It works in English and Telugu.',
+  
+  'complete compliance faster': '**Faster Compliance:**\n\n➡️ Follow the visual checklist, and you\'ll get automated alerts and suggestions.',
+  
+  'upload company documents': '**Document Upload:**\n\n➡️ Yes. Go to Profile > Uploads and submit GST, MSME, PAN, etc.',
+  
+  'sentiment analysis work': '**Sentiment Analysis:**\n\n➡️ We use AI to analyze feedback and assign sentiment tags like Positive/Negative.',
+  
+  'contact shortlisted students': '**Contact Students:**\n\n➡️ Yes. You\'ll receive contact info once you shortlist or schedule interviews.',
+  
+  'pay post jobs': '**Posting Fees:**\n\n➡️ No. It\'s free for verified startups under Telangana Govt. programs.',
+  
+  'startup data secure': '**Data Security:**\n\n➡️ We use secure encrypted storage and token-based access.',
+  
+  'post telugu': '**Telugu Posting:**\n\n➡️ Yes. Use the language toggle when creating your job or scheme.',
+  
+  'track applications status': '**Application Status:**\n\n➡️ Yes. You\'ll see a progress bar showing how many students applied, are shortlisted, etc.'
+};
+
+const OFFICIAL_FAQ = {
+  'add new scheme': '**Add Scheme:**\n\n➡️ Go to Scheme Management and click "Add Scheme."',
+  
+  'edit delete schemes': '**Edit/Delete Schemes:**\n\n➡️ Yes. Click on any scheme to edit or remove it.',
+  
+  'monitor startups': '**Startup Monitoring:**\n\n➡️ Visit the Startup Monitoring Table for a list of all registered startups with KYC status.',
+  
+  'heatmap show': '**Heatmap Information:**\n\n➡️ It visualizes startup activity and job stats across Telangana districts.',
+  
+  'sentiment analysis help': '**Sentiment Analysis Benefits:**\n\n➡️ It flags feedback trends to help you improve schemes and services.',
+  
+  'export startup job data': '**Data Export:**\n\n➡️ Yes. Go to Analytics and click "Export CSV."',
+  
+  'verify startup compliance': '**Compliance Verification:**\n\n➡️ Check the Compliance Tracker for document status and alerts.',
+  
+  'switch language telugu': '**Language Switch:**\n\n➡️ Yes. Use the toggle at the top of your dashboard.',
+  
+  'assign mentor startups': '**Mentor Assignment:**\n\n➡️ Currently manual; a future update will allow assigning mentors via the dashboard.',
+  
+  'contact startups directly': '**Contact Startups:**\n\n➡️ Yes. You\'ll find contact details in their profile section.'
+};
+
+const GENERAL_FAQ = {
+  'what govstartup navigator': '**About GovStartup Navigator:**\n\n➡️ It\'s a unified platform connecting students, startups, and officials in Telangana for jobs, internships, and innovation.',
+  
+  'data safe secure': '**Data Safety:**\n\n➡️ Yes. We use secure authentication, encrypted storage, and token-based access.',
+  
+  'change role signup': '**Role Changes:**\n\n➡️ No, but you can create a new account or request role change via support.',
+  
+  'contact support': '**Support Contact:**\n\n➡️ Click "Help" or use the chatbot to raise a support request.',
+  
+  'platform expand states': '**Platform Expansion:**\n\n➡️ Yes. Telangana is the pilot, but expansion is planned for other regions.'
 };
 
 export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -84,6 +150,71 @@ export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   const userInfo = getUserInfo();
 
+  // Enhanced FAQ matching function with fuzzy search
+  const findFAQAnswer = (message: string, userRole: string): string | null => {
+    const lowerMessage = message.toLowerCase();
+    
+    // Determine which FAQ set to search based on user role
+    let faqSet = GENERAL_FAQ;
+    if (userRole === 'student') {
+      faqSet = { ...STUDENT_FAQ, ...GENERAL_FAQ };
+    } else if (userRole === 'startup') {
+      faqSet = { ...STARTUP_FAQ, ...GENERAL_FAQ };
+    } else if (userRole === 'official') {
+      faqSet = { ...OFFICIAL_FAQ, ...GENERAL_FAQ };
+    }
+    
+    // Direct keyword matching
+    for (const [key, answer] of Object.entries(faqSet)) {
+      const keywords = key.split(' ');
+      if (keywords.every(keyword => lowerMessage.includes(keyword))) {
+        return answer;
+      }
+    }
+    
+    // Fuzzy matching for common variations
+    const fuzzyMatches = [
+      // Student specific matches
+      { patterns: ['how', 'apply'], answer: STUDENT_FAQ['apply job internship'] },
+      { patterns: ['track', 'application'], answer: STUDENT_FAQ['track application'] },
+      { patterns: ['save', 'job'], answer: STUDENT_FAQ['save jobs later'] },
+      { patterns: ['resume', 'upload'], answer: STUDENT_FAQ['upload resume multiple update'] },
+      { patterns: ['notification', 'email'], answer: STUDENT_FAQ['email notifications'] },
+      { patterns: ['telugu', 'language'], answer: STUDENT_FAQ['telugu language switch'] },
+      { patterns: ['free', 'cost', 'price'], answer: STUDENT_FAQ['platform free students'] },
+      { patterns: ['login', 'issue', 'problem'], answer: STUDENT_FAQ['login issues'] },
+      { patterns: ['delete', 'account'], answer: STUDENT_FAQ['delete account'] },
+      { patterns: ['verified', 'jobs'], answer: STUDENT_FAQ['verified jobs'] },
+      
+      // Startup specific matches
+      { patterns: ['post', 'job'], answer: STARTUP_FAQ['post job internship'] },
+      { patterns: ['applicants', 'candidates'], answer: STARTUP_FAQ['see applicants'] },
+      { patterns: ['compliance'], answer: STARTUP_FAQ['compliance checklist'] },
+      { patterns: ['edit', 'job'], answer: STARTUP_FAQ['edit remove job posting'] },
+      { patterns: ['performance', 'analytics'], answer: STARTUP_FAQ['track startup performance'] },
+      { patterns: ['documents', 'upload'], answer: STARTUP_FAQ['upload company documents'] },
+      
+      // Official specific matches
+      { patterns: ['add', 'scheme'], answer: OFFICIAL_FAQ['add new scheme'] },
+      { patterns: ['monitor', 'startup'], answer: OFFICIAL_FAQ['monitor startups'] },
+      { patterns: ['heatmap'], answer: OFFICIAL_FAQ['heatmap show'] },
+      { patterns: ['export', 'data'], answer: OFFICIAL_FAQ['export startup job data'] },
+      
+      // General matches
+      { patterns: ['what', 'govstartup'], answer: GENERAL_FAQ['what govstartup navigator'] },
+      { patterns: ['safe', 'secure', 'data'], answer: GENERAL_FAQ['data safe secure'] },
+      { patterns: ['support', 'help'], answer: GENERAL_FAQ['contact support'] }
+    ];
+    
+    for (const match of fuzzyMatches) {
+      if (match.patterns.every(pattern => lowerMessage.includes(pattern))) {
+        return match.answer;
+      }
+    }
+    
+    return null;
+  };
+
   // Function to check if message matches any FAQ
   const findFAQAnswer = (message: string): string | null => {
     const lowerMessage = message.toLowerCase();
@@ -104,11 +235,11 @@ export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }
     
     if (lowerMessage.includes('save') && lowerMessage.includes('job')) {
-      return STUDENT_FAQ['save jobs'];
+      return STUDENT_FAQ['save jobs later'];
     }
     
     if (lowerMessage.includes('resume') && (lowerMessage.includes('upload') || lowerMessage.includes('update'))) {
-      return STUDENT_FAQ['upload resume'];
+      return STUDENT_FAQ['upload resume multiple update'];
     }
     
     if (lowerMessage.includes('notification') || lowerMessage.includes('email')) {
@@ -116,11 +247,11 @@ export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }
     
     if (lowerMessage.includes('telugu') || lowerMessage.includes('language')) {
-      return STUDENT_FAQ['telugu language'];
+      return STUDENT_FAQ['telugu language switch'];
     }
     
     if (lowerMessage.includes('free') || lowerMessage.includes('cost') || lowerMessage.includes('price')) {
-      return STUDENT_FAQ['platform free'];
+      return STUDENT_FAQ['platform free students'];
     }
     
     return null;
@@ -292,15 +423,13 @@ export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         timestamp: new Date().toISOString()
       });
 
-      // Check for FAQ answers first (especially for students)
-      if (userInfo.role === 'student') {
-        const faqAnswer = findFAQAnswer(message);
-        if (faqAnswer) {
-          return {
-            type: 'text',
-            content: faqAnswer
-          };
-        }
+      // Check for FAQ answers first using the enhanced matching
+      const faqAnswer = findFAQAnswer(message, userInfo.role);
+      if (faqAnswer) {
+        return {
+          type: 'text',
+          content: faqAnswer
+        };
       }
 
       const lowerMessage = message.toLowerCase();
