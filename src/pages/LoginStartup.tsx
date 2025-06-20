@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { Building2, ArrowLeft, Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,19 +7,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Float, Sphere, MeshDistortMaterial } from "@react-three/drei";
+import { Float, Sphere } from "@react-three/drei";
 import { toast } from "sonner";
 import { isValidOfficialEmail, getOrganizationByEmail } from "@/services/officialAuth";
 
 const AnimatedSphere = () => (
   <Float speed={2} rotationIntensity={1} floatIntensity={2}>
     <Sphere args={[1, 64, 64]}>
-      <MeshDistortMaterial
+      <meshStandardMaterial
         color="#3b82f6"
-        attach="material"
-        distort={0.4}
-        speed={2}
         roughness={0.1}
+        metalness={0.1}
       />
     </Sphere>
   </Float>
