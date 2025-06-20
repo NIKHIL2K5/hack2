@@ -1,13 +1,15 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Users, Building2, TrendingUp, Eye, BarChart3, Download } from 'lucide-react';
+import { MapPin, Users, Building2, TrendingUp, Eye, BarChart3, Download, Filter } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 
 export const DistrictAnalytics = () => {
   const [selectedDistrict, setSelectedDistrict] = useState(null);
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedPriority, setSelectedPriority] = useState('all');
+  const [selectedEmploymentRange, setSelectedEmploymentRange] = useState('all');
 
   const districtData = [
     {
@@ -60,13 +62,57 @@ export const DistrictAnalytics = () => {
   const handleAnalyzeDistrict = (district: any) => {
     setSelectedDistrict(district);
     console.log('Analyzing district:', district.name);
-    // Implementation for detailed district analysis
+    
+    // Show detailed analysis modal or redirect to detailed view
+    alert(`Analyzing ${district.name} district:\n\n` +
+          `Population: ${district.population.toLocaleString()}\n` +
+          `Employment Rate: ${district.employmentRate}\n` +
+          `Startups: ${district.startups}\n` +
+          `Priority: ${district.priority}\n` +
+          `Recommended Intervention: ${district.intervention}`);
+  };
+
+  const handleFilterToggle = () => {
+    setShowFilters(!showFilters);
+    console.log('Filter panel toggled:', !showFilters);
   };
 
   const handleGenerateReport = () => {
     console.log('Generating district analytics report');
-    // Implementation for report generation
+    const reportData = {
+      totalDistricts: districtData.length,
+      highPriorityDistricts: districtData.filter(d => d.priority === 'high priority').length,
+      totalStartups: districtData.reduce((sum, d) => sum + d.startups, 0),
+      averageEmployment: Math.round(
+        districtData.reduce((sum, d) => sum + parseFloat(d.employmentRate), 0) / districtData.length
+      )
+    };
+    
+    alert(`District Analytics Report Generated:\n\n` +
+          `Total Districts: ${reportData.totalDistricts}\n` +
+          `High Priority Districts: ${reportData.highPriorityDistricts}\n` +
+          `Total Startups: ${reportData.totalStartups}\n` +
+          `Average Employment Rate: ${reportData.averageEmployment}%`);
   };
+
+  const handleExportData = () => {
+    console.log('Exporting district data');
+    const csvData = districtData.map(district => 
+      `${district.name},${district.population},${district.employmentRate},${district.startups},${district.priority}`
+    );
+    alert('District data exported successfully!\n\nData format: Name, Population, Employment Rate, Startups, Priority');
+  };
+
+  const filteredDistricts = districtData.filter(district => {
+    if (selectedPriority !== 'all' && district.priority !== selectedPriority) return false;
+    if (selectedEmploymentRange !== 'all') {
+      const rate = parseFloat(district.employmentRate);
+      if (selectedEmploymentRange === 'low' && rate >= 50) return false;
+      if (selectedEmploymentRange === 'medium' && (rate < 50 || rate >= 70)) return false;
+      if (selectedEmploymentRange === 'high' && rate < 70) return false;
+    }
+    return true;
+  });
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -86,6 +132,14 @@ export const DistrictAnalytics = () => {
         </div>
         <div className="flex space-x-3">
           <Button
+            onClick={handleFilterToggle}
+            variant="outline"
+            className={`${showFilters ? 'bg-blue-500 text-white' : 'bg-white/10 border-white/20 text-white'} hover:bg-white/20`}
+          >
+            <Filter className="w-4 h-4 mr-2" />
+            Filter
+          </Button>
+          <Button
             onClick={handleGenerateReport}
             className="bg-blue-500 hover:bg-blue-600 text-white"
           >
@@ -93,6 +147,7 @@ export const DistrictAnalytics = () => {
             Generate Report
           </Button>
           <Button
+            onClick={handleExportData}
             variant="outline"
             className="bg-white/10 border-white/20 text-white hover:bg-white/20"
           >
@@ -101,6 +156,44 @@ export const DistrictAnalytics = () => {
           </Button>
         </div>
       </div>
+
+      {showFilters && (
+        <Card className="bg-white/10 backdrop-blur-lg border-white/20">
+          <CardHeader>
+            <CardTitle className="text-white text-lg">Filter Districts</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-white/80 text-sm mb-2 block">Priority Level</label>
+                <select 
+                  value={selectedPriority}
+                  onChange={(e) => setSelectedPriority(e.target.value)}
+                  className="w-full bg-white/10 border border-white/20 text-white rounded-md px-3 py-2"
+                >
+                  <option value="all">All Priorities</option>
+                  <option value="high priority">High Priority</option>
+                  <option value="medium priority">Medium Priority</option>
+                  <option value="low priority">Low Priority</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-white/80 text-sm mb-2 block">Employment Rate</label>
+                <select 
+                  value={selectedEmploymentRange}
+                  onChange={(e) => setSelectedEmploymentRange(e.target.value)}
+                  className="w-full bg-white/10 border border-white/20 text-white rounded-md px-3 py-2"
+                >
+                  <option value="all">All Ranges</option>
+                  <option value="low">Below 50%</option>
+                  <option value="medium">50% - 70%</option>
+                  <option value="high">Above 70%</option>
+                </select>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
       
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {[
@@ -157,11 +250,18 @@ export const DistrictAnalytics = () => {
 
       <Card className="bg-white/10 backdrop-blur-lg border-white/20">
         <CardHeader>
-          <CardTitle className="text-white">District Overview</CardTitle>
+          <CardTitle className="text-white">
+            District Overview 
+            {filteredDistricts.length !== districtData.length && (
+              <span className="text-sm text-white/60 ml-2">
+                ({filteredDistricts.length} of {districtData.length} districts)
+              </span>
+            )}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {districtData.map((district) => (
+            {filteredDistricts.map((district) => (
               <div key={district.id} className="p-4 bg-white/5 rounded-lg">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
