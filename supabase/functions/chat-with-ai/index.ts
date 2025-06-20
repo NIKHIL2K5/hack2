@@ -15,13 +15,14 @@ serve(async (req) => {
   }
 
   try {
-    console.log('OpenAI API Key exists:', !!openAIApiKey);
+    console.log('OpenAI API Key configured:', !!openAIApiKey);
+    console.log('API Key prefix:', openAIApiKey ? openAIApiKey.substring(0, 20) + '...' : 'not found');
     
     const { message, context, userRole, userName, hasImage } = await req.json();
-    console.log('Received request:', { message, userRole, userName });
+    console.log('Received request:', { message, userRole, userName, hasImage });
 
     if (!openAIApiKey) {
-      console.error('OpenAI API key not found');
+      console.error('OpenAI API key not found in environment');
       throw new Error('OpenAI API key not configured');
     }
 
@@ -43,7 +44,7 @@ User Role: ${userRole || 'platform user'}
 User Name: ${userName || 'User'}
 ${hasImage ? 'Note: The user has shared an image for analysis.' : ''}`;
 
-    console.log('Making request to OpenAI...');
+    console.log('Making request to OpenAI with model gpt-4.1-2025-04-14...');
     
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -52,7 +53,7 @@ ${hasImage ? 'Note: The user has shared an image for analysis.' : ''}`;
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4.1-2025-04-14',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: message }
@@ -63,15 +64,37 @@ ${hasImage ? 'Note: The user has shared an image for analysis.' : ''}`;
     });
 
     console.log('OpenAI response status:', response.status);
+    console.log('OpenAI response headers:', Object.fromEntries(response.headers.entries()));
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('OpenAI API error:', response.status, errorText);
-      throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
+      console.error('OpenAI API error details:', {
+        status: response.status,
+        statusText: response.statusText,
+        body: errorText
+      });
+      
+      if (response.status === 429) {
+        throw new Error('OpenAI API quota exceeded. Please check your billing and usage limits.');
+      } else if (response.status === 401) {
+        throw new Error('Invalid OpenAI API key. Please check your API key configuration.');
+      } else {
+        throw new Error(`OpenAI API error: ${response.status} - ${errorText}`);
+      }
     }
 
     const data = await response.json();
     console.log('OpenAI response received successfully');
+    console.log('Response data structure:', {
+      hasChoices: !!data.choices,
+      choicesLength: data.choices?.length,
+      hasMessage: !!data.choices?.[0]?.message,
+      hasContent: !!data.choices?.[0]?.message?.content
+    });
+    
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+      throw new Error('Invalid response structure from OpenAI');
+    }
     
     const aiResponse = data.choices[0].message.content;
 
@@ -83,6 +106,8 @@ ${hasImage ? 'Note: The user has shared an image for analysis.' : ''}`;
     });
   } catch (error) {
     console.error('Error in chat-with-ai function:', error);
+    console.error('Error stack:', error.stack);
+    
     return new Response(JSON.stringify({ 
       error: error.message || 'I apologize for the technical difficulty. Please try again or rephrase your question.' 
     }), {
