@@ -8,6 +8,7 @@ import { Suspense, useState } from "react";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import LoginOfficial from "./pages/LoginOfficial";
+import LoginStartup from "./pages/LoginStartup";
 import DashboardStartup from "./pages/DashboardStartup";
 import DashboardStudent from "./pages/DashboardStudent";
 import DashboardOfficial from "./pages/DashboardOfficial";
@@ -47,6 +48,7 @@ const App = () => {
                 <Route path="/" element={<Index />} />
                 <Route path="/login/:role" element={<Login />} />
                 <Route path="/login/official" element={<LoginOfficial />} />
+                <Route path="/login/startup" element={<LoginStartup />} />
                 <Route path="/dashboard/startup" element={<DashboardStartup />} />
                 <Route path="/dashboard/student" element={<DashboardStudent />} />
                 <Route path="/dashboard/official" element={<DashboardOfficial />} />
