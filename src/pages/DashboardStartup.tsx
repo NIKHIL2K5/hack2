@@ -1,9 +1,10 @@
 
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { Building2, Plus, Users, FileText, Bot, Settings, LogOut, Briefcase, CheckCircle, User } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Building2, Plus, Users, FileText, Bot, Settings, LogOut, Briefcase, CheckCircle, User, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { useOfficialData } from "@/hooks/useOfficialData";
@@ -11,12 +12,90 @@ import { Scene3D } from "@/components/3d/Scene3D";
 import { JobPostingModal } from "@/components/official/JobPostingModal";
 import { JobManagement } from "@/components/official/JobManagement";
 import { StartupProfile } from "@/components/official/StartupProfile";
+import { isValidOfficialEmail } from "@/services/officialAuth";
 
 const DashboardStartup = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
+  const [hasValidAccess, setHasValidAccess] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
   const { getApplicationStats, officialUser } = useOfficialData();
   const stats = getApplicationStats();
+
+  useEffect(() => {
+    // Check if user has valid org.in email access
+    const storedUser = localStorage.getItem('officialUser');
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      const email = user.email;
+      setUserEmail(email);
+      
+      if (isValidOfficialEmail(email)) {
+        setHasValidAccess(true);
+      } else {
+        setHasValidAccess(false);
+      }
+    } else {
+      setHasValidAccess(false);
+    }
+  }, []);
+
+  // If user doesn't have valid access, show access denied message
+  if (!hasValidAccess) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-red-900 via-red-700 to-red-500 flex items-center justify-center p-6">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="max-w-md w-full"
+        >
+          <Card className="bg-white/10 backdrop-blur-lg border-red-300/20">
+            <CardHeader className="text-center">
+              <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <AlertTriangle className="w-8 h-8 text-red-300" />
+              </div>
+              <CardTitle className="text-2xl font-bold text-white">Access Restricted</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Alert className="bg-red-500/20 border-red-400/50">
+                <AlertTriangle className="h-4 w-4 text-red-300" />
+                <AlertTitle className="text-red-200">Organization Email Required</AlertTitle>
+                <AlertDescription className="text-red-100">
+                  Only official organization emails ending with "org.in" are allowed to access the startup dashboard.
+                </AlertDescription>
+              </Alert>
+              
+              {userEmail && (
+                <div className="text-center">
+                  <p className="text-white/70 text-sm mb-2">Current email:</p>
+                  <p className="text-white font-mono bg-white/10 rounded px-3 py-2">{userEmail}</p>
+                </div>
+              )}
+              
+              <div className="text-center space-y-4">
+                <p className="text-white/80">
+                  Please contact your organization administrator or use a valid organization email to access this dashboard.
+                </p>
+                
+                <div className="flex flex-col space-y-2">
+                  <Link to="/login/startup">
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                      Login with Organization Email
+                    </Button>
+                  </Link>
+                  <Link to="/">
+                    <Button variant="outline" className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20">
+                      Back to Home
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+    );
+  }
 
   const dashboardStats = [
     { title: "Active Jobs", value: "12", icon: Briefcase, color: "text-blue-500" },
