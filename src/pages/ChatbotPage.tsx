@@ -36,7 +36,7 @@ const ChatbotPage = () => {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Hello! I'm your AI assistant for discovering government schemes and opportunities. How can I help you today?",
+      text: "Hello! I'm Sethu, your AI assistant for discovering government schemes and opportunities. How can I help you today?",
       sender: "bot",
       timestamp: new Date().toLocaleTimeString()
     }
@@ -162,7 +162,7 @@ const ChatbotPage = () => {
               <div className="flex items-center space-x-3">
                 <AnimatedBot />
                 <div>
-                  <h1 className="text-2xl font-bold">AI Scheme Assistant</h1>
+                  <h1 className="text-2xl font-bold">Sethu - AI Assistant</h1>
                   <p className="text-white/60">Discover government schemes & opportunities</p>
                 </div>
               </div>
@@ -235,7 +235,7 @@ const ChatbotPage = () => {
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-                  placeholder={language === "english" ? "Ask about government schemes..." : "ప్రభుత్వ పథకాల గురించి అడుగండి..."}
+                  placeholder={language === "english" ? "Ask Sethu about government schemes..." : "సేతుని ప్రభుత్వ పథకాల గురించి అడుగండి..."}
                   className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/60"
                   disabled={isTyping}
                 />

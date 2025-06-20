@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useEnhancedAI } from '@/contexts/EnhancedAIContext';
@@ -27,7 +26,7 @@ export const UniversalAIChat: React.FC = () => {
     if (messages.length === 0) {
       const welcomeMessage = {
         id: 1,
-        text: `Hi ${userName || 'there'}! I'm your comprehensive AI assistant with deep knowledge of this platform. I can help you with detailed guidance on ${userRole === 'student' ? 'job searches, career planning, skill development, and interview preparation' : userRole === 'startup' ? 'funding opportunities, government schemes, hiring strategies, and business growth' : userRole === 'official' ? 'scheme management, policy implementation, and ecosystem monitoring' : 'navigating the platform and maximizing your opportunities'}. I provide precise, actionable advice tailored to your specific situation. You can also share images for visual analysis. How can I assist you today?`,
+        text: `Hi ${userName || 'there'}! I'm Sethu, your comprehensive AI assistant with deep knowledge of this platform. I can help you with detailed guidance on ${userRole === 'student' ? 'job searches, career planning, skill development, and interview preparation' : userRole === 'startup' ? 'funding opportunities, government schemes, hiring strategies, and business growth' : userRole === 'official' ? 'scheme management, policy implementation, and ecosystem monitoring' : 'navigating the platform and maximizing your opportunities'}. I provide precise, actionable advice tailored to your specific situation. You can also share images for visual analysis. How can I assist you today?`,
         sender: 'ai' as const,
         timestamp: new Date().toLocaleTimeString()
       };

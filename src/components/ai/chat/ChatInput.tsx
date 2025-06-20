@@ -52,7 +52,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
           value={inputMessage}
           onChange={(e) => onInputChange(e.target.value)}
           onKeyPress={handleKeyPress}
-          placeholder="Ask me anything about the platform or share an image..."
+          placeholder="Ask Sethu anything about the platform or share an image..."
           className="flex-1"
           disabled={isAIThinking}
         />
