@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Users, Shield, Edit, Trash2, User, Search, UserPlus } from 'lucide-react';
+import { Plus, Users, Shield, Edit, Trash2, User, Search, UserPlus, AlertTriangle } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 export const RoleManagement = () => {
@@ -13,6 +13,7 @@ export const RoleManagement = () => {
   const [isAddUserOpen, setIsAddUserOpen] = useState(false);
   const [isEditRoleOpen, setIsEditRoleOpen] = useState(false);
   const [isEditUserOpen, setIsEditUserOpen] = useState(false);
+  const [isDeleteUserOpen, setIsDeleteUserOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [newRoleName, setNewRoleName] = useState('');
   const [newRolePermissions, setNewRolePermissions] = useState<string[]>([]);
@@ -20,6 +21,7 @@ export const RoleManagement = () => {
   const [newUserRole, setNewUserRole] = useState('');
   const [editingRole, setEditingRole] = useState<any>(null);
   const [editingUser, setEditingUser] = useState<any>(null);
+  const [deletingUser, setDeletingUser] = useState<any>(null);
 
   const roles = [
     {
@@ -241,6 +243,24 @@ export const RoleManagement = () => {
     setNewUserRole('');
   };
 
+  const handleDeleteUser = (user: any) => {
+    console.log('Initiating delete for user:', user);
+    setDeletingUser(user);
+    setIsDeleteUserOpen(true);
+  };
+
+  const confirmDeleteUser = () => {
+    if (deletingUser) {
+      console.log('Confirming delete for user:', deletingUser);
+      toast({
+        title: "User Deleted",
+        description: `User "${deletingUser.name}" has been removed from the system`,
+      });
+      setIsDeleteUserOpen(false);
+      setDeletingUser(null);
+    }
+  };
+
   const handleDeactivateUser = (user: any) => {
     console.log('Deactivating user:', user);
     toast({
@@ -380,25 +400,30 @@ export const RoleManagement = () => {
           <CardContent>
             <div className="space-y-3">
               {filteredUsers.map((user) => (
-                <div key={user.id} className="p-3 bg-white/5 rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2 mb-1">
-                        <h4 className="text-white font-medium text-sm">{user.name}</h4>
-                        <Badge className={getStatusColor(user.status)}>
-                          {user.status}
-                        </Badge>
+                <div key={user.id} className="p-4 bg-white/5 rounded-lg border border-white/10">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center space-x-3 mb-2">
+                        <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                          <User className="w-4 h-4 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-white font-medium text-sm truncate">{user.name}</h4>
+                          <Badge className={getStatusColor(user.status)} size="sm">
+                            {user.status}
+                          </Badge>
+                        </div>
                       </div>
-                      <p className="text-white/70 text-xs">{user.email}</p>
-                      <div className="flex items-center space-x-3 text-xs text-white/60 mt-1">
-                        <span>Role: {user.role}</span>
-                        <span>•</span>
-                        <span>District: {user.district}</span>
-                        <span>•</span>
-                        <span>Last active: {user.lastActive}</span>
+                      <div className="pl-11 space-y-1">
+                        <p className="text-white/70 text-xs truncate">{user.email}</p>
+                        <div className="flex flex-wrap gap-2 text-xs text-white/60">
+                          <span className="bg-white/10 px-2 py-1 rounded">Role: {user.role}</span>
+                          <span className="bg-white/10 px-2 py-1 rounded">District: {user.district}</span>
+                        </div>
+                        <p className="text-white/50 text-xs">Last active: {user.lastActive}</p>
                       </div>
                     </div>
-                    <div className="flex space-x-1">
+                    <div className="flex space-x-2 ml-3">
                       <Button 
                         size="sm" 
                         variant="outline" 
@@ -411,7 +436,7 @@ export const RoleManagement = () => {
                         size="sm" 
                         variant="outline" 
                         className="bg-red-500/20 border-red-500/30 text-red-300 hover:bg-red-500/30"
-                        onClick={() => handleDeactivateUser(user)}
+                        onClick={() => handleDeleteUser(user)}
                       >
                         <Trash2 className="w-3 h-3" />
                       </Button>
@@ -604,6 +629,43 @@ export const RoleManagement = () => {
               </Button>
               <Button onClick={handleUpdateUser} className="bg-blue-500 hover:bg-blue-600 text-white">
                 Update User
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete User Confirmation Modal */}
+      <Dialog open={isDeleteUserOpen} onOpenChange={setIsDeleteUserOpen}>
+        <DialogContent className="bg-white/95 backdrop-blur-lg border-white/20">
+          <DialogHeader>
+            <DialogTitle className="text-gray-900 flex items-center">
+              <AlertTriangle className="w-5 h-5 text-red-500 mr-2" />
+              Confirm User Deletion
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <p className="text-gray-700">
+                Are you sure you want to delete user <strong>{deletingUser?.name}</strong>?
+              </p>
+              <p className="text-sm text-gray-600 mt-2">
+                This action cannot be undone. The user will lose access to the system immediately.
+              </p>
+            </div>
+            <div className="flex justify-end space-x-2">
+              <Button 
+                variant="outline" 
+                onClick={() => setIsDeleteUserOpen(false)}
+                className="bg-gray-100 hover:bg-gray-200 text-gray-700"
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={confirmDeleteUser} 
+                className="bg-red-500 hover:bg-red-600 text-white"
+              >
+                Delete User
               </Button>
             </div>
           </div>

@@ -47,7 +47,6 @@ export const NotificationCreationForm = ({ onClose }: NotificationCreationFormPr
       description: `Successfully sent "${messageTitle}" to ${audienceOptions.find(a => a.id === selectedAudience)?.name}`,
     });
 
-    // Reset form
     setMessageTitle('');
     setMessageText('');
     setSelectedAudience('all');
@@ -79,7 +78,6 @@ export const NotificationCreationForm = ({ onClose }: NotificationCreationFormPr
       description: "Notification has been scheduled and will be sent at the specified time",
     });
 
-    // Reset form
     setMessageTitle('');
     setMessageText('');
     setSelectedAudience('all');
@@ -90,67 +88,71 @@ export const NotificationCreationForm = ({ onClose }: NotificationCreationFormPr
   };
 
   return (
-    <Card className="bg-white/10 backdrop-blur-lg border-white/20">
-      <CardHeader>
-        <CardTitle className="text-white">Create New Notification</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div>
-          <label className="text-white/80 text-sm block mb-2">Title</label>
-          <Input
-            value={messageTitle}
-            onChange={(e) => setMessageTitle(e.target.value)}
-            placeholder="Enter notification title..."
-            className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
-          />
+    <div className="space-y-6 max-w-2xl mx-auto">
+      <div>
+        <label className="text-gray-700 text-sm font-medium block mb-2">Title</label>
+        <Input
+          value={messageTitle}
+          onChange={(e) => setMessageTitle(e.target.value)}
+          placeholder="Enter notification title..."
+          className="w-full bg-white border-gray-300 text-gray-900 placeholder:text-gray-500"
+        />
+      </div>
+      
+      <div>
+        <label className="text-gray-700 text-sm font-medium block mb-2">Message</label>
+        <Textarea
+          value={messageText}
+          onChange={(e) => setMessageText(e.target.value)}
+          placeholder="Enter your message..."
+          rows={6}
+          className="w-full bg-white border-gray-300 text-gray-900 placeholder:text-gray-500 resize-none"
+        />
+      </div>
+      
+      <div>
+        <label className="text-gray-700 text-sm font-medium block mb-3">Target Audience</label>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {audienceOptions.map((audience) => (
+            <Button
+              key={audience.id}
+              size="sm"
+              variant={selectedAudience === audience.id ? "default" : "outline"}
+              onClick={() => setSelectedAudience(audience.id)}
+              className={`justify-start text-left h-auto py-3 px-4 ${
+                selectedAudience === audience.id ? 
+                "bg-blue-500 hover:bg-blue-600 text-white border-blue-500" : 
+                "bg-white hover:bg-gray-50 text-gray-700 border-gray-300"
+              }`}
+            >
+              <div className="flex flex-col items-start">
+                <span className="font-medium">{audience.name}</span>
+                <span className="text-xs opacity-70">({audience.count} users)</span>
+              </div>
+            </Button>
+          ))}
         </div>
-        <div>
-          <label className="text-white/80 text-sm block mb-2">Message</label>
-          <Textarea
-            value={messageText}
-            onChange={(e) => setMessageText(e.target.value)}
-            placeholder="Enter your message..."
-            rows={4}
-            className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
-          />
-        </div>
-        <div>
-          <label className="text-white/80 text-sm block mb-2">Target Audience</label>
-          <div className="grid grid-cols-2 gap-2">
-            {audienceOptions.map((audience) => (
-              <Button
-                key={audience.id}
-                size="sm"
-                variant={selectedAudience === audience.id ? "default" : "outline"}
-                onClick={() => setSelectedAudience(audience.id)}
-                className={selectedAudience === audience.id ? 
-                  "bg-blue-500 text-white" : 
-                  "bg-white/10 border-white/20 text-white hover:bg-white/20"
-                }
-              >
-                {audience.name} ({audience.count})
-              </Button>
-            ))}
-          </div>
-        </div>
-        <div className="flex space-x-2">
-          <Button 
-            className="bg-blue-500 hover:bg-blue-600 text-white flex-1"
-            onClick={handleSendNow}
-          >
-            <Send className="w-4 h-4 mr-2" />
-            Send Now
-          </Button>
-          <Button 
-            variant="outline" 
-            className="bg-white/10 border-white/20 text-white hover:bg-white/20"
-            onClick={handleSchedule}
-          >
-            <Clock className="w-4 h-4 mr-2" />
-            Schedule
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+      </div>
+      
+      <div className="flex gap-3 pt-4">
+        <Button 
+          className="bg-blue-500 hover:bg-blue-600 text-white flex-1"
+          onClick={handleSendNow}
+          size="lg"
+        >
+          <Send className="w-4 h-4 mr-2" />
+          Send Now
+        </Button>
+        <Button 
+          variant="outline" 
+          className="bg-white hover:bg-gray-50 text-gray-700 border-gray-300 px-6"
+          onClick={handleSchedule}
+          size="lg"
+        >
+          <Clock className="w-4 h-4 mr-2" />
+          Schedule
+        </Button>
+      </div>
+    </div>
   );
 };

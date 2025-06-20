@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   BarChart3, 
@@ -35,6 +34,11 @@ import { OfficialMobileHeader } from '@/components/official/OfficialMobileHeader
 
 const DashboardOfficial = () => {
   const [activeTab, setActiveTab] = useState('overview');
+
+  // Initialize with overview tab and scroll to top on tab change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [activeTab]);
 
   const navigationItems = [
     { id: 'overview', label: 'Overview', icon: BarChart3 },
@@ -153,7 +157,7 @@ const DashboardOfficial = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-teal-900 pb-20 lg:pb-0">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-teal-900 pb-24 lg:pb-0">
       {/* Desktop Header */}
       <header className="hidden lg:block bg-white/5 backdrop-blur-lg border-b border-white/10">
         <div className="container mx-auto px-6 py-4">
