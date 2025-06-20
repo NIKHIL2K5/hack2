@@ -30,6 +30,8 @@ import { NotificationCenter } from '@/components/official/NotificationCenter';
 import { DocumentManagement } from '@/components/official/DocumentManagement';
 import { RoleManagement } from '@/components/official/RoleManagement';
 import { OfficialProfile } from '@/components/official/OfficialProfile';
+import { OfficialMobileNav } from '@/components/official/OfficialMobileNav';
+import { OfficialMobileHeader } from '@/components/official/OfficialMobileHeader';
 
 const DashboardOfficial = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -83,8 +85,8 @@ const DashboardOfficial = () => {
       default:
         return (
           <div className="space-y-6">
-            {/* Overview Stats - Fixed alignment */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Overview Stats - Mobile optimized */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {overviewStats.map((stat, index) => (
                 <motion.div
                   key={stat.title}
@@ -93,19 +95,19 @@ const DashboardOfficial = () => {
                   transition={{ delay: index * 0.1 }}
                 >
                   <Card className="bg-white/10 backdrop-blur-lg border-white/20">
-                    <CardContent className="p-6">
+                    <CardContent className="p-4 sm:p-6">
                       <div className="flex items-center justify-between">
                         <div className="flex-1 min-w-0">
-                          <p className="text-white/80 text-sm font-medium mb-1">{stat.title}</p>
+                          <p className="text-white/80 text-xs sm:text-sm font-medium mb-1 truncate">{stat.title}</p>
                           <div className="flex items-center space-x-2">
-                            <p className="text-3xl font-bold text-white">{stat.value}</p>
+                            <p className="text-2xl sm:text-3xl font-bold text-white">{stat.value}</p>
                             <Badge className="bg-green-100 text-green-700 text-xs">
                               {stat.change}
                             </Badge>
                           </div>
                         </div>
-                        <div className={`w-12 h-12 rounded-lg ${stat.color} flex items-center justify-center flex-shrink-0`}>
-                          <stat.icon className="w-6 h-6 text-white" />
+                        <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg ${stat.color} flex items-center justify-center flex-shrink-0`}>
+                          <stat.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                         </div>
                       </div>
                     </CardContent>
@@ -114,25 +116,25 @@ const DashboardOfficial = () => {
               ))}
             </div>
 
-            {/* Recent Activities */}
+            {/* Recent Activities - Mobile optimized */}
             <Card className="bg-white/10 backdrop-blur-lg border-white/20">
               <CardHeader>
-                <CardTitle className="text-white">Recent Activities</CardTitle>
+                <CardTitle className="text-white text-lg sm:text-xl">Recent Activities</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {[
                     { action: 'New startup registered', detail: 'TechVenture Solutions from Hyderabad', time: '2 minutes ago' },
                     { action: 'Scheme application approved', detail: 'Startup Funding Scheme for GreenTech Innovations', time: '15 minutes ago' },
                     { action: 'Job post flagged for review', detail: 'Software Developer position with unusually low stipend', time: '1 hour ago' },
                     { action: 'Compliance report submitted', detail: 'Q4 compliance by DataFlow Systems', time: '3 hours ago' }
                   ].map((activity, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                    <div key={index} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-white/5 rounded-lg space-y-1 sm:space-y-0">
                       <div className="flex-1 min-w-0">
-                        <p className="text-white font-medium truncate">{activity.action}</p>
-                        <p className="text-white/70 text-sm truncate">{activity.detail}</p>
+                        <p className="text-white font-medium text-sm sm:text-base truncate">{activity.action}</p>
+                        <p className="text-white/70 text-xs sm:text-sm truncate">{activity.detail}</p>
                       </div>
-                      <span className="text-white/60 text-xs flex-shrink-0 ml-2">{activity.time}</span>
+                      <span className="text-white/60 text-xs flex-shrink-0 sm:ml-2">{activity.time}</span>
                     </div>
                   ))}
                 </div>
@@ -144,9 +146,9 @@ const DashboardOfficial = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-teal-900">
-      {/* Header */}
-      <header className="bg-white/5 backdrop-blur-lg border-b border-white/10">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-teal-900 pb-20 lg:pb-0">
+      {/* Desktop Header */}
+      <header className="hidden lg:block bg-white/5 backdrop-blur-lg border-b border-white/10">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -174,11 +176,14 @@ const DashboardOfficial = () => {
         </div>
       </header>
 
-      <div className="container mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          {/* Sidebar Navigation */}
-          <div className="lg:col-span-1">
-            <Card className="bg-white/10 backdrop-blur-lg border-white/20">
+      {/* Mobile Header */}
+      <OfficialMobileHeader activeTab={activeTab} setActiveTab={setActiveTab} />
+
+      <div className="container mx-auto px-4 sm:px-6 py-4 sm:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8">
+          {/* Desktop Sidebar Navigation */}
+          <div className="hidden lg:block lg:col-span-1">
+            <Card className="bg-white/10 backdrop-blur-lg border-white/20 sticky top-8">
               <CardContent className="p-4">
                 <nav className="space-y-2">
                   {navigationItems.map((item) => (
@@ -208,12 +213,16 @@ const DashboardOfficial = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3 }}
+              className="min-h-screen lg:min-h-0"
             >
               {renderContent()}
             </motion.div>
           </div>
         </div>
       </div>
+
+      {/* Mobile Navigation */}
+      <OfficialMobileNav activeTab={activeTab} setActiveTab={setActiveTab} />
     </div>
   );
 };
