@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { AlertCircle } from "lucide-react";
@@ -439,8 +438,10 @@ export const useStudentData = () => {
       }
     }
 
-    // Sync job data to global storage
-    dataSyncService.syncJobPostings(AVAILABLE_JOBS);
+    // Sync job data to global storage - using the correct method name
+    AVAILABLE_JOBS.forEach(job => {
+      dataSyncService.syncJobPosting(job, job.company);
+    });
   }, []);
 
   const handleInputChange = (field, value) => {
