@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -313,7 +312,7 @@ export const StartupMonitoringPanel = () => {
                       size="sm" 
                       variant="outline" 
                       className="bg-red-500/20 border-red-500/30 text-red-300 hover:bg-red-500/30"
-                      onClick={() => handleFlag(startup.id)}
+                      onClick={() => handleFlag(String(startup.id))}
                     >
                       <Flag className="w-4 h-4" />
                     </Button>
