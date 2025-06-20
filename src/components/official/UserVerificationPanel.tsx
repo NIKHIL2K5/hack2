@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -83,6 +82,31 @@ export const UserVerificationPanel = () => {
     { name: 'Fake Corp', reason: 'Non-existent company', flaggedDate: '2024-01-14', severity: 'high' }
   ];
 
+  const handleReviewUser = (userId: number) => {
+    console.log('Reviewing user:', userId);
+    // Implementation for reviewing user documents
+  };
+
+  const handleApproveUser = (userId: number) => {
+    console.log('Approving user:', userId);
+    // Implementation for approving user verification
+  };
+
+  const handleRejectUser = (userId: number) => {
+    console.log('Rejecting user:', userId);
+    // Implementation for rejecting user verification
+  };
+
+  const handleExportReport = () => {
+    console.log('Exporting verification report');
+    // Implementation for exporting verification data
+  };
+
+  const handleFilterUsers = () => {
+    console.log('Filtering users with criteria:', selectedFilter);
+    // Implementation for filtering users
+  };
+
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'high': return 'bg-red-500';
@@ -110,6 +134,7 @@ export const UserVerificationPanel = () => {
         </div>
         <div className="flex space-x-3">
           <Button
+            onClick={handleFilterUsers}
             variant="outline"
             className="bg-white/10 border-white/20 text-white hover:bg-white/20"
           >
@@ -117,6 +142,7 @@ export const UserVerificationPanel = () => {
             Filter
           </Button>
           <Button
+            onClick={handleExportReport}
             variant="outline"
             className="bg-white/10 border-white/20 text-white hover:bg-white/20"
           >
@@ -271,15 +297,29 @@ export const UserVerificationPanel = () => {
                     </div>
                   </div>
                   <div className="flex space-x-2">
-                    <Button size="sm" variant="outline" className="bg-white/10 border-white/20 text-white">
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="bg-white/10 border-white/20 text-white"
+                      onClick={() => handleReviewUser(user.id)}
+                    >
                       <Eye className="w-4 h-4 mr-1" />
                       Review
                     </Button>
-                    <Button size="sm" className="bg-green-500 hover:bg-green-600 text-white">
+                    <Button 
+                      size="sm" 
+                      className="bg-green-500 hover:bg-green-600 text-white"
+                      onClick={() => handleApproveUser(user.id)}
+                    >
                       <CheckCircle className="w-4 h-4 mr-1" />
                       Approve
                     </Button>
-                    <Button size="sm" variant="destructive" className="bg-red-500 hover:bg-red-600">
+                    <Button 
+                      size="sm" 
+                      variant="destructive" 
+                      className="bg-red-500 hover:bg-red-600"
+                      onClick={() => handleRejectUser(user.id)}
+                    >
                       <X className="w-4 h-4 mr-1" />
                       Reject
                     </Button>
