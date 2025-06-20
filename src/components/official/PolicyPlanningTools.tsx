@@ -1,13 +1,14 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { TrendingUp, FileText, MapPin, BarChart3, Target, Users, Building2, Download, Eye, Plus, AlertCircle } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, Area, AreaChart, ScatterChart, Scatter } from 'recharts';
+import { useToast } from "@/hooks/use-toast";
 
 export const PolicyPlanningTools = () => {
   const [selectedMetric, setSelectedMetric] = useState('employment');
+  const { toast } = useToast();
 
   const districtPerformance = [
     { district: 'Hyderabad', employment: 85, startups: 120, growth: 15.2, funding: 45.5 },
@@ -89,24 +90,83 @@ export const PolicyPlanningTools = () => {
     }
   };
 
+  const handleNewPolicy = () => {
+    console.log('Creating new policy');
+    toast({
+      title: "New Policy Creation 📋",
+      description: "Opening policy creation wizard. Fill in the details for your new policy initiative.",
+    });
+  };
+
+  const handleGenerateReport = () => {
+    console.log('Generating analytics report');
+    
+    const reportData = {
+      reportDate: new Date().toISOString(),
+      districtPerformance,
+      sectorGrowth,
+      policyImpact,
+      underservedRegions,
+      policyRecommendations,
+      summary: {
+        totalPolicies: policyImpact.length,
+        averageImpact: 'High',
+        totalBeneficiaries: policyImpact.reduce((sum, policy) => sum + policy.beneficiaries, 0),
+        recommendationsPending: policyRecommendations.length
+      }
+    };
+
+    const dataStr = JSON.stringify(reportData, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `policy-analytics-report-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+
+    toast({
+      title: "Report Generated 📊",
+      description: "Comprehensive policy analytics report has been downloaded. Includes all metrics and recommendations.",
+    });
+  };
+
+  const handleAnalyzeRegion = (regionName: string) => {
+    console.log('Analyzing region:', regionName);
+    toast({
+      title: "Regional Analysis Started 🔍",
+      description: `Conducting deep analysis for ${regionName}. Reviewing demographics, economic indicators, and intervention opportunities.`,
+    });
+  };
+
+  const handleImplementRecommendation = (recTitle: string) => {
+    console.log('Implementing recommendation:', recTitle);
+    toast({
+      title: "Recommendation Implementation 🎯",
+      description: `Initiating implementation process for "${recTitle}". Assigning resources and setting up project timeline.`,
+    });
+  };
+
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-white">Policy Planning & Analytics</h2>
-          <p className="text-white/70">Data-driven insights for effective policy formulation and resource allocation</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-white">Policy Planning & Analytics</h2>
+          <p className="text-white/70 text-sm sm:text-base">Data-driven insights for effective policy formulation and resource allocation</p>
         </div>
-        <div className="flex space-x-3">
+        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 w-full sm:w-auto">
           <Button
+            onClick={handleNewPolicy}
             variant="outline"
-            className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+            className="bg-white/10 border-white/20 text-white hover:bg-white/20 w-full sm:w-auto"
           >
             <Plus className="w-4 h-4 mr-2" />
             New Policy
           </Button>
           <Button
+            onClick={handleGenerateReport}
             variant="outline"
-            className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+            className="bg-white/10 border-white/20 text-white hover:bg-white/20 w-full sm:w-auto"
           >
             <Download className="w-4 h-4 mr-2" />
             Generate Report
@@ -145,7 +205,7 @@ export const PolicyPlanningTools = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="bg-white/10 backdrop-blur-lg border-white/20">
           <CardHeader>
-            <CardTitle className="text-white">District Performance Metrics</CardTitle>
+            <CardTitle className="text-white text-lg sm:text-xl">District Performance Metrics</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -163,7 +223,7 @@ export const PolicyPlanningTools = () => {
                 <Bar dataKey={selectedMetric} fill="#3B82F6" />
               </BarChart>
             </ResponsiveContainer>
-            <div className="flex space-x-2 mt-4">
+            <div className="flex flex-wrap gap-2 mt-4">
               {['employment', 'startups', 'growth', 'funding'].map((metric) => (
                 <Button
                   key={metric}
@@ -211,7 +271,7 @@ export const PolicyPlanningTools = () => {
 
       <Card className="bg-white/10 backdrop-blur-lg border-white/20">
         <CardHeader>
-          <CardTitle className="text-white flex items-center">
+          <CardTitle className="text-white flex items-center text-lg sm:text-xl">
             <AlertCircle className="w-5 h-5 mr-2" />
             Underserved Regions Analysis
           </CardTitle>
@@ -219,16 +279,16 @@ export const PolicyPlanningTools = () => {
         <CardContent>
           <div className="space-y-3">
             {underservedRegions.map((region, index) => (
-              <div key={index} className="p-4 bg-white/5 rounded-lg">
-                <div className="flex items-center justify-between">
+              <div key={index} className="p-3 sm:p-4 bg-white/5 rounded-lg">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex-1">
-                    <div className="flex items-center space-x-3 mb-2">
-                      <h4 className="text-white font-medium">{region.region}</h4>
-                      <Badge className={`${getPriorityColor(region.priority)} text-white text-xs`}>
+                    <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 mb-2">
+                      <h4 className="text-white font-medium text-sm sm:text-base">{region.region}</h4>
+                      <Badge className={`${getPriorityColor(region.priority)} text-white text-xs w-fit`}>
                         {region.priority} priority
                       </Badge>
                     </div>
-                    <div className="grid grid-cols-4 gap-4 text-sm">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 text-xs sm:text-sm">
                       <div>
                         <span className="text-white/60">Population: </span>
                         <span className="text-white/80">{region.population.toLocaleString()}</span>
@@ -241,13 +301,18 @@ export const PolicyPlanningTools = () => {
                         <span className="text-white/60">Employment Rate: </span>
                         <span className="text-white/80">{region.employmentRate}%</span>
                       </div>
-                      <div>
+                      <div className="col-span-2 lg:col-span-1">
                         <span className="text-white/60">Intervention: </span>
                         <span className="text-white/80">{region.interventionNeeded}</span>
                       </div>
                     </div>
                   </div>
-                  <Button size="sm" variant="outline" className="bg-white/10 border-white/20 text-white">
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="bg-white/10 border-white/20 text-white hover:bg-white/20 w-full sm:w-auto"
+                    onClick={() => handleAnalyzeRegion(region.region)}
+                  >
                     <Eye className="w-4 h-4 mr-1" />
                     Analyze
                   </Button>
@@ -305,16 +370,16 @@ export const PolicyPlanningTools = () => {
             <div className="space-y-3">
               {policyRecommendations.map((rec, index) => (
                 <div key={index} className="p-3 bg-white/5 rounded-lg">
-                  <div className="flex items-start justify-between mb-2">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                     <div className="flex-1">
-                      <div className="flex items-center space-x-2 mb-1">
+                      <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-2 mb-1">
                         <h4 className="text-white font-medium text-sm">{rec.title}</h4>
-                        <Badge className={`${getPriorityColor(rec.priority)} text-white text-xs`}>
+                        <Badge className={`${getPriorityColor(rec.priority)} text-white text-xs w-fit`}>
                           {rec.priority}
                         </Badge>
                       </div>
                       <p className="text-white/70 text-xs mb-2">{rec.description}</p>
-                      <div className="grid grid-cols-3 gap-2 text-xs mb-2">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs mb-2">
                         <div>
                           <span className="text-white/60">Budget: </span>
                           <span className="text-white/80">{rec.budget}</span>
@@ -336,7 +401,12 @@ export const PolicyPlanningTools = () => {
                         ))}
                       </div>
                     </div>
-                    <Button size="sm" variant="outline" className="bg-white/10 border-white/20 text-white ml-2">
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="bg-white/10 border-white/20 text-white hover:bg-white/20 w-full sm:w-auto"
+                      onClick={() => handleImplementRecommendation(rec.title)}
+                    >
                       <Target className="w-4 h-4" />
                     </Button>
                   </div>
