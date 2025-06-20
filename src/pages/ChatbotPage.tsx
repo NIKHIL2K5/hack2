@@ -4,8 +4,8 @@ import { Send, Bot, User, ArrowLeft, Globe, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import { getUserInfo } from "@/contexts/ai/userHelpers";
+import { useEnhancedAI } from "@/contexts/EnhancedAIContext";
 
 const AnimatedBot = () => (
   <motion.div
@@ -35,6 +35,8 @@ const AnimatedBot = () => (
 
 const ChatbotPage = () => {
   const userInfo = getUserInfo();
+  const { askEnhancedAI, isAIThinking } = useEnhancedAI();
+  
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -45,7 +47,6 @@ const ChatbotPage = () => {
   ]);
   const [inputMessage, setInputMessage] = useState("");
   const [language, setLanguage] = useState("english");
-  const [isTyping, setIsTyping] = useState(false);
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
@@ -58,29 +59,18 @@ const ChatbotPage = () => {
     };
 
     setMessages(prev => [...prev, userMessage]);
-    setIsTyping(true);
+    const currentMessage = inputMessage;
+    setInputMessage("");
 
     try {
       const currentPage = window.location.pathname;
       const context = `Current page: ${currentPage}, User role: ${userInfo.role}`;
 
-      const { data, error } = await supabase.functions.invoke('chat-with-ai', {
-        body: {
-          message: inputMessage,
-          context,
-          userRole: userInfo.role,
-          userName: userInfo.name,
-          hasImage: false
-        }
-      });
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
+      const aiResponse = await askEnhancedAI(currentMessage, context);
+      
       const botMessage = {
         id: messages.length + 2,
-        text: data.content,
+        text: aiResponse.content,
         sender: "bot",
         timestamp: new Date().toLocaleTimeString()
       };
@@ -95,11 +85,7 @@ const ChatbotPage = () => {
         timestamp: new Date().toLocaleTimeString()
       };
       setMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsTyping(false);
     }
-
-    setInputMessage("");
   };
 
   const TypingIndicator = () => (
@@ -237,7 +223,7 @@ const ChatbotPage = () => {
                   </div>
                 </motion.div>
               ))}
-              {isTyping && <TypingIndicator />}
+              {isAIThinking && <TypingIndicator />}
             </div>
 
             {/* Input Area */}
@@ -249,12 +235,12 @@ const ChatbotPage = () => {
                   onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
                   placeholder={language === "english" ? "Ask Sethu anything about government schemes, jobs, or career guidance..." : "సేతుని ప్రభుత్వ పథకాలు, ఉద్యోగాలు లేదా కెరీర్ గైడెన్స్ గురించి అడుగండి..."}
                   className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/60"
-                  disabled={isTyping}
+                  disabled={isAIThinking}
                 />
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Button
                     onClick={handleSendMessage}
-                    disabled={isTyping}
+                    disabled={isAIThinking || !inputMessage.trim()}
                     className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 disabled:opacity-50"
                   >
                     <Send className="w-4 h-4" />
@@ -282,7 +268,7 @@ const ChatbotPage = () => {
                 onClick={() => setInputMessage(action)}
                 variant="outline"
                 className="w-full bg-white/5 border-white/20 text-white hover:bg-white/10 h-12"
-                disabled={isTyping}
+                disabled={isAIThinking}
               >
                 {action}
               </Button>

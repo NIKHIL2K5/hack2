@@ -2,10 +2,44 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
+// Using dummy values since we're not actually connecting to Supabase in this environment
 const SUPABASE_URL = "https://zqpkpwsdqjqoqsfjohor.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpxcGtwd3NkcWpxb3FzZmpvaG9yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA0MTYxMzAsImV4cCI6MjA2NTk5MjEzMH0.YxO-pWSrXvODxaxplorr101i4MWU88Un6govS3KEG-Q";
 
-// Import the supabase client like this:
-// import { supabase } from "@/integrations/supabase/client";
+// Mock Supabase client with functions implementation
+const mockSupabase = {
+  functions: {
+    invoke: async (functionName: string, options: any) => {
+      console.log(`Mock invoking Supabase function: ${functionName}`, options);
+      
+      // Simulate a delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Return mock data based on the function name
+      if (functionName === 'chat-with-ai') {
+        const { message } = options.body;
+        
+        let response = "I'm Sethu, your AI assistant. ";
+        
+        if (message.toLowerCase().includes("job")) {
+          response += "I can help you find job opportunities that match your skills and interests. Would you like me to search for specific roles or industries?";
+        } else if (message.toLowerCase().includes("scheme") || message.toLowerCase().includes("funding")) {
+          response += "There are several government schemes available for startups and entrepreneurs in Telangana. The T-Hub incubation program and TSIC Innovation Challenge are particularly popular.";
+        } else if (message.toLowerCase().includes("profile")) {
+          response += "Your profile is an important part of your presence on this platform. Make sure to keep it updated with your latest skills and experiences to improve your visibility to potential employers.";
+        } else if (message.toLowerCase().includes("application")) {
+          response += "You can track all your job applications through the Application Tracker. It shows real-time status updates for each position you've applied to.";
+        } else {
+          response += "I'm here to help with job searches, career guidance, government schemes, and platform navigation. How can I assist you today?";
+        }
+        
+        return { data: { content: response } };
+      }
+      
+      return { data: { content: "I'm sorry, I couldn't process that request." } };
+    }
+  }
+};
 
-export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+// Export the mock client
+export const supabase = mockSupabase as unknown as ReturnType<typeof createClient<Database>>;

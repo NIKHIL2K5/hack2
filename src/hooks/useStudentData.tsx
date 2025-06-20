@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { AlertCircle } from "lucide-react";
 import { saveUserData, loadUserData } from "@/utils/userStorage";
 import { applicationSyncService } from "@/services/applicationSync";
 import { dataSyncService } from "@/services/dataSync";
@@ -387,7 +386,7 @@ export const useStudentData = () => {
     joinedDate: "2024-01-15"
   });
 
-  const [appliedJobs, setAppliedJobs] = useState([]);
+  const [appliedJobs, setAppliedJobs] = useState<any[]>([]);
 
   const [applicationData, setApplicationData] = useState({
     fullName: "",
@@ -405,7 +404,7 @@ export const useStudentData = () => {
     availableFrom: "",
     workMode: "hybrid",
     additionalInfo: "",
-    resumeFile: null
+    resumeFile: null as File | null
   });
 
   // Load user data on hook initialization
@@ -444,22 +443,24 @@ export const useStudentData = () => {
     });
   }, []);
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = (field: string, value: string) => {
     setApplicationData(prev => ({
       ...prev,
       [field]: value
     }));
   };
 
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    setApplicationData(prev => ({
-      ...prev,
-      resumeFile: file
-    }));
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setApplicationData(prev => ({
+        ...prev,
+        resumeFile: file
+      }));
+    }
   };
 
-  const handleSubmitApplication = (e, selectedJob) => {
+  const handleSubmitApplication = (e: React.FormEvent, selectedJob: any) => {
     e.preventDefault();
     
     if (!applicationData.fullName || !applicationData.email) {
@@ -523,7 +524,7 @@ export const useStudentData = () => {
     return true;
   };
 
-  const handleUpdateProfile = (e) => {
+  const handleUpdateProfile = (e: React.FormEvent) => {
     e.preventDefault();
     
     const userData = {

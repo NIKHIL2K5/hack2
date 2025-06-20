@@ -32,7 +32,7 @@ export const UniversalAIChat: React.FC = () => {
       };
       setMessages([welcomeMessage]);
     }
-  }, [userName, userRole]);
+  }, [userName, userRole, messages.length]);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
