@@ -17,9 +17,9 @@ const mockSupabase = {
       
       // Return mock data based on the function name
       if (functionName === 'chat-with-ai') {
-        const { message } = options.body;
+        const { message, userRole, userName } = options.body;
         
-        let response = "I'm Sethu, your AI assistant. ";
+        let response = `Hi ${userName || 'there'}! I'm Sethu, your AI assistant. `;
         
         if (message.toLowerCase().includes("job")) {
           response += "I can help you find job opportunities that match your skills and interests. Would you like me to search for specific roles or industries?";
@@ -29,8 +29,10 @@ const mockSupabase = {
           response += "Your profile is an important part of your presence on this platform. Make sure to keep it updated with your latest skills and experiences to improve your visibility to potential employers.";
         } else if (message.toLowerCase().includes("application")) {
           response += "You can track all your job applications through the Application Tracker. It shows real-time status updates for each position you've applied to.";
+        } else if (options.body.hasImage) {
+          response += "I've analyzed the image you shared. If this is a resume, I recommend highlighting your key skills more prominently and ensuring your contact information is clearly visible at the top.";
         } else {
-          response += "I'm here to help with job searches, career guidance, government schemes, and platform navigation. How can I assist you today?";
+          response += `I'm here to help with ${userRole === 'student' ? 'job searches, career planning, skill development, and interview preparation' : userRole === 'startup' ? 'funding opportunities, government schemes, hiring strategies, and business growth' : userRole === 'official' ? 'scheme management, policy implementation, and ecosystem monitoring' : 'navigating the platform and maximizing your opportunities'}. How can I assist you today?`;
         }
         
         return { data: { content: response } };
@@ -38,7 +40,23 @@ const mockSupabase = {
       
       return { data: { content: "I'm sorry, I couldn't process that request." } };
     }
-  }
+  },
+  auth: {
+    getSession: () => ({ data: { session: null }, error: null }),
+    onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+  },
+  from: () => ({
+    select: () => ({ data: [], error: null }),
+    insert: () => ({ data: null, error: null }),
+    update: () => ({ data: null, error: null }),
+    delete: () => ({ data: null, error: null }),
+  }),
+  storage: {
+    from: () => ({
+      upload: () => ({ data: { path: 'mock-path' }, error: null }),
+      getPublicUrl: () => ({ data: { publicUrl: 'https://example.com/mock-image.jpg' } }),
+    }),
+  },
 };
 
 // Export the mock client

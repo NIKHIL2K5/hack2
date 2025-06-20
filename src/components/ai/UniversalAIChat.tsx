@@ -27,7 +27,7 @@ export const UniversalAIChat: React.FC = () => {
       const welcomeMessage = {
         id: 1,
         text: `Hi ${userName || 'there'}! I'm Sethu, your comprehensive AI assistant with deep knowledge of this platform. I can help you with detailed guidance on ${userRole === 'student' ? 'job searches, career planning, skill development, and interview preparation' : userRole === 'startup' ? 'funding opportunities, government schemes, hiring strategies, and business growth' : userRole === 'official' ? 'scheme management, policy implementation, and ecosystem monitoring' : 'navigating the platform and maximizing your opportunities'}. I provide precise, actionable advice tailored to your specific situation. You can also share images for visual analysis. How can I assist you today?`,
-        sender: 'ai' as const,
+        sender: "ai" as const,
         timestamp: new Date().toLocaleTimeString()
       };
       setMessages([welcomeMessage]);
@@ -91,6 +91,7 @@ export const UniversalAIChat: React.FC = () => {
 
       setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
+      console.error("AI Chat Error:", error);
       const errorMessage: Message = {
         id: messages.length + 2,
         text: "I apologize, but I'm having trouble processing your request right now. Please try again, and I'll do my best to provide comprehensive assistance.",
