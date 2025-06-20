@@ -1,6 +1,5 @@
 import { useStudentDashboard } from "@/hooks/useStudentDashboard";
 import { StudentDashboardLayout } from "@/components/student/StudentDashboardLayout";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const DashboardStudent = () => {

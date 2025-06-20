@@ -68,12 +68,6 @@ export const StudentDashboardLayout = (props: StudentDashboardLayoutProps) => {
 
   const navigate = useNavigate();
 
-  const stats = [
-    { title: "Applications Sent", value: appliedJobs.length.toString(), icon: FileText },
-    { title: "Jobs Viewed", value: "45", icon: Eye },
-    { title: "Profile Views", value: "23", icon: User }
-  ];
-
   const handleNavigation = (path: string) => {
     if (onNavigate) {
       onNavigate(path);
@@ -81,6 +75,12 @@ export const StudentDashboardLayout = (props: StudentDashboardLayoutProps) => {
       navigate(path);
     }
   };
+
+  const stats = [
+    { title: "Applications Sent", value: appliedJobs.length.toString(), icon: FileText },
+    { title: "Jobs Viewed", value: "45", icon: Eye },
+    { title: "Profile Views", value: "23", icon: User }
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-neutral-100 to-neutral-200">
