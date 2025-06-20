@@ -9,6 +9,8 @@ import { useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Float, Octahedron } from "@react-three/drei";
 import { toast } from "sonner";
+import { isValidOfficialEmail, getOrganizationByEmail } from "@/services/officialAuth";
+import { useOfficialData } from "@/hooks/useOfficialData";
 
 const AnimatedOctahedron = () => (
   <Float speed={1.5} rotationIntensity={1} floatIntensity={1.5}>
@@ -30,13 +32,14 @@ const LoginOfficial = () => {
     confirmPassword: ""
   });
   const navigate = useNavigate();
+  const { loginOfficial } = useOfficialData();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate official email domain
-    if (!formData.email.endsWith('@org.in')) {
-      toast.error("Please use your official @org.in email address");
+    // Validate official email
+    if (!isValidOfficialEmail(formData.email)) {
+      toast.error("This email is not authorized for official access. Please contact your administrator.");
       return;
     }
     
@@ -64,9 +67,22 @@ const LoginOfficial = () => {
       toast.error("Password must be at least 8 characters long");
       return;
     }
-    
-    toast.success(isLogin ? "Secure access granted!" : "Official account created successfully!");
-    setTimeout(() => navigate("/dashboard/official"), 1500);
+
+    // Login or register the official
+    const success = loginOfficial(
+      formData.email,
+      formData.name || "Official User",
+      formData.department || "General",
+      formData.employeeId || "EMP001"
+    );
+
+    if (success) {
+      const organization = getOrganizationByEmail(formData.email);
+      toast.success(`Welcome to ${organization?.name}! Access granted.`);
+      setTimeout(() => navigate("/dashboard/official"), 1500);
+    } else {
+      toast.error("Authentication failed. Please try again.");
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,11 +123,11 @@ const LoginOfficial = () => {
                 <Shield className="w-10 h-10 text-white" />
               </motion.div>
               <CardTitle className="text-3xl font-bold text-white mb-2">
-                {isLogin ? "Secure Access" : "Official Registration"}
+                {isLogin ? "Authorized Access" : "Official Registration"}
               </CardTitle>
               <p className="text-white/80 text-lg flex items-center justify-center">
                 <Lock className="w-4 h-4 mr-2" />
-                {isLogin ? "Government portal login" : "Create official account"}
+                {isLogin ? "Restricted to approved organizations" : "Register with authorized email"}
               </p>
             </CardHeader>
             
@@ -164,7 +180,7 @@ const LoginOfficial = () => {
                 )}
                 
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-white font-medium">Official Email</Label>
+                  <Label htmlFor="email" className="text-white font-medium">Authorized Email</Label>
                   <motion.div whileFocus={{ scale: 1.02 }}>
                     <Input 
                       id="email" 
@@ -172,11 +188,10 @@ const LoginOfficial = () => {
                       value={formData.email}
                       onChange={handleInputChange}
                       placeholder="official@organization.org.in" 
-                      pattern=".*@.*\.org\.in$"
                       className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-indigo-400 focus:ring-indigo-400/50 h-12 text-lg"
                     />
                   </motion.div>
-                  <p className="text-xs text-white/50">Must use official @org.in email domain (e.g., @telangana.org.in, @india.org.in)</p>
+                  <p className="text-xs text-white/50">Only pre-approved organization emails are accepted</p>
                 </div>
                 
                 <div className="space-y-2">
@@ -231,7 +246,7 @@ const LoginOfficial = () => {
                     className="w-full bg-gradient-to-r from-indigo-500 to-indigo-700 hover:from-indigo-600 hover:to-indigo-800 text-white border-0 h-14 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     <Lock className="w-4 h-4 mr-2" />
-                    {isLogin ? "Secure Sign In" : "Register Account"}
+                    {isLogin ? "Secure Access" : "Register Account"}
                   </Button>
                 </motion.div>
               </form>

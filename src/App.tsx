@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Suspense } from "react";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
+import LoginOfficial from "./pages/LoginOfficial";
 import DashboardStartup from "./pages/DashboardStartup";
 import DashboardStudent from "./pages/DashboardStudent";
 import DashboardOfficial from "./pages/DashboardOfficial";
@@ -36,6 +37,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/login/:role" element={<Login />} />
+              <Route path="/login/official" element={<LoginOfficial />} />
               <Route path="/dashboard/startup" element={<DashboardStartup />} />
               <Route path="/dashboard/student" element={<DashboardStudent />} />
               <Route path="/dashboard/official" element={<DashboardOfficial />} />
