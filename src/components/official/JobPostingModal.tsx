@@ -18,8 +18,23 @@ interface JobPostingModalProps {
   organizationName: string;
 }
 
+interface JobFormData {
+  title: string;
+  department: string;
+  location: string;
+  jobType: string;
+  experience: string;
+  salary: string;
+  description: string;
+  responsibilities: string[];
+  requirements: string[];
+  skills: string[];
+  benefits: string[];
+  deadline: string;
+}
+
 export const JobPostingModal = ({ isOpen, onClose, organizationName }: JobPostingModalProps) => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<JobFormData>({
     title: "",
     department: "",
     location: "",
@@ -34,33 +49,33 @@ export const JobPostingModal = ({ isOpen, onClose, organizationName }: JobPostin
     deadline: ""
   });
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: keyof JobFormData, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
   };
 
-  const handleArrayField = (field: string, index: number, value: string) => {
+  const handleArrayField = (field: keyof Pick<JobFormData, 'responsibilities' | 'requirements' | 'skills' | 'benefits'>, index: number, value: string) => {
     setFormData(prev => ({
       ...prev,
-      [field]: prev[field as keyof typeof prev].map((item: string, i: number) => 
+      [field]: (prev[field] as string[]).map((item, i) => 
         i === index ? value : item
       )
     }));
   };
 
-  const addArrayItem = (field: string) => {
+  const addArrayItem = (field: keyof Pick<JobFormData, 'responsibilities' | 'requirements' | 'skills' | 'benefits'>) => {
     setFormData(prev => ({
       ...prev,
-      [field]: [...prev[field as keyof typeof prev], ""]
+      [field]: [...(prev[field] as string[]), ""]
     }));
   };
 
-  const removeArrayItem = (field: string, index: number) => {
+  const removeArrayItem = (field: keyof Pick<JobFormData, 'responsibilities' | 'requirements' | 'skills' | 'benefits'>, index: number) => {
     setFormData(prev => ({
       ...prev,
-      [field]: prev[field as keyof typeof prev].filter((_: string, i: number) => i !== index)
+      [field]: (prev[field] as string[]).filter((_, i) => i !== index)
     }));
   };
 
@@ -135,10 +150,10 @@ export const JobPostingModal = ({ isOpen, onClose, organizationName }: JobPostin
     onClose();
   };
 
-  const renderArrayField = (label: string, field: string, placeholder: string) => (
+  const renderArrayField = (label: string, field: keyof Pick<JobFormData, 'responsibilities' | 'requirements' | 'skills' | 'benefits'>, placeholder: string) => (
     <div className="space-y-2">
       <Label className="text-white">{label}</Label>
-      {formData[field as keyof typeof formData].map((item: string, index: number) => (
+      {(formData[field] as string[]).map((item, index) => (
         <div key={index} className="flex gap-2">
           <Input
             value={item}
@@ -146,7 +161,7 @@ export const JobPostingModal = ({ isOpen, onClose, organizationName }: JobPostin
             placeholder={placeholder}
             className="bg-white/10 border-white/20 text-white placeholder:text-white/50"
           />
-          {formData[field as keyof typeof formData].length > 1 && (
+          {(formData[field] as string[]).length > 1 && (
             <Button
               type="button"
               onClick={() => removeArrayItem(field, index)}
