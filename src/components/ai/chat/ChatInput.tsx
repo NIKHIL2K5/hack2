@@ -59,7 +59,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
         <Button
           onClick={onSendMessage}
           disabled={isAIThinking || (!inputMessage.trim() && !hasSelectedImage)}
-          className="h-10 w-10 p-0 flex-shrink-0"
+          className="h-10 w-10 p-0 flex-shrink-0 bg-blue-500 hover:bg-blue-600 text-white"
         >
           <Send className="w-4 h-4" />
         </Button>

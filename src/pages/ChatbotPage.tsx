@@ -41,7 +41,7 @@ const ChatbotPage = () => {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: `Hello! I'm Sethu, your AI assistant for discovering government schemes and opportunities. I'm powered by advanced AI and can help you with detailed guidance on ${userInfo.role === 'student' ? 'job searches, career planning, and skill development' : userInfo.role === 'startup' ? 'funding opportunities, government schemes, and business growth' : userInfo.role === 'official' ? 'scheme management and policy implementation' : 'navigating the platform and maximizing your opportunities'}. How can I help you today?`,
+      text: `Hello! I'm Sethu, your AI assistant for discovering government schemes and opportunities. I'm powered by advanced AI and can help you with detailed guidance on ${userInfo.role === 'student' ? 'job searches, career planning, skill development' : userInfo.role === 'startup' ? 'funding opportunities, government schemes, and business growth' : userInfo.role === 'official' ? 'scheme management and policy implementation' : 'navigating the platform and maximizing your opportunities'}. How can I help you today?`,
       sender: "bot",
       timestamp: new Date().toLocaleTimeString()
     }
@@ -205,7 +205,7 @@ const ChatbotPage = () => {
         >
           {/* Messages Area */}
           <div className="h-full flex flex-col">
-            <div className="flex-1 p-6 overflow-y-auto space-y-4">
+            <div className="flex-1 p-6 overflow-y-auto space-y-4 custom-scrollbar">
               {messages.map((message) => (
                 <motion.div
                   key={message.id}
