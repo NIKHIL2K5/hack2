@@ -8,7 +8,7 @@ export interface OfficialOrganization {
 }
 
 export const OFFICIAL_ORGANIZATIONS: OfficialOrganization[] = [
-  // Corporate Companies
+  // Corporate Companies (Startup Partners/Registered Organizations)
   {
     id: 'techcorp',
     name: 'TechCorp Innovations',

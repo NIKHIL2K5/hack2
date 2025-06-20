@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Building2, Plus, Users, FileText, Bot, Settings, LogOut, Briefcase, CheckCircle } from "lucide-react";
@@ -8,6 +7,7 @@ import { Canvas } from "@react-three/fiber";
 import { Float, Box, Sphere } from "@react-three/drei";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import { useOfficialData } from "@/hooks/useOfficialData";
 
 const FloatingShape = ({ position, color, shape = "box" }: any) => (
   <Float speed={1} rotationIntensity={0.5} floatIntensity={1}>
@@ -30,18 +30,21 @@ const Scene3D = () => (
 
 const DashboardStartup = () => {
   const [activeTab, setActiveTab] = useState("overview");
+  const { getApplicationStats } = useOfficialData();
+  const stats = getApplicationStats();
 
-  const stats = [
+  const dashboardStats = [
     { title: "Active Jobs", value: "12", icon: Briefcase, color: "text-blue-500" },
-    { title: "Applications", value: "48", icon: Users, color: "text-teal-500" },
-    { title: "Compliance Score", value: "92%", icon: CheckCircle, color: "text-green-500" },
-    { title: "Scheme Matches", value: "8", icon: FileText, color: "text-purple-500" }
+    { title: "Total Applications", value: stats.total.toString(), icon: Users, color: "text-teal-500" },
+    { title: "Accepted Applications", value: stats.shortlisted.toString(), icon: CheckCircle, color: "text-green-500" },
+    { title: "Pending Review", value: stats.pending.toString(), icon: FileText, color: "text-yellow-500" }
   ];
 
   const recentJobs = [
-    { title: "Frontend Developer Intern", applications: 15, status: "Active" },
-    { title: "Data Science Intern", applications: 23, status: "Active" },
-    { title: "UI/UX Designer", applications: 10, status: "Closed" }
+    { title: "Frontend Developer Intern", applications: stats.pending + 5, status: "Active" },
+    { title: "Data Science Intern", applications: stats.reviewed + 8, status: "Active" },
+    { title: "UI/UX Designer", applications: stats.shortlisted + 3, status: "Active" },
+    { title: "Backend Developer", applications: stats.rejected + 2, status: "Closed" }
   ];
 
   const handlePostJob = () => {
@@ -68,8 +71,8 @@ const DashboardStartup = () => {
                 <Building2 className="w-7 h-7 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold">Startup Dashboard</h1>
-                <p className="text-white/60">Welcome back, TechCorp Innovations</p>
+                <h1 className="text-2xl font-bold">Partner Organization Dashboard</h1>
+                <p className="text-white/60">Manage applications and job postings</p>
               </div>
             </motion.div>
             
@@ -111,7 +114,7 @@ const DashboardStartup = () => {
           animate={{ opacity: 1, y: 0 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
         >
-          {stats.map((stat, index) => (
+          {dashboardStats.map((stat, index) => (
             <motion.div
               key={stat.title}
               initial={{ opacity: 0, y: 20 }}
@@ -157,7 +160,7 @@ const DashboardStartup = () => {
             <motion.div whileHover={{ scale: 1.02 }}>
               <Button className="w-full h-20 bg-gradient-to-r from-teal-500 to-teal-700 hover:from-teal-600 hover:to-teal-800 text-white text-lg font-semibold">
                 <Users className="w-6 h-6 mr-3" />
-                View Applications
+                Manage Applications
               </Button>
             </motion.div>
           </Link>
@@ -180,7 +183,7 @@ const DashboardStartup = () => {
         >
           <Card className="bg-white/5 backdrop-blur-lg border-white/10">
             <CardHeader>
-              <CardTitle className="text-white text-xl">Recent Job Postings</CardTitle>
+              <CardTitle className="text-white text-xl">Recent Job Postings & Applications</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -192,7 +195,7 @@ const DashboardStartup = () => {
                   >
                     <div>
                       <h3 className="text-white font-semibold">{job.title}</h3>
-                      <p className="text-white/60">{job.applications} applications</p>
+                      <p className="text-white/60">{job.applications} applications received</p>
                     </div>
                     <span className={`px-3 py-1 rounded-full text-sm ${
                       job.status === "Active" 
