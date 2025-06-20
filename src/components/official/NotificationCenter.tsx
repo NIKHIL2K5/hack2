@@ -1,5 +1,5 @@
-
 import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -45,13 +45,8 @@ export const NotificationCenter = () => {
 
       {/* Create Notification Modal */}
       <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
-        <DialogContent className="max-w-2xl bg-white/95 backdrop-blur-lg border-white/20">
-          <DialogHeader>
-            <DialogTitle className="text-gray-900">Create New Notification</DialogTitle>
-          </DialogHeader>
-          <div className="p-4">
-            <NotificationCreationForm onClose={() => setIsCreateModalOpen(false)} />
-          </div>
+        <DialogContent className="max-w-2xl p-0 bg-white border-0 overflow-hidden">
+          <NotificationCreationForm onClose={() => setIsCreateModalOpen(false)} />
         </DialogContent>
       </Dialog>
     </div>
