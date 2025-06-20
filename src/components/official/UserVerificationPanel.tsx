@@ -5,28 +5,12 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Shield, Users, CheckCircle, AlertTriangle, Search, Filter, Download, Eye, Clock, FileText, UserCheck, X } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { useToast } from "@/hooks/use-toast";
 
 export const UserVerificationPanel = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
-
-  const verificationStats = [
-    { name: 'Jan', verified: 45, pending: 12, rejected: 3 },
-    { name: 'Feb', verified: 52, pending: 8, rejected: 5 },
-    { name: 'Mar', verified: 48, pending: 15, rejected: 2 },
-    { name: 'Apr', verified: 61, pending: 9, rejected: 4 },
-    { name: 'May', verified: 55, pending: 18, rejected: 3 },
-    { name: 'Jun', verified: 67, pending: 11, rejected: 6 }
-  ];
-
-  const userTypeDistribution = [
-    { name: 'Students', value: 1456, color: '#3B82F6' },
-    { name: 'Startups', value: 387, color: '#10B981' },
-    { name: 'Officials', value: 45, color: '#F59E0B' },
-    { name: 'Freelancers', value: 268, color: '#8B5CF6' }
-  ];
-
-  const pendingVerifications = [
+  const [pendingUsers, setPendingUsers] = useState([
     {
       id: 1,
       name: 'Rajesh Kumar',
@@ -67,6 +51,24 @@ export const UserVerificationPanel = () => {
       priority: 'high',
       district: 'Karimnagar'
     }
+  ]);
+
+  const { toast } = useToast();
+
+  const verificationStats = [
+    { name: 'Jan', verified: 45, pending: 12, rejected: 3 },
+    { name: 'Feb', verified: 52, pending: 8, rejected: 5 },
+    { name: 'Mar', verified: 48, pending: 15, rejected: 2 },
+    { name: 'Apr', verified: 61, pending: 9, rejected: 4 },
+    { name: 'May', verified: 55, pending: 18, rejected: 3 },
+    { name: 'Jun', verified: 67, pending: 11, rejected: 6 }
+  ];
+
+  const userTypeDistribution = [
+    { name: 'Students', value: 1456, color: '#3B82F6' },
+    { name: 'Startups', value: 387, color: '#10B981' },
+    { name: 'Officials', value: 45, color: '#F59E0B' },
+    { name: 'Freelancers', value: 268, color: '#8B5CF6' }
   ];
 
   const recentlyVerified = [
@@ -77,34 +79,89 @@ export const UserVerificationPanel = () => {
   ];
 
   const flaggedAccounts = [
-    { name: 'Suspicious Startup Ltd', reason: 'Invalid documents', flaggedDate: '2024-01-16', severity: 'high' },
-    { name: 'John Doe', reason: 'Duplicate registration', flaggedDate: '2024-01-15', severity: 'medium' },
-    { name: 'Fake Corp', reason: 'Non-existent company', flaggedDate: '2024-01-14', severity: 'high' }
+    { id: 1, name: 'Suspicious Startup Ltd', reason: 'Invalid documents', flaggedDate: '2024-01-16', severity: 'high' },
+    { id: 2, name: 'John Doe', reason: 'Duplicate registration', flaggedDate: '2024-01-15', severity: 'medium' },
+    { id: 3, name: 'Fake Corp', reason: 'Non-existent company', flaggedDate: '2024-01-14', severity: 'high' }
   ];
 
   const handleReviewUser = (userId: number) => {
     console.log('Reviewing user:', userId);
-    // Implementation for reviewing user documents
+    const user = pendingUsers.find(u => u.id === userId);
+    toast({
+      title: "Document Review Started",
+      description: `Opening document review for ${user?.name}. Checking all submitted documents...`,
+    });
   };
 
   const handleApproveUser = (userId: number) => {
     console.log('Approving user:', userId);
-    // Implementation for approving user verification
+    const user = pendingUsers.find(u => u.id === userId);
+    
+    // Remove user from pending list
+    setPendingUsers(prev => prev.filter(u => u.id !== userId));
+    
+    toast({
+      title: "User Approved ✅",
+      description: `${user?.name} has been successfully verified and approved. Welcome email sent.`,
+    });
   };
 
   const handleRejectUser = (userId: number) => {
     console.log('Rejecting user:', userId);
-    // Implementation for rejecting user verification
+    const user = pendingUsers.find(u => u.id === userId);
+    
+    // Remove user from pending list
+    setPendingUsers(prev => prev.filter(u => u.id !== userId));
+    
+    toast({
+      title: "User Rejected ❌", 
+      description: `${user?.name}'s verification has been rejected. Rejection notice sent with feedback.`,
+      variant: "destructive",
+    });
   };
 
   const handleExportReport = () => {
     console.log('Exporting verification report');
-    // Implementation for exporting verification data
+    
+    const reportData = {
+      exportDate: new Date().toISOString(),
+      totalPendingVerifications: pendingUsers.length,
+      verificationStats,
+      userDistribution: userTypeDistribution,
+      flaggedAccounts: flaggedAccounts.length,
+      recentActivity: recentlyVerified
+    };
+
+    const dataStr = JSON.stringify(reportData, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `verification-report-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+
+    toast({
+      title: "Report Exported 📊",
+      description: "Verification analytics report has been downloaded successfully.",
+    });
   };
 
   const handleFilterUsers = () => {
     console.log('Filtering users with criteria:', selectedFilter);
-    // Implementation for filtering users
+    toast({
+      title: "Filter Applied 🔍",
+      description: `Showing users filtered by: ${selectedFilter}. Use search to further narrow results.`,
+    });
+  };
+
+  const handleViewFlaggedAccount = (accountId: number) => {
+    console.log('Viewing flagged account:', accountId);
+    const account = flaggedAccounts.find(a => a.id === accountId);
+    toast({
+      title: "Viewing Flagged Account 🚩",
+      description: `Opening detailed investigation for ${account?.name}. Reviewing all flags and evidence.`,
+    });
   };
 
   const getPriorityColor = (priority: string) => {
@@ -154,10 +211,10 @@ export const UserVerificationPanel = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {[
-          { title: 'Pending Verification', value: '47', change: '+8', icon: AlertTriangle, color: 'bg-yellow-500' },
+          { title: 'Pending Verification', value: pendingUsers.length.toString(), change: '+8', icon: AlertTriangle, color: 'bg-yellow-500' },
           { title: 'Verified Today', value: '23', change: '+15', icon: CheckCircle, color: 'bg-green-500' },
           { title: 'Total Users', value: '2,156', change: '+156', icon: Users, color: 'bg-blue-500' },
-          { title: 'Flagged Accounts', value: '12', change: '-3', icon: Shield, color: 'bg-red-500' }
+          { title: 'Flagged Accounts', value: flaggedAccounts.length.toString(), change: '-3', icon: Shield, color: 'bg-red-500' }
         ].map((stat) => (
           <Card key={stat.title} className="bg-white/10 backdrop-blur-lg border-white/20">
             <CardContent className="p-4">
@@ -260,7 +317,7 @@ export const UserVerificationPanel = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {pendingVerifications.map((user) => (
+            {pendingUsers.map((user) => (
               <div key={user.id} className="p-4 bg-white/5 rounded-lg">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
@@ -300,7 +357,7 @@ export const UserVerificationPanel = () => {
                     <Button 
                       size="sm" 
                       variant="outline" 
-                      className="bg-white/10 border-white/20 text-white"
+                      className="bg-white/10 border-white/20 text-white hover:bg-white/20"
                       onClick={() => handleReviewUser(user.id)}
                     >
                       <Eye className="w-4 h-4 mr-1" />
@@ -378,7 +435,12 @@ export const UserVerificationPanel = () => {
                         <span className="text-white/50 text-xs">{account.flaggedDate}</span>
                       </div>
                     </div>
-                    <Button size="sm" variant="outline" className="bg-white/10 border-white/20 text-white">
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                      onClick={() => handleViewFlaggedAccount(account.id)}
+                    >
                       <Eye className="w-4 h-4" />
                     </Button>
                   </div>
