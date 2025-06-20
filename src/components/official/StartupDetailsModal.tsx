@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Flag, MapPin, Users, Building, Phone, Mail, Globe, Calendar, DollarSign, AlertTriangle, CheckCircle, Eye, Download } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface StartupDetailsModalProps {
   isOpen: boolean;
@@ -14,23 +15,100 @@ interface StartupDetailsModalProps {
 }
 
 export const StartupDetailsModal = ({ isOpen, onClose, startup, onFlag }: StartupDetailsModalProps) => {
+  const { toast } = useToast();
+
   if (!startup) return null;
 
   const handleFlagStartup = () => {
     onFlag(String(startup.id));
     console.log('Startup flagged:', startup.name);
+    
+    toast({
+      title: startup.isFlagged ? "Flag Removed" : "Startup Flagged",
+      description: startup.isFlagged 
+        ? `${startup.name} has been removed from review.` 
+        : `${startup.name} has been flagged for review. The technical team will investigate.`,
+      variant: startup.isFlagged ? "default" : "destructive"
+    });
   };
 
   const handleApproveCompliance = () => {
     console.log('Compliance approved for:', startup.name);
+    
+    toast({
+      title: "Compliance Approved",
+      description: `Compliance status for ${startup.name} has been approved. Certificate will be generated automatically.`,
+      variant: "default"
+    });
+
+    // Simulate compliance approval
+    setTimeout(() => {
+      toast({
+        title: "Certificate Generated",
+        description: `Compliance certificate has been sent to ${startup.contactEmail}`,
+        variant: "default"
+      });
+    }, 2000);
   };
 
   const handleSendNotice = () => {
     console.log('Compliance notice sent to:', startup.name);
+    
+    toast({
+      title: "Compliance Notice Sent",
+      description: `Non-compliance notice has been sent to ${startup.name}. They have 30 days to respond.`,
+      variant: "destructive"
+    });
   };
 
   const handleDownloadReport = () => {
     console.log('Downloading detailed report for:', startup.name);
+    
+    // Simulate report generation and download
+    toast({
+      title: "Generating Report",
+      description: "Detailed startup report is being generated...",
+      variant: "default"
+    });
+
+    setTimeout(() => {
+      // Create a downloadable file
+      const reportData = {
+        startupName: startup.name,
+        location: startup.location,
+        industry: startup.industry,
+        employees: startup.employees,
+        funding: startup.fundingReceived,
+        complianceStatus: startup.complianceStatus,
+        registrationDate: startup.registeredDate,
+        lastCompliance: startup.lastCompliance,
+        isDPIIT: startup.isDPIIT,
+        contactInfo: {
+          email: startup.contactEmail,
+          phone: startup.contactPhone,
+          website: startup.website
+        },
+        description: startup.description,
+        generatedAt: new Date().toISOString(),
+        reportType: "Detailed Startup Analysis"
+      };
+
+      const dataStr = JSON.stringify(reportData, null, 2);
+      const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+      
+      const exportFileDefaultName = `${startup.name.replace(/\s+/g, '_')}_Report_${new Date().toISOString().split('T')[0]}.json`;
+      
+      const linkElement = document.createElement('a');
+      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('download', exportFileDefaultName);
+      linkElement.click();
+
+      toast({
+        title: "Report Downloaded",
+        description: `Detailed report for ${startup.name} has been downloaded successfully.`,
+        variant: "default"
+      });
+    }, 1500);
   };
 
   return (
