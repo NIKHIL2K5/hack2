@@ -4,15 +4,25 @@ import { User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Link } from "react-router-dom";
+import { NotificationsPanel } from "./NotificationsPanel";
 
 interface StudentHeaderProps {
   profileName: string;
   showProfile: boolean;
   setShowProfile: (show: boolean) => void;
   ProfileModalContent: React.ReactNode;
+  appliedJobs?: any[];
+  profile?: any;
 }
 
-export const StudentHeader = ({ profileName, showProfile, setShowProfile, ProfileModalContent }: StudentHeaderProps) => {
+export const StudentHeader = ({ 
+  profileName, 
+  showProfile, 
+  setShowProfile, 
+  ProfileModalContent,
+  appliedJobs = [],
+  profile = {}
+}: StudentHeaderProps) => {
   return (
     <header className="glass-card border-b border-neutral-200/80 shadow-sm">
       <div className="container mx-auto px-6 py-4">
@@ -42,6 +52,8 @@ export const StudentHeader = ({ profileName, showProfile, setShowProfile, Profil
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
+            <NotificationsPanel appliedJobs={appliedJobs} profile={profile} />
+            
             <Dialog open={showProfile} onOpenChange={setShowProfile}>
               <DialogTrigger asChild>
                 <Button variant="outline" className="border-neutral-300 text-neutral-700 hover:bg-neutral-100">

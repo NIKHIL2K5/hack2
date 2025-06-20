@@ -1,9 +1,9 @@
-
 import { motion } from "framer-motion";
-import { Building2, MapPin, DollarSign, Clock } from "lucide-react";
+import { Building2, MapPin, DollarSign, Clock, Bookmark } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useSavedJobs } from "@/hooks/useSavedJobs";
 
 interface Job {
   id: number;
@@ -25,6 +25,17 @@ interface JobCardProps {
 }
 
 export const JobCard = ({ job, index, onApply }: JobCardProps) => {
+  const { saveJob, removeSavedJob, isJobSaved } = useSavedJobs();
+  const isSaved = isJobSaved(job.id);
+
+  const handleSaveToggle = () => {
+    if (isSaved) {
+      removeSavedJob(job.id);
+    } else {
+      saveJob(job);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -37,7 +48,18 @@ export const JobCard = ({ job, index, onApply }: JobCardProps) => {
         <CardContent className="p-6">
           <div className="flex justify-between items-start mb-4">
             <div className="flex-1">
-              <h3 className="text-xl font-bold text-neutral-800 mb-2 group-hover:text-primary-700 transition-colors">{job.title}</h3>
+              <div className="flex items-start justify-between mb-2">
+                <h3 className="text-xl font-bold text-neutral-800 group-hover:text-primary-700 transition-colors">{job.title}</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleSaveToggle}
+                  className={`p-2 ${isSaved ? 'text-yellow-500 hover:text-yellow-600' : 'text-gray-400 hover:text-yellow-500'} transition-colors`}
+                >
+                  <Bookmark className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
+                </Button>
+              </div>
+              
               <div className="flex items-center space-x-4 text-neutral-600 mb-3 text-sm">
                 <div className="flex items-center">
                   <Building2 className="w-4 h-4 mr-1" />

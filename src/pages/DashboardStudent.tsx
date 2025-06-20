@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { FileText, User, Eye } from "lucide-react";
 import { Dialog } from "@/components/ui/dialog";
@@ -9,6 +8,7 @@ import { StudentProfileModal } from "@/components/student/StudentProfileModal";
 import { JobApplicationModal } from "@/components/student/JobApplicationModal";
 import { JobsSection } from "@/components/student/JobsSection";
 import { QuickActions } from "@/components/student/QuickActions";
+import { SavedJobsWidget } from "@/components/student/SavedJobsWidget";
 import { useStudentData } from "@/hooks/useStudentData";
 
 const DashboardStudent = () => {
@@ -191,6 +191,8 @@ const DashboardStudent = () => {
         profileName={profile.name}
         showProfile={showProfile}
         setShowProfile={setShowProfile}
+        appliedJobs={appliedJobs}
+        profile={profile}
         ProfileModalContent={
           <StudentProfileModal
             profile={profile}
@@ -220,6 +222,8 @@ const DashboardStudent = () => {
 
         <QuickActions />
       </main>
+
+      <SavedJobsWidget />
 
       <Dialog open={showJobApplication} onOpenChange={setShowJobApplication}>
         <JobApplicationModal
