@@ -1,26 +1,35 @@
 
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Send, Bot, User, ArrowLeft, Globe } from "lucide-react";
+import { Send, Bot, User, ArrowLeft, Globe, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { Canvas } from "@react-three/fiber";
-import { Float, Sphere, MeshDistortMaterial } from "@react-three/drei";
 
-const FloatingBot = () => (
-  <Float speed={3} rotationIntensity={1} floatIntensity={2}>
-    <Sphere args={[0.5, 32, 32]}>
-      <MeshDistortMaterial
-        color="#6366f1"
-        attach="material"
-        distort={0.3}
-        speed={2}
-        roughness={0}
-      />
-    </Sphere>
-  </Float>
+const AnimatedBot = () => (
+  <motion.div
+    className="relative w-20 h-20 mx-auto mb-4"
+    animate={{
+      y: [0, -10, 0],
+      rotate: [0, 5, -5, 0],
+    }}
+    transition={{
+      duration: 4,
+      repeat: Infinity,
+      ease: "easeInOut"
+    }}
+  >
+    <div className="w-full h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
+      <Bot className="w-8 h-8 text-white" />
+    </div>
+    <motion.div
+      className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center"
+      animate={{ scale: [1, 1.2, 1] }}
+      transition={{ duration: 2, repeat: Infinity }}
+    >
+      <Sparkles className="w-3 h-3 text-white" />
+    </motion.div>
+  </motion.div>
 );
 
 const ChatbotPage = () => {
@@ -34,6 +43,7 @@ const ChatbotPage = () => {
   ]);
   const [inputMessage, setInputMessage] = useState("");
   const [language, setLanguage] = useState("english");
+  const [isTyping, setIsTyping] = useState(false);
 
   const predefinedResponses = {
     schemes: "Here are some relevant government schemes for your startup:\n\n1. T-Hub Incubation Program\n2. Telangana State Innovation Cell (TSIC)\n3. WE-Hub (Women Entrepreneurs Hub)\n4. MSME Development Schemes\n\nWould you like detailed information about any of these?",
@@ -52,6 +62,7 @@ const ChatbotPage = () => {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    setIsTyping(true);
 
     // Simulate AI response
     setTimeout(() => {
@@ -73,20 +84,66 @@ const ChatbotPage = () => {
       };
 
       setMessages(prev => [...prev, botMessage]);
-    }, 1000);
+      setIsTyping(false);
+    }, 1500);
 
     setInputMessage("");
   };
 
+  const TypingIndicator = () => (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex justify-start"
+    >
+      <div className="flex items-start space-x-3 max-w-[80%]">
+        <div className="w-8 h-8 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
+          <Bot className="w-4 h-4 text-white" />
+        </div>
+        <div className="bg-white/10 rounded-2xl p-4">
+          <div className="flex space-x-1">
+            {[0, 1, 2].map((i) => (
+              <motion.div
+                key={i}
+                className="w-2 h-2 bg-white/60 rounded-full"
+                animate={{ scale: [1, 1.5, 1] }}
+                transition={{
+                  duration: 0.6,
+                  repeat: Infinity,
+                  delay: i * 0.2
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 text-white">
-      {/* 3D Background */}
-      <div className="fixed inset-0 opacity-10">
-        <Canvas>
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[10, 10, 5]} intensity={1} />
-          <FloatingBot />
-        </Canvas>
+      {/* Animated Background */}
+      <div className="fixed inset-0 overflow-hidden opacity-10">
+        <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20" />
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-white rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -100, 0],
+              opacity: [0, 1, 0],
+            }}
+            transition={{
+              duration: 3 + Math.random() * 2,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+            }}
+          />
+        ))}
       </div>
 
       {/* Header */}
@@ -103,9 +160,7 @@ const ChatbotPage = () => {
                 </motion.div>
               </Link>
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
-                  <Bot className="w-6 h-6 text-white" />
-                </div>
+                <AnimatedBot />
                 <div>
                   <h1 className="text-2xl font-bold">AI Scheme Assistant</h1>
                   <p className="text-white/60">Discover government schemes & opportunities</p>
@@ -170,6 +225,7 @@ const ChatbotPage = () => {
                   </div>
                 </motion.div>
               ))}
+              {isTyping && <TypingIndicator />}
             </div>
 
             {/* Input Area */}
@@ -181,11 +237,13 @@ const ChatbotPage = () => {
                   onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
                   placeholder={language === "english" ? "Ask about government schemes..." : "ప్రభుత్వ పథకాల గురించి అడుగండి..."}
                   className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                  disabled={isTyping}
                 />
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Button
                     onClick={handleSendMessage}
-                    className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600"
+                    disabled={isTyping}
+                    className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 disabled:opacity-50"
                   >
                     <Send className="w-4 h-4" />
                   </Button>
@@ -212,6 +270,7 @@ const ChatbotPage = () => {
                 onClick={() => setInputMessage(action)}
                 variant="outline"
                 className="w-full bg-white/5 border-white/20 text-white hover:bg-white/10 h-12"
+                disabled={isTyping}
               >
                 {action}
               </Button>
