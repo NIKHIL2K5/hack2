@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, MessageSquare } from 'lucide-react';
@@ -17,7 +16,7 @@ export const ChatToggleButton: React.FC<ChatToggleButtonProps> = ({ isOpen, onTo
     >
       <Button
         onClick={onToggle}
-        className="w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg"
+        className="w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg border-0"
       >
         <AnimatePresence mode="wait">
           {isOpen ? (
@@ -27,7 +26,7 @@ export const ChatToggleButton: React.FC<ChatToggleButtonProps> = ({ isOpen, onTo
               animate={{ scale: 1 }}
               exit={{ scale: 0 }}
             >
-              <X className="w-6 h-6" />
+              <X className="w-6 h-6 text-white" />
             </motion.div>
           ) : (
             <motion.div
@@ -36,7 +35,7 @@ export const ChatToggleButton: React.FC<ChatToggleButtonProps> = ({ isOpen, onTo
               animate={{ scale: 1 }}
               exit={{ scale: 0 }}
             >
-              <MessageSquare className="w-6 h-6" />
+              <MessageSquare className="w-6 h-6 text-white" />
             </motion.div>
           )}
         </AnimatePresence>

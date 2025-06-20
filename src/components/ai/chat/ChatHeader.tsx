@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Bot, Sparkles } from 'lucide-react';
@@ -16,7 +15,7 @@ export const ChatHeader: React.FC = () => {
             <p className="text-xs opacity-80">Expert guidance & image analysis</p>
           </div>
         </div>
-        <motion.div whileHover={{ rotate: 180 }}>
+        <motion.div whileHover={{ rotate: 180 }} transition={{ duration: 0.5 }}>
           <Sparkles className="w-5 h-5" />
         </motion.div>
       </div>

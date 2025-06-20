@@ -3,18 +3,18 @@ import { useState } from "react";
 import { Send, Bot, User, ArrowLeft, Globe, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getUserInfo } from "@/contexts/ai/userHelpers";
 import { useEnhancedAI } from "@/contexts/EnhancedAIContext";
 
 const AnimatedBot = () => (
   <motion.div
     className="relative w-20 h-20 mx-auto mb-4"
-    animate={{
+    animate={{ 
       y: [0, -10, 0],
       rotate: [0, 5, -5, 0],
     }}
-    transition={{
+    transition={{ 
       duration: 4,
       repeat: Infinity,
       ease: "easeInOut"
@@ -36,11 +36,12 @@ const AnimatedBot = () => (
 const ChatbotPage = () => {
   const userInfo = getUserInfo();
   const { askEnhancedAI, isAIThinking } = useEnhancedAI();
+  const navigate = useNavigate();
   
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: `Hello! I'm Sethu, your AI assistant for discovering government schemes and opportunities. I'm powered by advanced AI and can help you with detailed guidance on ${userInfo.role === 'student' ? 'job searches, career planning, and skill development' : userInfo.role === 'startup' ? 'funding opportunities, government schemes, and business growth' : userInfo.role === 'official' ? 'scheme management and policy implementation' : 'navigating the platform'}. How can I help you today?`,
+      text: `Hello! I'm Sethu, your AI assistant for discovering government schemes and opportunities. I'm powered by advanced AI and can help you with detailed guidance on ${userInfo.role === 'student' ? 'job searches, career planning, and skill development' : userInfo.role === 'startup' ? 'funding opportunities, government schemes, and business growth' : userInfo.role === 'official' ? 'scheme management and policy implementation' : 'navigating the platform and maximizing your opportunities'}. How can I help you today?`,
       sender: "bot",
       timestamp: new Date().toLocaleTimeString()
     }
@@ -85,6 +86,19 @@ const ChatbotPage = () => {
         timestamp: new Date().toLocaleTimeString()
       };
       setMessages(prev => [...prev, errorMessage]);
+    }
+  };
+
+  const handleBackNavigation = () => {
+    // Determine where to navigate based on user role
+    if (userInfo.role === 'student') {
+      navigate('/dashboard/student');
+    } else if (userInfo.role === 'startup') {
+      navigate('/dashboard/startup');
+    } else if (userInfo.role === 'official') {
+      navigate('/dashboard/official');
+    } else {
+      navigate('/');
     }
   };
 
@@ -149,14 +163,14 @@ const ChatbotPage = () => {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Link to="/dashboard/startup">
-                <motion.div whileHover={{ scale: 1.1, x: -5 }}>
-                  <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    Back to Dashboard
-                  </Button>
-                </motion.div>
-              </Link>
+              <Button 
+                variant="outline" 
+                className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                onClick={handleBackNavigation}
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Dashboard
+              </Button>
               <div className="flex items-center space-x-3">
                 <AnimatedBot />
                 <div>
@@ -241,7 +255,7 @@ const ChatbotPage = () => {
                   <Button
                     onClick={handleSendMessage}
                     disabled={isAIThinking || !inputMessage.trim()}
-                    className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 disabled:opacity-50"
+                    className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 disabled:opacity-50 text-white"
                   >
                     <Send className="w-4 h-4" />
                   </Button>
