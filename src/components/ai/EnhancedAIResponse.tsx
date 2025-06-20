@@ -3,6 +3,7 @@ import React from 'react';
 interface AIResponseData {
   type: 'text';
   content: string;
+  model?: string;
 }
 
 interface EnhancedAIResponseProps {
@@ -36,10 +37,20 @@ export const EnhancedAIResponse: React.FC<EnhancedAIResponseProps> = ({ response
     return formattedText;
   };
 
+  // Add model attribution if available
+  const getModelAttribution = () => {
+    if (response.model) {
+      return `<div class="text-xs text-gray-500 mt-2">Powered by ${response.model}</div>`;
+    }
+    return '';
+  };
+
   return (
-    <div 
-      className="text-sm text-gray-700 whitespace-pre-wrap"
-      dangerouslySetInnerHTML={{ __html: formatText(response.content) }}
-    />
+    <div className="text-sm text-gray-700 whitespace-pre-wrap">
+      <div dangerouslySetInnerHTML={{ __html: formatText(response.content) }} />
+      {response.model && (
+        <div className="text-xs text-gray-500 mt-2">Powered by {response.model}</div>
+      )}
+    </div>
   );
 };

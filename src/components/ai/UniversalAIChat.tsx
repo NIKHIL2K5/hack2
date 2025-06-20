@@ -13,6 +13,7 @@ interface Message {
   image?: File;
   imageName?: string;
   responseData?: any;
+  model?: string;
 }
 
 export const UniversalAIChat: React.FC = () => {
@@ -27,9 +28,10 @@ export const UniversalAIChat: React.FC = () => {
     if (messages.length === 0) {
       const welcomeMessage = {
         id: 1,
-        text: `Hi ${userName || 'there'}! I'm Sethu, your comprehensive AI assistant with deep knowledge of this platform. I can help you with detailed guidance on ${userRole === 'student' ? 'job searches, career planning, skill development, and interview preparation' : userRole === 'startup' ? 'funding opportunities, government schemes, hiring strategies, and business growth' : userRole === 'official' ? 'scheme management, policy implementation, and ecosystem monitoring' : 'navigating the platform and maximizing your opportunities'}. I provide precise, actionable advice tailored to your specific situation. You can also share images for visual analysis. How can I assist you today?`,
+        text: `Hi ${userName || 'there'}! I'm Sethu, your comprehensive AI assistant powered by DeepSeek-R1-0528. I can help you with detailed guidance on ${userRole === 'student' ? 'job searches, career planning, skill development, and interview preparation' : userRole === 'startup' ? 'funding opportunities, government schemes, hiring strategies, and business growth' : userRole === 'official' ? 'scheme management, policy implementation, and ecosystem monitoring' : 'navigating the platform and maximizing your opportunities'}. I provide precise, actionable advice tailored to your specific situation. You can also share images for visual analysis. How can I assist you today?`,
         sender: "ai" as const,
-        timestamp: new Date().toLocaleTimeString()
+        timestamp: new Date().toLocaleTimeString(),
+        model: "deepseek-ai/DeepSeek-R1-0528"
       };
       setMessages([welcomeMessage]);
     }
@@ -88,7 +90,8 @@ export const UniversalAIChat: React.FC = () => {
           text: faqAnswer,
           sender: "ai",
           timestamp: new Date().toLocaleTimeString(),
-          responseData: { type: 'text', content: faqAnswer }
+          responseData: { type: 'text', content: faqAnswer },
+          model: "FAQ Database"
         };
         
         setMessages(prev => [...prev, aiMessage]);
@@ -103,7 +106,8 @@ export const UniversalAIChat: React.FC = () => {
           text: aiResponse.content,
           sender: "ai",
           timestamp: new Date().toLocaleTimeString(),
-          responseData: aiResponse
+          responseData: aiResponse,
+          model: aiResponse.model || "deepseek-ai/DeepSeek-R1-0528"
         };
 
         setMessages(prev => [...prev, aiMessage]);

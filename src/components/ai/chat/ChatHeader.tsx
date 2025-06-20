@@ -12,7 +12,7 @@ export const ChatHeader: React.FC = () => {
           </div>
           <div>
             <h3 className="font-semibold">Sethu - AI Assistant</h3>
-            <p className="text-xs opacity-80">Expert guidance & image analysis</p>
+            <p className="text-xs opacity-80">Powered by DeepSeek-R1-0528</p>
           </div>
         </div>
         <motion.div whileHover={{ rotate: 180 }} transition={{ duration: 0.5 }}>

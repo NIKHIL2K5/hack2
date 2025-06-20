@@ -12,6 +12,7 @@ interface Message {
   image?: File;
   imageName?: string;
   responseData?: any;
+  model?: string;
 }
 
 interface ChatMessagesProps {
@@ -52,11 +53,19 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({ messages, isAIThinki
               </div>
             )}
             {message.sender === 'ai' && message.responseData ? (
-              <EnhancedAIResponse response={message.responseData} userRole={userRole} />
+              <EnhancedAIResponse response={{
+                ...message.responseData,
+                model: message.model
+              }} userRole={userRole} />
             ) : (
               <p className="text-sm whitespace-pre-wrap">{message.text}</p>
             )}
-            <p className="text-xs opacity-60 mt-1">{message.timestamp}</p>
+            <div className="flex justify-between items-center mt-1">
+              <p className="text-xs opacity-60">{message.timestamp}</p>
+              {message.model && message.sender === 'ai' && (
+                <p className="text-xs opacity-60">Powered by {message.model}</p>
+              )}
+            </div>
           </div>
         </motion.div>
       ))}
