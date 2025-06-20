@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { GraduationCap, Search, FileText, User, LogOut, Briefcase, MapPin, Filter, Plus, Edit3, Upload, Building2, Clock, DollarSign, Phone, Mail, Calendar, Globe, Github, Linkedin } from "lucide-react";
@@ -50,7 +51,7 @@ const DashboardStudent = () => {
     resume: "alex_resume.pdf"
   });
 
-  // Sample jobs data
+  // Expanded jobs data with more locations
   const jobs = [
     {
       id: 1,
@@ -92,20 +93,92 @@ const DashboardStudent = () => {
       id: 4,
       title: "Full Stack Developer",
       company: "StartupTech",
-      location: "Hyderabad",
+      location: "Karimnagar",
       stipend: "₹35,000",
       duration: "6 months",
       skills: ["React", "Node.js", "MongoDB"],
       description: "Build end-to-end web applications and work with modern tech stack.",
       posted: "5 days ago",
       type: "Internship"
+    },
+    {
+      id: 5,
+      title: "Mobile App Developer",
+      company: "AppTech Solutions",
+      location: "Khammam",
+      stipend: "₹28,000",
+      duration: "5 months",
+      skills: ["React Native", "Flutter", "Mobile UI"],
+      description: "Develop innovative mobile applications for Android and iOS platforms.",
+      posted: "1 week ago",
+      type: "Internship"
+    },
+    {
+      id: 6,
+      title: "Backend Developer",
+      company: "CloudTech Systems",
+      location: "Mahbubnagar",
+      stipend: "₹32,000",
+      duration: "6 months",
+      skills: ["Node.js", "Express", "AWS"],
+      description: "Work on scalable backend systems and cloud infrastructure.",
+      posted: "4 days ago",
+      type: "Internship"
+    },
+    {
+      id: 7,
+      title: "DevOps Engineer",
+      company: "InfraTech Solutions",
+      location: "Adilabad",
+      stipend: "₹40,000",
+      duration: "8 months",
+      skills: ["Docker", "Kubernetes", "Jenkins"],
+      description: "Manage deployment pipelines and infrastructure automation.",
+      posted: "2 days ago",
+      type: "Full-time"
+    },
+    {
+      id: 8,
+      title: "Cybersecurity Analyst",
+      company: "SecureNet Technologies",
+      location: "Medak",
+      stipend: "₹38,000",
+      duration: "6 months",
+      skills: ["Network Security", "Penetration Testing", "SIEM"],
+      description: "Protect digital assets and conduct security assessments.",
+      posted: "3 days ago",
+      type: "Internship"
+    },
+    {
+      id: 9,
+      title: "AI Research Intern",
+      company: "DeepMind Labs",
+      location: "Rangareddy",
+      stipend: "₹45,000",
+      duration: "6 months",
+      skills: ["Deep Learning", "TensorFlow", "Research"],
+      description: "Conduct cutting-edge research in artificial intelligence and machine learning.",
+      posted: "1 day ago",
+      type: "Research"
+    },
+    {
+      id: 10,
+      title: "Blockchain Developer",
+      company: "CryptoTech Innovations",
+      location: "Nalgonda",
+      stipend: "₹50,000",
+      duration: "8 months",
+      skills: ["Solidity", "Web3", "Smart Contracts"],
+      description: "Build decentralized applications and smart contracts on blockchain platforms.",
+      posted: "2 days ago",
+      type: "Full-time"
     }
   ];
 
   const stats = [
-    { title: "Applications Sent", value: "8", icon: FileText },
-    { title: "Jobs Applied", value: "12", icon: Briefcase },
-    { title: "Profile Views", value: "45", icon: User }
+    { title: "Applications Sent", value: "12", icon: FileText },
+    { title: "Jobs Applied", value: "18", icon: Briefcase },
+    { title: "Profile Views", value: "67", icon: User }
   ];
 
   // Filter jobs based on search criteria
@@ -197,24 +270,38 @@ const DashboardStudent = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-900 via-teal-700 to-teal-500 text-white">
-      <header className="bg-white/5 backdrop-blur-lg border-b border-white/10">
+    <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-neutral-100 to-neutral-200">
+      <header className="glass-card border-b border-neutral-200/80 shadow-sm">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-teal-500 to-teal-700 rounded-xl flex items-center justify-center">
-                <GraduationCap className="w-7 h-7 text-white" />
+            <motion.div 
+              className="flex items-center space-x-4"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="w-12 h-12 relative">
+                <img 
+                  src="/lovable-uploads/cec6e927-27d5-408a-824c-f6c3bec5f342.png" 
+                  alt="GovStartup Navigator"
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div>
-                <h1 className="text-2xl font-bold">Student Dashboard</h1>
-                <p className="text-white/60">Welcome back, {profile.name}</p>
+                <h1 className="text-2xl font-bold text-primary-700">Student Dashboard</h1>
+                <p className="text-neutral-600">Welcome back, {profile.name}</p>
               </div>
-            </div>
+            </motion.div>
             
-            <div className="flex items-center space-x-4">
+            <motion.div 
+              className="flex items-center space-x-4"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
               <Dialog open={showProfile} onOpenChange={setShowProfile}>
                 <DialogTrigger asChild>
-                  <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
+                  <Button variant="outline" className="border-neutral-300 text-neutral-700 hover:bg-neutral-100">
                     <User className="w-4 h-4 mr-2" />
                     Profile
                   </Button>
@@ -275,11 +362,11 @@ const DashboardStudent = () => {
               </Dialog>
               
               <Link to="/">
-                <Button variant="outline" className="bg-red-500/20 border-red-500/50 text-red-200 hover:bg-red-500/30">
+                <Button variant="outline" className="border-red-300 text-red-600 hover:bg-red-50">
                   <LogOut className="w-4 h-4" />
                 </Button>
               </Link>
-            </div>
+            </motion.div>
           </div>
         </div>
       </header>
@@ -293,16 +380,19 @@ const DashboardStudent = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, y: -5 }}
+              className="group"
             >
-              <Card className="bg-white/10 backdrop-blur-lg border-white/20">
+              <Card className="glass-card hover:shadow-xl transition-all duration-300 group-hover:border-primary-300">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-white/70">{stat.title}</p>
-                      <p className="text-3xl font-bold text-white">{stat.value}</p>
+                      <p className="text-neutral-600 text-sm font-medium">{stat.title}</p>
+                      <p className="text-3xl font-bold text-primary-700 mt-1">{stat.value}</p>
                     </div>
-                    <stat.icon className="w-8 h-8 text-teal-300" />
+                    <div className="p-3 bg-primary-100 rounded-lg group-hover:bg-primary-200 transition-colors">
+                      <stat.icon className="w-6 h-6 text-primary-600" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -317,40 +407,40 @@ const DashboardStudent = () => {
           transition={{ delay: 0.3 }}
           className="mb-8"
         >
-          <Card className="bg-white/10 backdrop-blur-lg border-white/20">
+          <Card className="glass-card border-neutral-200">
             <CardHeader>
-              <CardTitle className="text-white flex items-center">
-                <Search className="w-5 h-5 mr-2" />
+              <CardTitle className="text-neutral-800 flex items-center">
+                <Search className="w-5 h-5 mr-2 text-primary-600" />
                 Search Jobs
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-white/70 text-sm mb-2">Search by title or company</label>
+                  <label className="block text-neutral-700 text-sm mb-2 font-medium">Search by title or company</label>
                   <Input
                     placeholder="e.g. Frontend Developer"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                    className="border-neutral-300 focus:border-primary-500 focus:ring-primary-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-white/70 text-sm mb-2">Location</label>
+                  <label className="block text-neutral-700 text-sm mb-2 font-medium">Location</label>
                   <Input
                     placeholder="e.g. Hyderabad"
                     value={locationFilter}
                     onChange={(e) => setLocationFilter(e.target.value)}
-                    className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                    className="border-neutral-300 focus:border-primary-500 focus:ring-primary-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-white/70 text-sm mb-2">Skills</label>
+                  <label className="block text-neutral-700 text-sm mb-2 font-medium">Skills</label>
                   <Input
                     placeholder="e.g. React, Python"
                     value={skillFilter}
                     onChange={(e) => setSkillFilter(e.target.value)}
-                    className="bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                    className="border-neutral-300 focus:border-primary-500 focus:ring-primary-500"
                   />
                 </div>
               </div>
@@ -361,29 +451,39 @@ const DashboardStudent = () => {
         {/* Jobs Section */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-white">Available Jobs ({filteredJobs.length})</h2>
+            <motion.h2 
+              className="text-2xl font-bold text-neutral-800"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+            >
+              Available Jobs ({filteredJobs.length})
+            </motion.h2>
             <Link to="/jobs">
-              <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
-                View All Jobs
-              </Button>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button variant="outline" className="border-primary-300 text-primary-700 hover:bg-primary-50">
+                  View All Jobs
+                </Button>
+              </motion.div>
             </Link>
           </div>
 
           <div className="grid gap-6">
-            {filteredJobs.slice(0, 4).map((job, index) => (
+            {filteredJobs.slice(0, 6).map((job, index) => (
               <motion.div
                 key={job.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ scale: 1.02, y: -5 }}
+                className="group"
               >
-                <Card className="bg-white/10 backdrop-blur-lg border-white/20 hover:border-white/40 transition-all duration-300">
+                <Card className="glass-card hover:shadow-xl transition-all duration-300 group-hover:border-primary-300">
                   <CardContent className="p-6">
                     <div className="flex justify-between items-start mb-4">
                       <div className="flex-1">
-                        <h3 className="text-xl font-bold text-white mb-2">{job.title}</h3>
-                        <div className="flex items-center space-x-4 text-white/70 mb-3">
+                        <h3 className="text-xl font-bold text-neutral-800 mb-2 group-hover:text-primary-700 transition-colors">{job.title}</h3>
+                        <div className="flex items-center space-x-4 text-neutral-600 mb-3 text-sm">
                           <div className="flex items-center">
                             <Building2 className="w-4 h-4 mr-1" />
                             {job.company}
@@ -401,31 +501,33 @@ const DashboardStudent = () => {
                             {job.duration}
                           </div>
                         </div>
-                        <p className="text-white/80 mb-4">{job.description}</p>
+                        <p className="text-neutral-700 mb-4 leading-relaxed">{job.description}</p>
                         <div className="flex flex-wrap gap-2 mb-4">
                           {job.skills.map((skill, skillIndex) => (
                             <Badge 
                               key={skillIndex}
                               variant="outline" 
-                              className="border-teal-400/30 text-teal-200 bg-teal-500/20"
+                              className="border-accent-300 text-accent-700 bg-accent-50 hover:bg-accent-100 transition-colors"
                             >
                               {skill}
                             </Badge>
                           ))}
                         </div>
                       </div>
-                      <Badge className="bg-blue-500/20 text-blue-200 border-blue-400/30">
+                      <Badge className="bg-primary-100 text-primary-700 border-primary-300 font-medium">
                         {job.type}
                       </Badge>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-white/60 text-sm">Posted {job.posted}</span>
-                      <Button 
-                        onClick={() => handleApplyJob(job)}
-                        className="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800"
-                      >
-                        Apply Now
-                      </Button>
+                      <span className="text-neutral-500 text-sm">Posted {job.posted}</span>
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <Button 
+                          onClick={() => handleApplyJob(job)}
+                          className="gradient-primary text-white hover:opacity-90 transition-opacity"
+                        >
+                          Apply Now
+                        </Button>
+                      </motion.div>
                     </div>
                   </CardContent>
                 </Card>
@@ -439,17 +541,22 @@ const DashboardStudent = () => {
               animate={{ opacity: 1 }}
               className="text-center py-12"
             >
-              <p className="text-white/60 text-xl">No jobs found matching your criteria.</p>
-              <p className="text-white/40 mt-2">Try adjusting your search filters.</p>
+              <p className="text-neutral-600 text-xl">No jobs found matching your criteria.</p>
+              <p className="text-neutral-500 mt-2">Try adjusting your search filters.</p>
             </motion.div>
           )}
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+        >
           <Link to="/my-applications">
-            <motion.div whileHover={{ scale: 1.02 }}>
-              <Button className="w-full h-20 bg-gradient-to-r from-blue-500 to-blue-700 text-white text-lg">
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button className="w-full h-20 gradient-primary text-white text-lg shadow-lg hover:shadow-xl transition-shadow">
                 <FileText className="w-6 h-6 mr-3" />
                 My Applications
               </Button>
@@ -457,24 +564,24 @@ const DashboardStudent = () => {
           </Link>
           
           <Link to="/application-tracker">
-            <motion.div whileHover={{ scale: 1.02 }}>
-              <Button className="w-full h-20 bg-gradient-to-r from-emerald-500 to-emerald-700 text-white text-lg">
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button className="w-full h-20 bg-accent text-white text-lg shadow-lg hover:shadow-xl hover:bg-accent-600 transition-all">
                 <Briefcase className="w-6 h-6 mr-3" />
                 Track Applications
               </Button>
             </motion.div>
           </Link>
-        </div>
+        </motion.div>
       </main>
 
       {/* Enhanced Job Application Modal */}
       <Dialog open={showJobApplication} onOpenChange={setShowJobApplication}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white text-gray-900">
           <DialogHeader className="border-b pb-4">
-            <DialogTitle className="text-2xl font-bold text-center">
+            <DialogTitle className="text-2xl font-bold text-center text-primary-700">
               Apply for {selectedJob?.title}
             </DialogTitle>
-            <div className="text-center text-gray-600 mt-2">
+            <div className="text-center text-neutral-600 mt-2">
               <p className="flex items-center justify-center gap-2">
                 <Building2 className="w-4 h-4" />
                 {selectedJob?.company} • {selectedJob?.location}

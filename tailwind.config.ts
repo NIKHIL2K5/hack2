@@ -23,27 +23,33 @@ export default {
 				sans: ['Inter', 'system-ui', 'sans-serif'],
 			},
 			colors: {
-				// Custom GovStartup Navigator palette
+				// Neutral professional palette
 				primary: {
-					DEFAULT: '#007ACC',
-					50: '#E6F3FF',
-					100: '#CCE7FF',
-					500: '#007ACC',
-					600: '#0066B3',
-					700: '#004D80'
+					DEFAULT: '#1a365d',
+					50: '#e6f3ff',
+					100: '#cce7ff',
+					500: '#1a365d',
+					600: '#154056',
+					700: '#102a42'
 				},
 				accent: {
-					DEFAULT: '#10B981',
-					50: '#ECFDF5',
-					100: '#D1FAE5',
-					500: '#10B981',
-					600: '#059669'
+					DEFAULT: '#22c55e',
+					50: '#f0fdf4',
+					100: '#dcfce7',
+					500: '#22c55e',
+					600: '#16a34a'
 				},
 				neutral: {
-					50: '#F5F7FA',
-					100: '#E5E7EB',
-					800: '#1F2937',
-					900: '#111827'
+					50: '#f8fafc',
+					100: '#f1f5f9',
+					200: '#e2e8f0',
+					300: '#cbd5e1',
+					400: '#94a3b8',
+					500: '#64748b',
+					600: '#475569',
+					700: '#334155',
+					800: '#1e293b',
+					900: '#0f172a'
 				},
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -124,6 +130,16 @@ export default {
 				'pulse-slow': {
 					'0%, 100%': { opacity: '1' },
 					'50%': { opacity: '0.5' }
+				},
+				'scale-in': {
+					'0%': { transform: 'scale(0.9)', opacity: '0' },
+					'100%': { transform: 'scale(1)', opacity: '1' }
+				},
+				'bounce-in': {
+					'0%': { transform: 'scale(0.3)', opacity: '0' },
+					'50%': { transform: 'scale(1.05)' },
+					'70%': { transform: 'scale(0.9)' },
+					'100%': { transform: 'scale(1)', opacity: '1' }
 				}
 			},
 			animation: {
@@ -132,7 +148,9 @@ export default {
 				'fade-in': 'fade-in 0.3s ease-out',
 				'slide-in-right': 'slide-in-right 0.3s ease-out',
 				'float': 'float 3s ease-in-out infinite',
-				'pulse-slow': 'pulse-slow 2s ease-in-out infinite'
+				'pulse-slow': 'pulse-slow 2s ease-in-out infinite',
+				'scale-in': 'scale-in 0.3s ease-out',
+				'bounce-in': 'bounce-in 0.6s ease-out'
 			}
 		}
 	},
