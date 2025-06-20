@@ -1,6 +1,5 @@
 
 import { Float } from "@react-three/drei";
-import { Vector3 } from "three";
 
 interface FloatingShapeProps {
   position: [number, number, number];
@@ -14,7 +13,7 @@ export const FloatingShape = ({ position, color, shape = "box" }: FloatingShapeP
       {shape === "box" ? (
         <boxGeometry args={[0.5, 0.5, 0.5]} />
       ) : (
-        <sphereGeometry args={[0.3, 32, 32]} />
+        <sphereGeometry args={[0.3, 16, 16]} />
       )}
       <meshStandardMaterial color={color} />
     </mesh>
