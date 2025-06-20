@@ -1,253 +1,42 @@
 
 import { useState, useEffect } from 'react';
-import { useStudentData } from '@/hooks/useStudentData';
-import { dataSyncService } from '@/services/dataSync';
+import { getAllCompanies, getDistrictsWithCompanies, getSectorsWithCompanies } from '@/services/companyData';
 
 export const useStudentDashboard = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [locationFilter, setLocationFilter] = useState("");
-  const [skillFilter, setSkillFilter] = useState("");
-  const [showProfile, setShowProfile] = useState(false);
-  const [showJobApplication, setShowJobApplication] = useState(false);
-  const [selectedJob, setSelectedJob] = useState(null);
-  const [jobs, setJobs] = useState([]);
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [companies, setCompanies] = useState(getAllCompanies());
+  const [availableDistricts] = useState(getDistrictsWithCompanies());
+  const [availableSectors] = useState(getSectorsWithCompanies());
 
-  const {
-    profile,
-    setProfile,
-    appliedJobs,
-    applicationData,
-    handleInputChange,
-    handleFileUpload,
-    handleSubmitApplication,
-    handleUpdateProfile
-  } = useStudentData();
-
-  // Load jobs from both static data and synced startup postings
-  useEffect(() => {
-    // Static demo jobs
-    const staticJobs = [
-      {
-        id: 1,
-        title: "Frontend Developer Intern",
-        company: "TechCorp Innovations",
-        location: "Hyderabad",
-        stipend: "₹25,000",
-        duration: "6 months",
-        skills: ["React", "JavaScript", "CSS"],
-        description: "Join our dynamic team to build cutting-edge web applications using React and modern frontend technologies.",
-        posted: "2 days ago",
-        type: "Internship"
-      },
-      {
-        id: 2,
-        title: "Data Science Intern",
-        company: "AI Solutions Ltd",
-        location: "Warangal",
-        stipend: "₹30,000",
-        duration: "4 months",
-        skills: ["Python", "Machine Learning", "SQL"],
-        description: "Work on exciting AI projects and gain hands-on experience with machine learning algorithms.",
-        posted: "1 day ago",
-        type: "Internship"
-      },
-      {
-        id: 3,
-        title: "UI/UX Designer",
-        company: "Design Studio Pro",
-        location: "Nizamabad",
-        stipend: "₹20,000",
-        duration: "3 months",
-        skills: ["Figma", "Adobe XD", "Prototyping"],
-        description: "Create beautiful and intuitive user experiences for our digital products.",
-        posted: "3 days ago",
-        type: "Part-time"
-      },
-      {
-        id: 4,
-        title: "Full Stack Developer",
-        company: "StartupTech",
-        location: "Karimnagar",
-        stipend: "₹35,000",
-        duration: "6 months",
-        skills: ["React", "Node.js", "MongoDB"],
-        description: "Build end-to-end web applications and work with modern tech stack.",
-        posted: "5 days ago",
-        type: "Internship"
-      },
-      {
-        id: 5,
-        title: "Mobile App Developer",
-        company: "AppTech Solutions",
-        location: "Khammam",
-        stipend: "₹28,000",
-        duration: "5 months",
-        skills: ["React Native", "Flutter", "Mobile UI"],
-        description: "Develop innovative mobile applications for Android and iOS platforms.",
-        posted: "1 week ago",
-        type: "Internship"
-      },
-      {
-        id: 6,
-        title: "Backend Developer",
-        company: "CloudTech Systems",
-        location: "Mahbubnagar",
-        stipend: "₹32,000",
-        duration: "6 months",
-        skills: ["Node.js", "Express", "AWS"],
-        description: "Work on scalable backend systems and cloud infrastructure.",
-        posted: "4 days ago",
-        type: "Internship"
-      },
-      {
-        id: 7,
-        title: "DevOps Engineer",
-        company: "InfraTech Solutions",
-        location: "Adilabad",
-        stipend: "₹40,000",
-        duration: "8 months",
-        skills: ["Docker", "Kubernetes", "Jenkins"],
-        description: "Manage deployment pipelines and infrastructure automation.",
-        posted: "2 days ago",
-        type: "Full-time"
-      },
-      {
-        id: 8,
-        title: "Cybersecurity Analyst",
-        company: "SecureNet Technologies",
-        location: "Medak",
-        stipend: "₹38,000",
-        duration: "6 months",
-        skills: ["Network Security", "Penetration Testing", "SIEM"],
-        description: "Protect digital assets and conduct security assessments.",
-        posted: "3 days ago",
-        type: "Internship"
-      },
-      {
-        id: 9,
-        title: "AI Research Intern",
-        company: "DeepMind Labs",
-        location: "Rangareddy",
-        stipend: "₹45,000",
-        duration: "6 months",
-        skills: ["Deep Learning", "TensorFlow", "Research"],
-        description: "Conduct cutting-edge research in artificial intelligence and machine learning.",
-        posted: "1 day ago",
-        type: "Research"
-      },
-      {
-        id: 10,
-        title: "Blockchain Developer",
-        company: "CryptoTech Innovations",
-        location: "Nalgonda",
-        stipend: "₹50,000",
-        duration: "8 months",
-        skills: ["Solidity", "Web3", "Smart Contracts"],
-        description: "Build decentralized applications and smart contracts on blockchain platforms.",
-        posted: "2 days ago",
-        type: "Full-time"
-      }
-    ];
-
-    // Get synced jobs from startups
-    const syncedJobs = dataSyncService.getGlobalJobPostings();
-    
-    // Combine and set jobs
-    const allJobs = [...staticJobs, ...syncedJobs];
-    setJobs(allJobs);
-
-    // Track dashboard access
-    if (profile.email) {
-      dataSyncService.trackAction(
-        profile.email,
-        'student',
-        'dashboard_access',
-        { jobsAvailable: allJobs.length }
-      );
-    }
-  }, [profile.email]);
-
-  // Filter jobs based on search criteria
-  const filteredJobs = jobs.filter(job => {
-    const matchesSearch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         job.company.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesLocation = !locationFilter || job.location.toLowerCase().includes(locationFilter.toLowerCase());
-    const matchesSkill = !skillFilter || job.skills.some(skill => 
-      skill.toLowerCase().includes(skillFilter.toLowerCase())
-    );
-    
-    return matchesSearch && matchesLocation && matchesSkill;
-  });
-
-  const handleApplyJob = (job) => {
-    setSelectedJob(job);
-    setShowJobApplication(true);
-    
-    // Track job application initiation
-    if (profile.email) {
-      dataSyncService.trackAction(
-        profile.email,
-        'student',
-        'job_application_started',
-        { jobId: job.id, jobTitle: job.title, company: job.company }
-      );
-    }
+  const stats = {
+    totalApplications: 45,
+    pendingReviews: 12,
+    interviews: 3,
+    rejections: 8,
+    acceptances: 2
   };
 
-  const handleSubmitJobApplication = (e) => {
-    const success = handleSubmitApplication(e, selectedJob);
-    if (success) {
-      // Track successful job application
-      if (profile.email && selectedJob) {
-        dataSyncService.trackAction(
-          profile.email,
-          'student',
-          'job_application_submitted',
-          { 
-            jobId: selectedJob.id, 
-            jobTitle: selectedJob.title, 
-            company: selectedJob.company,
-            applicationData: {
-              fullName: applicationData.fullName,
-              email: applicationData.email,
-              skills: applicationData.skills
-            }
-          }
-        );
-      }
-      
-      setShowJobApplication(false);
-      setSelectedJob(null);
-    }
-  };
+  const recentApplications = [
+    { company: 'TechVenture Solutions', position: 'Software Developer Intern', status: 'Under Review', appliedDate: '2024-01-15' },
+    { company: 'HealthTech Innovations', position: 'Data Analyst Intern', status: 'Interview Scheduled', appliedDate: '2024-01-12' },
+    { company: 'FinPay Solutions', position: 'Frontend Developer', status: 'Accepted', appliedDate: '2024-01-10' },
+    { company: 'GreenTech Innovations', position: 'Product Manager Intern', status: 'Rejected', appliedDate: '2024-01-08' }
+  ];
+
+  const savedJobs = [
+    { id: 1, company: 'EduTech Global', position: 'UI/UX Designer Intern', location: 'Hyderabad', savedDate: '2024-01-18' },
+    { id: 2, company: 'Smart Manufacturing Co', position: 'IoT Developer', location: 'Karimnagar', savedDate: '2024-01-17' },
+    { id: 3, company: 'BioTech Solutions', position: 'Research Intern', location: 'Nizamabad', savedDate: '2024-01-16' }
+  ];
 
   return {
-    // State
-    searchTerm,
-    setSearchTerm,
-    locationFilter,
-    setLocationFilter,
-    skillFilter,
-    setSkillFilter,
-    showProfile,
-    setShowProfile,
-    showJobApplication,
-    setShowJobApplication,
-    selectedJob,
-    jobs,
-    filteredJobs,
-    
-    // Profile and application data
-    profile,
-    setProfile,
-    appliedJobs,
-    applicationData,
-    
-    // Handlers
-    handleInputChange,
-    handleFileUpload,
-    handleApplyJob,
-    handleSubmitJobApplication,
-    handleUpdateProfile
+    activeTab,
+    setActiveTab,
+    stats,
+    recentApplications,
+    savedJobs,
+    companies,
+    availableDistricts,
+    availableSectors
   };
 };

@@ -1,3 +1,5 @@
+import { getAllCompanies } from './companyData';
+
 export interface UserAction {
   id: string;
   userId: string;
@@ -36,7 +38,8 @@ class DataSyncService {
     userActions: 'platform_user_actions',
     jobPostings: 'platform_job_postings',
     userProfiles: 'platform_user_profiles',
-    aiMemory: 'platform_ai_memory'
+    aiMemory: 'platform_ai_memory',
+    companies: 'platform_companies'
   };
 
   // Track user actions
@@ -74,13 +77,33 @@ class DataSyncService {
     return this.getUserActions().filter(action => action.organizationName === organizationName);
   }
 
-  // Sync job posting across all dashboards
+  // Initialize companies data
+  initializeCompanies() {
+    const existingCompanies = localStorage.getItem(this.storageKeys.companies);
+    if (!existingCompanies) {
+      const companies = getAllCompanies();
+      localStorage.setItem(this.storageKeys.companies, JSON.stringify(companies));
+    }
+  }
+
+  // Get all companies
+  getCompanies() {
+    this.initializeCompanies();
+    const stored = localStorage.getItem(this.storageKeys.companies);
+    return stored ? JSON.parse(stored) : getAllCompanies();
+  }
+
+  // Sync job posting across all dashboards with company validation
   syncJobPosting(jobData: any, organizationName: string): JobPosting {
+    // Validate if organization exists in our company database
+    const companies = this.getCompanies();
+    const company = companies.find((c: any) => c.name === organizationName);
+    
     const newJob: JobPosting = {
       id: Date.now(),
       title: jobData.title,
       company: organizationName,
-      location: jobData.location || 'Telangana',
+      location: company?.district || jobData.location || 'Telangana',
       stipend: jobData.salary || 'Competitive',
       duration: jobData.experience || '6 months',
       skills: jobData.skills || [],
