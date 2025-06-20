@@ -1,9 +1,6 @@
 
 import React, { createContext, useContext, useState } from 'react';
 import { dataSyncService } from '@/services/dataSync';
-import { applicationSyncService } from '@/services/applicationSync';
-import { findFAQAnswer } from './ai/faqMatcher';
-import { generateJobRecommendations, generateSchemeInfo, generateAnalytics, generateCareerGuidance } from './ai/dataGenerators';
 import { getUserInfo } from './ai/userHelpers';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -41,46 +38,7 @@ export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         timestamp: new Date().toISOString()
       });
 
-      // Check for FAQ answers first using the enhanced matching
-      const faqAnswer = findFAQAnswer(message, userInfo.role);
-      if (faqAnswer) {
-        return {
-          type: 'text',
-          content: faqAnswer
-        };
-      }
-
-      const lowerMessage = message.toLowerCase();
-      
-      // Handle specific data requests with local data
-      if (lowerMessage.includes('job') && (lowerMessage.includes('recommend') || lowerMessage.includes('suggest') || lowerMessage.includes('find'))) {
-        const jobs = generateJobRecommendations(userInfo.role, context || '');
-        return {
-          type: 'job_recommendations',
-          content: `Based on your profile and preferences, here are some recommended opportunities for you:`,
-          data: jobs
-        };
-      }
-      
-      if (lowerMessage.includes('scheme') || lowerMessage.includes('funding') || lowerMessage.includes('grant')) {
-        const schemes = generateSchemeInfo(userInfo.role);
-        return {
-          type: 'scheme_info',
-          content: `Here are relevant government schemes and funding opportunities:`,
-          data: schemes
-        };
-      }
-      
-      if (lowerMessage.includes('analytic') || lowerMessage.includes('stat') || lowerMessage.includes('dashboard') || lowerMessage.includes('performance')) {
-        const analytics = generateAnalytics(userInfo.role, userInfo.email);
-        return {
-          type: 'analytics',
-          content: `Here's your current performance analytics:`,
-          data: analytics
-        };
-      }
-
-      // For general questions, use OpenAI
+      // Always use OpenAI for direct AI responses
       const { data, error } = await supabase.functions.invoke('chat-with-ai', {
         body: {
           message,
