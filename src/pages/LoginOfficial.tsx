@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import { Shield, ArrowLeft, Eye, EyeOff, Lock } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,18 +7,24 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import { Canvas } from "@react-three/fiber";
-import { Float, Octahedron } from "@react-three/drei";
 import { toast } from "sonner";
 import { isValidOfficialEmail, getOrganizationByEmail } from "@/services/officialAuth";
 import { useOfficialData } from "@/hooks/useOfficialData";
 
-const AnimatedOctahedron = () => (
-  <Float speed={1.5} rotationIntensity={1} floatIntensity={1.5}>
-    <Octahedron args={[1]}>
-      <meshStandardMaterial color="#6366f1" />
-    </Octahedron>
-  </Float>
+const FloatingShape = ({ delay = 0 }) => (
+  <motion.div
+    className="absolute w-16 h-16 bg-gradient-to-r from-indigo-400/20 to-indigo-600/20 rounded-full blur-xl"
+    animate={{
+      y: [0, -20, 0],
+      x: [0, 10, 0],
+      scale: [1, 1.1, 1],
+    }}
+    transition={{
+      duration: 4,
+      repeat: Infinity,
+      delay,
+    }}
+  />
 );
 
 const LoginOfficial = () => {
@@ -91,12 +98,11 @@ const LoginOfficial = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-indigo-700 to-indigo-500 flex items-center justify-center p-6 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-20">
-        <Canvas>
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[10, 10, 5]} intensity={1} />
-          <AnimatedOctahedron />
-        </Canvas>
+      {/* Background Animation */}
+      <div className="absolute inset-0 opacity-30">
+        <FloatingShape delay={0} />
+        <FloatingShape delay={1} />
+        <FloatingShape delay={2} />
       </div>
 
       <motion.div
