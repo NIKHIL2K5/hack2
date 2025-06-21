@@ -82,7 +82,7 @@ const Index = () => {
             <div className="hidden md:flex space-x-8">
               <a href="#features" className="text-gray-600 hover:text-blue-600 transition-colors">Features</a>
               <a href="#about" className="text-gray-600 hover:text-blue-600 transition-colors">About</a>
-              <a href="#contact" className="text-gray-600 hover:text-blue-600 transition-colors">Contact</a>
+              <a href="#contact" className="text-gray-600 hover:text-blue-600 transition-colors whitespace-nowrap">Contact</a>
             </div>
           </motion.div>
         </div>
