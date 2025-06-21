@@ -1,10 +1,11 @@
-
 import { motion } from "framer-motion";
-import { Building2, MapPin, DollarSign, Clock, Bookmark } from "lucide-react";
+import { Building2, MapPin, DollarSign, Clock, Bookmark, Bell } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useSavedJobs } from "@/hooks/useSavedJobs";
+import { notificationService } from "@/services/notificationService";
+import { toast } from "sonner";
 
 interface Job {
   id: number;
@@ -37,6 +38,21 @@ export const JobCard = ({ job, index, onApply }: JobCardProps) => {
     }
   };
 
+  const handleNotificationToggle = () => {
+    // Toggle job notifications
+    const notificationTitle = "Job Alert Enabled";
+    const notificationMessage = `You'll receive updates about "${job.title}" at ${job.company}`;
+    
+    notificationService.showNotification(
+      notificationTitle,
+      notificationMessage,
+      'job',
+      { jobId: job.id }
+    );
+    
+    toast.success("Job alerts enabled! You'll receive notifications about this position.");
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -50,14 +66,24 @@ export const JobCard = ({ job, index, onApply }: JobCardProps) => {
             <div className="flex-1">
               <div className="flex items-start justify-between mb-2">
                 <h3 className="text-xl font-bold text-neutral-800">{job.title}</h3>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleSaveToggle}
-                  className={`p-2 ${isSaved ? 'text-yellow-500' : 'text-gray-400'}`}
-                >
-                  <Bookmark className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
-                </Button>
+                <div className="flex space-x-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleSaveToggle}
+                    className={`p-2 ${isSaved ? 'text-yellow-500' : 'text-gray-400'}`}
+                  >
+                    <Bookmark className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleNotificationToggle}
+                    className="p-2 text-gray-400 hover:text-blue-500"
+                  >
+                    <Bell className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
               
               <div className="flex items-center space-x-4 text-neutral-600 mb-3 text-sm">

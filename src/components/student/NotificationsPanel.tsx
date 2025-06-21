@@ -1,19 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, X, Briefcase, Clock, Star, Lightbulb } from 'lucide-react';
+import { Bell, X, Briefcase, Clock, Star, Lightbulb, FileText, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-
-interface Notification {
-  id: number;
-  type: 'info' | 'success' | 'deadline' | 'tip';
-  title: string;
-  message: string;
-  timestamp: string;
-  isRead: boolean;
-}
+import { notificationService, Notification } from '@/services/notificationService';
 
 interface NotificationsPanelProps {
   appliedJobs: any[];
@@ -23,87 +14,65 @@ interface NotificationsPanelProps {
 export const NotificationsPanel = ({ appliedJobs, profile }: NotificationsPanelProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
 
+  // Load notifications on mount and when applied jobs change
   useEffect(() => {
-    // Generate smart notifications based on user data
-    const smartNotifications: Notification[] = [];
+    loadNotifications();
+    
+    // Set up interval to check for new notifications
+    const interval = setInterval(loadNotifications, 30000);
+    
+    return () => clearInterval(interval);
+  }, [appliedJobs]);
 
-    // Job suggestions based on skills
-    if (profile.skills && profile.skills.length > 0) {
-      smartNotifications.push({
-        id: 1,
-        type: 'info',
-        title: 'New Job Match!',
-        message: `Found 3 new positions matching your ${profile.skills[0]} skills`,
-        timestamp: '2 hours ago',
-        isRead: false
-      });
-    }
-
-    // Application reminders
-    if (appliedJobs.length > 0) {
-      smartNotifications.push({
-        id: 2,
-        type: 'success',
-        title: 'Application Update',
-        message: `Your application to ${appliedJobs[appliedJobs.length - 1]?.company} is under review`,
-        timestamp: '1 day ago',
-        isRead: false
-      });
-    }
-
-    // Profile completion tips
-    if (!profile.resume || !profile.portfolioUrl) {
-      smartNotifications.push({
-        id: 3,
-        type: 'tip',
-        title: 'Complete Your Profile',
-        message: 'Add your resume and portfolio to increase job match rate by 60%',
-        timestamp: '3 hours ago',
-        isRead: false
-      });
-    }
-
-    // Deadline alerts
-    smartNotifications.push({
-      id: 4,
-      type: 'deadline',
-      title: 'Application Deadline',
-      message: 'TechCorp Innovations internship application closes in 2 days',
-      timestamp: '5 hours ago',
-      isRead: false
-    });
-
-    setNotifications(smartNotifications);
-  }, [appliedJobs, profile]);
+  const loadNotifications = () => {
+    const userNotifications = notificationService.getNotifications();
+    setNotifications(userNotifications);
+    setUnreadCount(notificationService.getUnreadCount());
+  };
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
-      case 'success': return Star;
-      case 'deadline': return Clock;
-      case 'tip': return Lightbulb;
-      default: return Briefcase;
+      case 'job': return Briefcase;
+      case 'application': return CheckCircle;
+      case 'scheme': return FileText;
+      case 'system': return Lightbulb;
+      default: return Bell;
     }
   };
 
   const getNotificationColor = (type: string) => {
     switch (type) {
-      case 'success': return 'bg-green-100 text-green-800 border-green-200';
-      case 'deadline': return 'bg-red-100 text-red-800 border-red-200';
-      case 'tip': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      default: return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'job': return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'application': return 'bg-green-100 text-green-800 border-green-200';
+      case 'scheme': return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'system': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
-  const markAsRead = (id: number) => {
-    setNotifications(prev => 
-      prev.map(notif => 
-        notif.id === id ? { ...notif, isRead: true } : notif
-      )
-    );
+  const handleNotificationClick = (notification: Notification) => {
+    // Mark as read
+    notificationService.markAsRead(notification.id);
+    
+    // Navigate based on notification type
+    if (notification.type === 'job' && notification.data?.jobId) {
+      window.location.href = `/jobs?id=${notification.data.jobId}`;
+    } else if (notification.type === 'application' && notification.data?.applicationId) {
+      window.location.href = `/application-tracker?id=${notification.data.applicationId}`;
+    } else if (notification.type === 'scheme' && notification.data?.schemeId) {
+      window.location.href = `/scheme-manager?id=${notification.data.schemeId}`;
+    }
+    
+    // Refresh notifications
+    loadNotifications();
   };
 
-  const unreadCount = notifications.filter(n => !n.isRead).length;
+  const handleMarkAllAsRead = () => {
+    notificationService.markAllAsRead();
+    loadNotifications();
+  };
 
   return (
     <div className="relative">
@@ -127,23 +96,35 @@ export const NotificationsPanel = ({ appliedJobs, profile }: NotificationsPanelP
             initial={{ opacity: 0, scale: 0.95, y: -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -10 }}
-            className="absolute right-0 top-12 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-96 overflow-hidden"
+            className="absolute right-0 top-12 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-[500px] overflow-hidden"
           >
             <div className="p-4 border-b border-gray-200">
               <div className="flex items-center justify-between">
                 <h3 className="font-semibold text-gray-900">Notifications</h3>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsOpen(false)}
-                  className="h-6 w-6 p-0"
-                >
-                  <X className="w-4 h-4" />
-                </Button>
+                <div className="flex items-center space-x-2">
+                  {unreadCount > 0 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleMarkAllAsRead}
+                      className="text-xs text-blue-600 hover:text-blue-800"
+                    >
+                      Mark all as read
+                    </Button>
+                  )}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIsOpen(false)}
+                    className="h-6 w-6 p-0"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
             </div>
 
-            <div className="overflow-y-auto max-h-80">
+            <div className="overflow-y-auto max-h-[400px] custom-scrollbar">
               {notifications.length > 0 ? (
                 <div className="space-y-2 p-2">
                   {notifications.map((notification, index) => {
@@ -157,9 +138,9 @@ export const NotificationsPanel = ({ appliedJobs, profile }: NotificationsPanelP
                       >
                         <Card 
                           className={`cursor-pointer hover:bg-gray-50 transition-colors ${
-                            !notification.isRead ? 'border-l-4 border-l-blue-500' : ''
+                            !notification.read ? 'border-l-4 border-l-blue-500' : ''
                           }`}
-                          onClick={() => markAsRead(notification.id)}
+                          onClick={() => handleNotificationClick(notification)}
                         >
                           <CardContent className="p-3">
                             <div className="flex items-start space-x-3">
@@ -169,7 +150,9 @@ export const NotificationsPanel = ({ appliedJobs, profile }: NotificationsPanelP
                               <div className="flex-1 min-w-0">
                                 <p className="font-medium text-sm text-gray-900">{notification.title}</p>
                                 <p className="text-sm text-gray-600 mt-1">{notification.message}</p>
-                                <p className="text-xs text-gray-400 mt-1">{notification.timestamp}</p>
+                                <p className="text-xs text-gray-400 mt-1">
+                                  {new Date(notification.createdAt).toLocaleString()}
+                                </p>
                               </div>
                             </div>
                           </CardContent>

@@ -4,6 +4,7 @@ import { useEnhancedAI } from '@/contexts/EnhancedAIContext';
 import { ChatToggleButton } from './chat/ChatToggleButton';
 import { ChatWindow } from './chat/ChatWindow';
 import { findFAQAnswer } from '@/contexts/ai/faqData';
+import { notificationService } from '@/services/notificationService';
 
 interface Message {
   id: number;
@@ -36,6 +37,38 @@ export const UniversalAIChat: React.FC = () => {
       setMessages([welcomeMessage]);
     }
   }, [userName, userRole, messages.length]);
+
+  // Check for new notifications and show AI suggestions
+  useEffect(() => {
+    const checkForNotifications = () => {
+      const notifications = notificationService.getNotifications();
+      const unreadCount = notifications.filter(n => !n.read).length;
+      
+      // If there are unread notifications and the chat is not open, suggest checking them
+      if (unreadCount > 0 && !isOpen && Math.random() > 0.7) {
+        // 30% chance to show a suggestion
+        const jobNotifications = notifications.filter(n => n.type === 'job' && !n.read).length;
+        
+        if (jobNotifications > 0 && userRole === 'student') {
+          // Add a suggestion message about new jobs
+          const suggestionMessage = {
+            id: messages.length + 1,
+            text: `I notice you have ${jobNotifications} new job notifications that might interest you. Would you like me to help you review them?`,
+            sender: "ai" as const,
+            timestamp: new Date().toLocaleTimeString(),
+            model: "deepseek-ai/DeepSeek-R1-0528"
+          };
+          setMessages(prev => [...prev, suggestionMessage]);
+          setIsOpen(true);
+        }
+      }
+    };
+    
+    // Check every 2 minutes
+    const interval = setInterval(checkForNotifications, 120000);
+    
+    return () => clearInterval(interval);
+  }, [isOpen, userRole, messages.length]);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];

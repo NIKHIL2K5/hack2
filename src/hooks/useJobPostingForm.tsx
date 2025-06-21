@@ -1,7 +1,8 @@
-
 import { useState } from "react";
 import { toast } from "sonner";
 import { dataSyncService } from "@/services/dataSync";
+import { notificationService } from "@/services/notificationService";
+import { authService } from "@/services/authService";
 
 export interface JobFormData {
   title: string;
@@ -107,10 +108,10 @@ export const useJobPostingForm = (organizationName: string, onClose: () => void)
     dataSyncService.syncJobPosting(cleanedData, organizationName);
 
     // Track job posting action
-    const officialUser = JSON.parse(localStorage.getItem('officialUser') || '{}');
-    if (officialUser.email) {
+    const currentUser = authService.getCurrentUser();
+    if (currentUser) {
       dataSyncService.trackAction(
-        officialUser.email,
+        currentUser.email,
         'startup',
         'job_posted',
         {
@@ -122,6 +123,15 @@ export const useJobPostingForm = (organizationName: string, onClose: () => void)
         organizationName
       );
     }
+
+    // Notify students about the new job posting
+    notificationService.notifyAboutNewJob({
+      id: newJob.id,
+      title: newJob.title,
+      company: organizationName,
+      location: newJob.location,
+      skills: newJob.skills
+    });
 
     toast.success("Job posted successfully and synced to student dashboard!");
     

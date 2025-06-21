@@ -1,9 +1,10 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { dataSyncService } from '@/services/dataSync';
 import { getUserInfo } from './ai/userHelpers';
 import { supabase } from '@/integrations/supabase/client';
 import { findFAQAnswer } from './ai/faqData';
 import { OpenAI } from 'openai';
+import { toast } from 'sonner';
 
 interface AIContextType {
   askEnhancedAI: (message: string, context?: string, image?: File) => Promise<any>;
@@ -25,6 +26,7 @@ export const useEnhancedAI = () => {
 
 export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAIThinking, setIsAIThinking] = useState(false);
+  const [aiMemory, setAiMemory] = useState<any>(null);
 
   const userInfo = getUserInfo();
 
@@ -34,6 +36,14 @@ export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     apiKey: "hf_dummy_api_key", // This will be replaced with a real key in production
     dangerouslyAllowBrowser: true,
   });
+
+  // Load AI memory on component mount
+  useEffect(() => {
+    if (userInfo.email) {
+      const memory = dataSyncService.getUserAIMemory(userInfo.email);
+      setAiMemory(memory);
+    }
+  }, [userInfo.email]);
 
   const askEnhancedAI = async (message: string, context?: string, image?: File): Promise<any> => {
     setIsAIThinking(true);
@@ -52,7 +62,8 @@ export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         // If we have a direct FAQ match, return it immediately
         return {
           type: 'text',
-          content: faqAnswer
+          content: faqAnswer,
+          model: 'FAQ Database'
         };
       }
 
@@ -140,7 +151,7 @@ ${image ? 'Note: The user has shared an image for analysis.' : ''}`;
           return {
             type: 'text',
             content: data.content,
-            model: "deepseek-ai/DeepSeek-R1-0528"
+            model: data.model || "deepseek-ai/DeepSeek-R1-0528"
           };
         } catch (supabaseError) {
           console.error('Supabase Function Error:', supabaseError);
@@ -151,14 +162,13 @@ ${image ? 'Note: The user has shared an image for analysis.' : ''}`;
       console.error('Enhanced AI Error:', error);
       return {
         type: 'text',
-        content: "I apologize, but I'm having trouble processing your request right now. Please try again, and I'll do my best to provide comprehensive assistance."
+        content: "I apologize, but I'm having trouble processing your request right now. Please try again, and I'll do my best to provide comprehensive assistance.",
+        model: "error-fallback"
       };
     } finally {
       setIsAIThinking(false);
     }
   };
-
-  const aiMemory = dataSyncService.getUserAIMemory(userInfo.email);
 
   return (
     <EnhancedAIContext.Provider
