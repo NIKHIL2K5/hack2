@@ -38,7 +38,7 @@ User Role: ${userRole || 'platform user'}
 User Name: ${userName || 'User'}
 ${hasImage ? 'Note: The user has shared an image for analysis.' : ''}`;
 
-    // In production, this would be a real API call to Hugging Face
+    // Make API call to Hugging Face
     const chatCompletion = await huggingFaceClient.chat.completions.create({
       model: "deepseek-ai/DeepSeek-R1-0528",
       messages: [

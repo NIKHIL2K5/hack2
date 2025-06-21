@@ -6,10 +6,11 @@ import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { getUserInfo } from "@/contexts/ai/userHelpers";
 import { useEnhancedAI } from "@/contexts/EnhancedAIContext";
+import { useResponsive } from "@/hooks/useResponsive";
 
 const AnimatedBot = () => (
   <motion.div
-    className="relative w-20 h-20 mx-auto mb-4"
+    className="relative w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4"
     animate={{ 
       y: [0, -10, 0],
       rotate: [0, 5, -5, 0],
@@ -21,14 +22,14 @@ const AnimatedBot = () => (
     }}
   >
     <div className="w-full h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
-      <Bot className="w-8 h-8 text-white" />
+      <Bot className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
     </div>
     <motion.div
-      className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center"
+      className="absolute -top-2 -right-2 w-5 h-5 sm:w-6 sm:h-6 bg-yellow-400 rounded-full flex items-center justify-center"
       animate={{ scale: [1, 1.2, 1] }}
       transition={{ duration: 2, repeat: Infinity }}
     >
-      <Sparkles className="w-3 h-3 text-white" />
+      <Sparkles className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" />
     </motion.div>
   </motion.div>
 );
@@ -37,6 +38,7 @@ const ChatbotPage = () => {
   const userInfo = getUserInfo();
   const { askEnhancedAI, isAIThinking } = useEnhancedAI();
   const navigate = useNavigate();
+  const { isMobile } = useResponsive();
   
   const [messages, setMessages] = useState([
     {
@@ -86,7 +88,8 @@ const ChatbotPage = () => {
         id: messages.length + 2,
         text: aiResponse.content,
         sender: "bot",
-        timestamp: new Date().toLocaleTimeString()
+        timestamp: new Date().toLocaleTimeString(),
+        model: aiResponse.model
       };
 
       setMessages(prev => [...prev, botMessage]);
@@ -160,7 +163,7 @@ const ChatbotPage = () => {
 
       {/* Header */}
       <header className="relative z-10 bg-white/5 backdrop-blur-lg border-b border-white/10">
-        <div className="container mx-auto px-6 py-4">
+        <div className="container mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <Button 
@@ -174,8 +177,8 @@ const ChatbotPage = () => {
               <div className="flex items-center space-x-3">
                 <AnimatedBot />
                 <div>
-                  <h1 className="text-2xl font-bold">Sethu - AI Assistant</h1>
-                  <p className="text-white/60">Powered by DeepSeek-R1-0528 • Discover government schemes & opportunities</p>
+                  <h1 className="text-xl sm:text-2xl font-bold">Sethu - AI Assistant</h1>
+                  <p className="text-white/60 text-xs sm:text-sm">Powered by DeepSeek-R1-0528 • Discover government schemes & opportunities</p>
                 </div>
               </div>
             </div>
@@ -185,7 +188,7 @@ const ChatbotPage = () => {
               <select
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}
-                className="bg-white/10 border border-white/20 rounded-md px-3 py-1 text-white text-sm"
+                className="bg-white/10 border border-white/20 rounded-md px-2 py-1 text-white text-xs sm:text-sm"
               >
                 <option value="english" className="bg-indigo-800">English</option>
                 <option value="telugu" className="bg-indigo-800">తెలుగు</option>
@@ -196,16 +199,16 @@ const ChatbotPage = () => {
       </header>
 
       {/* Chat Interface */}
-      <main className="relative z-10 container mx-auto px-6 py-8 max-w-4xl">
+      <main className="relative z-10 container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl overflow-hidden"
-          style={{ height: "calc(100vh - 200px)" }}
+          style={{ height: "calc(100vh - 180px)" }}
         >
           {/* Messages Area */}
           <div className="h-full flex flex-col">
-            <div className="flex-1 p-6 overflow-y-auto space-y-4 custom-scrollbar">
+            <div className="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4 custom-scrollbar">
               {messages.map((message) => (
                 <motion.div
                   key={message.id}
@@ -232,7 +235,12 @@ const ChatbotPage = () => {
                         : "bg-white/10 text-white"
                     }`}>
                       <p className="whitespace-pre-line">{message.text}</p>
-                      <p className="text-xs opacity-60 mt-2">{message.timestamp}</p>
+                      <div className="flex justify-between items-center mt-2">
+                        <p className="text-xs opacity-60">{message.timestamp}</p>
+                        {message.model && message.sender === 'bot' && (
+                          <p className="text-xs opacity-60">Powered by {message.model}</p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -241,7 +249,7 @@ const ChatbotPage = () => {
             </div>
 
             {/* Input Area */}
-            <div className="p-6 border-t border-white/10">
+            <div className="p-4 sm:p-6 border-t border-white/10">
               <div className="flex space-x-4">
                 <Input
                   value={inputMessage}
@@ -270,7 +278,7 @@ const ChatbotPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4"
+          className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4"
         >
           {[
             "Show available government schemes",

@@ -33,7 +33,7 @@ export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   // Initialize Hugging Face client
   const huggingFaceClient = new OpenAI({
     baseURL: "https://router.huggingface.co/featherless-ai/v1",
-    apiKey: "hf_dummy_api_key", // This will be replaced with a real key in production
+    apiKey: process.env.HF_TOKEN || "hf_dummy_api_key", // This will be replaced with a real key in production
     dangerouslyAllowBrowser: true,
   });
 
@@ -89,12 +89,6 @@ User Name: ${userInfo.name || 'User'}
 ${image ? 'Note: The user has shared an image for analysis.' : ''}`;
 
         // In a production environment, we would use the actual Hugging Face API
-        // For now, we'll simulate the response
-        console.log("Using Hugging Face model with prompt:", systemPrompt);
-        
-        // Simulate Hugging Face API call
-        // In production, this would be:
-        /*
         const chatCompletion = await huggingFaceClient.chat.completions.create({
           model: "deepseek-ai/DeepSeek-R1-0528",
           messages: [
@@ -104,25 +98,7 @@ ${image ? 'Note: The user has shared an image for analysis.' : ''}`;
         });
         
         const aiResponse = chatCompletion.choices[0].message.content;
-        */
         
-        // For now, simulate a response
-        let aiResponse = `Hi ${userInfo.name || 'there'}! I'm Sethu, your AI assistant powered by DeepSeek-R1-0528. `;
-        
-        if (message.toLowerCase().includes("job")) {
-          aiResponse += "I can help you find job opportunities that match your skills and interests. The platform currently has several openings in technology, healthcare, and education sectors. Would you like me to recommend specific positions based on your profile?";
-        } else if (message.toLowerCase().includes("scheme") || message.toLowerCase().includes("funding")) {
-          aiResponse += "There are several government schemes available for startups and entrepreneurs in Telangana. The T-Hub incubation program offers funding up to ₹25 lakhs, while the TSIC Innovation Challenge provides prizes up to ₹10 lakhs. The WE-Hub specifically supports women entrepreneurs with funding up to ₹25 lakhs.";
-        } else if (message.toLowerCase().includes("profile")) {
-          aiResponse += "Your profile is crucial for success on this platform. I recommend completing all sections, especially your skills, experience, and portfolio links. This increases your visibility to employers by up to 70% and improves your match rate for relevant opportunities.";
-        } else if (message.toLowerCase().includes("application")) {
-          aiResponse += "You can track all your job applications through the Application Tracker. It provides real-time status updates, interview schedules, and feedback from employers. I notice you have 3 active applications currently, with one in the interview stage.";
-        } else if (image) {
-          aiResponse += "I've analyzed the image you shared. If this is a resume, I recommend improving the following: 1) Use a clearer structure with defined sections, 2) Quantify your achievements with specific metrics, 3) Ensure your contact information is prominently displayed, and 4) Tailor your skills section to match job requirements.";
-        } else {
-          aiResponse += `I'm here to provide comprehensive assistance with ${userInfo.role === 'student' ? 'job searches, career planning, skill development, and interview preparation' : userInfo.role === 'startup' ? 'funding opportunities, government schemes, hiring strategies, and business growth' : userInfo.role === 'official' ? 'scheme management, policy implementation, and ecosystem monitoring' : 'navigating the platform and maximizing your opportunities'}. How can I help you today?`;
-        }
-
         return {
           type: 'text',
           content: aiResponse,
