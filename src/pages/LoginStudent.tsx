@@ -9,7 +9,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { authService } from "@/services/authService";
 
-const LoginStudent = () => {
+export default function LoginStudent() {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -247,6 +247,4 @@ const LoginStudent = () => {
       </motion.div>
     </div>
   );
-};
-
-export default LoginStudent;
+}
