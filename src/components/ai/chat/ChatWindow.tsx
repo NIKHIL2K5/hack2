@@ -14,6 +14,7 @@ interface Message {
   image?: File;
   imageName?: string;
   responseData?: any;
+  model?: string;
 }
 
 interface ChatWindowProps {

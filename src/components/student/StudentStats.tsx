@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
-import { DivideIcon as LucideIcon } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import { useResponsive } from "@/hooks/useResponsive";
 import { ResponsiveGrid } from "@/components/ui/responsive-grid";
 

@@ -20,7 +20,7 @@ export const PageContainer: React.FC<PageContainerProps> = ({
   return (
     <div 
       className={cn(
-        "min-h-screen",
+        "min-h-screen pb-16 md:pb-0",
         className
       )}
       {...props}
