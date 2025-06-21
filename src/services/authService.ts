@@ -138,7 +138,43 @@ class AuthService {
   // Get the current user
   getCurrentUser(): UserData | null {
     const userStr = localStorage.getItem('currentUser');
-    return userStr ? JSON.parse(userStr) : null;
+    if (userStr) {
+      return JSON.parse(userStr);
+    }
+    
+    // Fallback to legacy storage methods
+    const studentUser = JSON.parse(localStorage.getItem('studentUser') || '{}');
+    const officialUser = JSON.parse(localStorage.getItem('officialUser') || '{}');
+    const startupAuth = JSON.parse(localStorage.getItem('startupAuth') || '{}');
+    
+    if (studentUser.email) {
+      return {
+        email: studentUser.email,
+        name: studentUser.name || 'Student',
+        role: 'student',
+        lastLogin: new Date().toISOString()
+      };
+    } else if (officialUser.email) {
+      return {
+        email: officialUser.email,
+        name: officialUser.name || 'Official',
+        role: 'official',
+        organization: officialUser.organization?.name,
+        department: officialUser.department,
+        employeeId: officialUser.employeeId,
+        lastLogin: new Date().toISOString()
+      };
+    } else if (startupAuth.user?.email) {
+      return {
+        email: startupAuth.user.email,
+        name: startupAuth.user.name || 'Startup',
+        role: 'startup',
+        organization: startupAuth.user.organization,
+        lastLogin: new Date().toISOString()
+      };
+    }
+    
+    return null;
   }
 
   // Check if user is logged in

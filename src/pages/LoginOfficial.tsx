@@ -63,7 +63,12 @@ const LoginOfficial = () => {
       // Login
       const success = await authService.login(formData.email, formData.password);
       if (success) {
-        navigate("/dashboard/official");
+        const currentUser = authService.getCurrentUser();
+        if (currentUser && currentUser.role === 'official') {
+          navigate("/dashboard/official");
+        } else {
+          toast.error("This account doesn't have official permissions");
+        }
       }
     } else {
       // Register

@@ -39,7 +39,12 @@ const LoginStudent = () => {
       // Login
       const success = await authService.login(formData.email, formData.password);
       if (success) {
-        navigate("/dashboard/student");
+        const currentUser = authService.getCurrentUser();
+        if (currentUser && currentUser.role === 'student') {
+          navigate("/dashboard/student");
+        } else {
+          toast.error("This account doesn't have student permissions");
+        }
       }
     } else {
       // Register

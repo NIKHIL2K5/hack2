@@ -47,15 +47,19 @@ const LoginStartup = () => {
       // Login
       const success = await authService.login(formData.email, formData.password);
       if (success) {
-        navigate("/dashboard/startup");
+        const currentUser = authService.getCurrentUser();
+        if (currentUser && currentUser.role === 'startup') {
+          navigate("/dashboard/startup");
+        } else {
+          toast.error("This account doesn't have startup permissions");
+        }
       }
     } else {
       // Register
       const success = await authService.register(formData.email, formData.password, {
         name: formData.name,
         role: 'startup',
-        organization: formData.startup,
-        department: 'Management'
+        organization: formData.startup
       });
       if (success) {
         navigate("/dashboard/startup");
