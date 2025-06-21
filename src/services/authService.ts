@@ -80,18 +80,20 @@ class AuthService {
       const user = existingUsers.find((user: any) => user.email === email);
       
       if (!user) {
-        // If no user found, create one for demo purposes
+        // For demo purposes, create a user based on email pattern
+        const role = this.determineRoleFromEmail(email);
         return this.register(email, password, {
           name: email.split('@')[0],
-          role: email.includes('student') ? 'student' : 
-                email.includes('official') ? 'official' : 'startup',
+          role,
           lastLogin: new Date().toISOString()
         });
       }
       
       // Update last login
       user.lastLogin = new Date().toISOString();
-      localStorage.setItem('users', JSON.stringify(existingUsers));
+      localStorage.setItem('users', JSON.stringify(
+        existingUsers.map((u: any) => u.id === user.id ? user : u)
+      ));
       
       // Store current user
       localStorage.setItem('currentUser', JSON.stringify(user));
@@ -124,6 +126,26 @@ class AuthService {
       toast.error('Login failed. Please try again.');
       return false;
     }
+  }
+
+  // Determine role from email for demo purposes
+  private determineRoleFromEmail(email: string): 'student' | 'startup' | 'official' {
+    const lowerEmail = email.toLowerCase();
+    
+    if (lowerEmail.includes('student') || 
+        lowerEmail.includes('edu') || 
+        lowerEmail.includes('college')) {
+      return 'student';
+    }
+    
+    if (lowerEmail.includes('gov') || 
+        lowerEmail.includes('official') || 
+        lowerEmail.includes('telangana')) {
+      return 'official';
+    }
+    
+    // Default to startup
+    return 'startup';
   }
 
   // Logout the current user

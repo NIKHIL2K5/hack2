@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { authService } from "@/services/authService";
 
@@ -37,6 +37,14 @@ const LoginOfficial = () => {
     confirmPassword: ""
   });
   const navigate = useNavigate();
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const currentUser = authService.getCurrentUser();
+    if (currentUser) {
+      navigate(`/dashboard/${currentUser.role}`);
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -178,18 +186,18 @@ const LoginOfficial = () => {
                 )}
                 
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-white font-medium">Authorized Email</Label>
+                  <Label htmlFor="email" className="text-white font-medium">Email Address</Label>
                   <motion.div whileFocus={{ scale: 1.02 }}>
                     <Input 
                       id="email" 
                       type="email" 
                       value={formData.email}
                       onChange={handleInputChange}
-                      placeholder="official@organization.org.in" 
+                      placeholder="official@telangana.gov.in" 
                       className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-indigo-400 focus:ring-indigo-400/50 h-12 text-lg"
                     />
                   </motion.div>
-                  <p className="text-xs text-white/50">Only pre-approved organization emails are accepted</p>
+                  <p className="text-xs text-white/50">For demo, use an email containing "gov" or "official"</p>
                 </div>
                 
                 <div className="space-y-2">

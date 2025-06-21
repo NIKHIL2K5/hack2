@@ -90,19 +90,67 @@ const App = () => {
               </ProtectedRoute>
             } />
             
-            {/* Other routes */}
-            <Route path="/my-applications" element={<MyApplications />} />
-            <Route path="/application-tracker" element={<ApplicationTracker />} />
+            {/* Other routes with role protection */}
+            <Route path="/my-applications" element={
+              <ProtectedRoute role="student">
+                <MyApplications />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/application-tracker" element={
+              <ProtectedRoute role="student">
+                <ApplicationTracker />
+              </ProtectedRoute>
+            } />
+            
             <Route path="/profile-settings" element={<ProfileSettings />} />
-            <Route path="/startup-profile" element={<StartupProfileCreator />} />
-            <Route path="/scheme-manager" element={<SchemeManager />} />
-            <Route path="/student-list" element={<StudentList />} />
+            
+            <Route path="/startup-profile" element={
+              <ProtectedRoute role="startup">
+                <StartupProfileCreator />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/scheme-manager" element={
+              <ProtectedRoute role="official">
+                <SchemeManager />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/student-list" element={
+              <ProtectedRoute role="official">
+                <StudentList />
+              </ProtectedRoute>
+            } />
+            
             <Route path="/chatbot" element={<ChatbotPage />} />
-            <Route path="/applications" element={<ApplicationsManagement />} />
-            <Route path="/compliance" element={<ComplianceTracker />} />
+            
+            <Route path="/applications" element={
+              <ProtectedRoute role="startup">
+                <ApplicationsManagement />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/compliance" element={
+              <ProtectedRoute role="startup">
+                <ComplianceTracker />
+              </ProtectedRoute>
+            } />
+            
             <Route path="/jobs" element={<JobBoard />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/feedback" element={<FeedbackSentiment />} />
+            
+            <Route path="/analytics" element={
+              <ProtectedRoute role="official">
+                <Analytics />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/feedback" element={
+              <ProtectedRoute role="official">
+                <FeedbackSentiment />
+              </ProtectedRoute>
+            } />
+            
             <Route path="*" element={<NotFound />} />
           </Routes>
           <UniversalAIChat />

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { authService } from "@/services/authService";
 
@@ -20,6 +20,14 @@ export default function LoginStudent() {
     confirmPassword: ""
   });
   const navigate = useNavigate();
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const currentUser = authService.getCurrentUser();
+    if (currentUser) {
+      navigate(`/dashboard/${currentUser.role}`);
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -171,6 +179,7 @@ export default function LoginStudent() {
                       className="bg-white/10 border-white/20 text-white placeholder:text-white/60 focus:border-teal-400 focus:ring-teal-400/50 h-12 text-lg"
                     />
                   </motion.div>
+                  <p className="text-xs text-white/50">For demo, use an email containing "student" or "edu"</p>
                 </div>
                 
                 <div className="space-y-2">

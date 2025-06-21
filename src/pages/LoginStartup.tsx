@@ -1,12 +1,11 @@
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { FloatingParticles } from "@/components/startup/FloatingParticles";
 import { StartupLoginHeader } from "@/components/startup/StartupLoginHeader";
 import { StartupLoginForm } from "@/components/startup/StartupLoginForm";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { authService } from "@/services/authService";
 
@@ -21,6 +20,14 @@ const LoginStartup = () => {
     confirmPassword: ""
   });
   const navigate = useNavigate();
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const currentUser = authService.getCurrentUser();
+    if (currentUser) {
+      navigate(`/dashboard/${currentUser.role}`);
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
