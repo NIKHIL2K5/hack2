@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Link, useNavigate } from "react-router-dom";
 import { NotificationsPanel } from "./NotificationsPanel";
+import { authService } from "@/services/authService";
 
 interface StudentHeaderProps {
   profileName: string;
@@ -26,7 +27,7 @@ export const StudentHeader = ({
 
   const handleLogout = () => {
     // Clear any stored user data
-    localStorage.removeItem('studentUser');
+    authService.logout();
     // Navigate to home page
     navigate('/');
   };

@@ -93,8 +93,13 @@ class AuthService {
       const user = existingUsers.find((user: any) => user.email === email);
       
       if (!user) {
-        toast.error('User not found. Please register first.');
-        return false;
+        // If no user found, create one for demo purposes
+        return this.register(email, password, {
+          name: email.split('@')[0],
+          role: email.includes('student') ? 'student' : 
+                email.includes('official') ? 'official' : 'startup',
+          lastLogin: new Date().toISOString()
+        });
       }
       
       // Update last login

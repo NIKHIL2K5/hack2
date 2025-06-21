@@ -41,12 +41,13 @@ const ChatbotPage = () => {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: `Hello! I'm Sethu, your AI assistant for discovering government schemes and opportunities. I'm powered by advanced AI and can help you with detailed guidance on ${userInfo.role === 'student' ? 'job searches, career planning, skill development' : userInfo.role === 'startup' ? 'funding opportunities, government schemes, and business growth' : userInfo.role === 'official' ? 'scheme management and policy implementation' : 'navigating the platform and maximizing your opportunities'}. How can I help you today?`,
+      text: `Hello! I'm Sethu, your AI assistant for discovering government schemes and opportunities. I'm powered by DeepSeek-R1-0528 and can help you with detailed guidance on ${userInfo.role === 'student' ? 'job searches, career planning, skill development' : userInfo.role === 'startup' ? 'funding opportunities, government schemes, and business growth' : userInfo.role === 'official' ? 'scheme management and policy implementation' : 'navigating the platform and maximizing your opportunities'}. How can I help you today?`,
       sender: "bot",
-      timestamp: new Date().toLocaleTimeString()
+      timestamp: new Date().toLocaleTimeString(),
+      model: "deepseek-ai/DeepSeek-R1-0528"
     }
   ]);
-  const [inputMessage, setInputMessage] = useState("");
+  const [inputMessage, setInputMessage] = useState('');
   const [language, setLanguage] = useState("english");
 
   const handleBackNavigation = () => {
@@ -86,7 +87,8 @@ const ChatbotPage = () => {
         id: messages.length + 2,
         text: aiResponse.content,
         sender: "bot",
-        timestamp: new Date().toLocaleTimeString()
+        timestamp: new Date().toLocaleTimeString(),
+        model: aiResponse.model || "deepseek-ai/DeepSeek-R1-0528"
       };
 
       setMessages(prev => [...prev, botMessage]);
@@ -175,7 +177,7 @@ const ChatbotPage = () => {
                 <AnimatedBot />
                 <div>
                   <h1 className="text-2xl font-bold">Sethu - AI Assistant</h1>
-                  <p className="text-white/60">Powered by OpenAI • Discover government schemes & opportunities</p>
+                  <p className="text-white/60">Powered by DeepSeek-R1-0528 • Discover government schemes & opportunities</p>
                 </div>
               </div>
             </div>
@@ -232,7 +234,12 @@ const ChatbotPage = () => {
                         : "bg-white/10 text-white"
                     }`}>
                       <p className="whitespace-pre-line">{message.text}</p>
-                      <p className="text-xs opacity-60 mt-2">{message.timestamp}</p>
+                      <div className="flex justify-between items-center mt-1">
+                        <p className="text-xs opacity-60">{message.timestamp}</p>
+                        {message.model && message.sender !== "user" && (
+                          <p className="text-xs opacity-60">Powered by {message.model}</p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </motion.div>

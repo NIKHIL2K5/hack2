@@ -1,16 +1,18 @@
 import React, { createContext, useContext, useState } from 'react';
+import { loadUserData } from '@/utils/userStorage';
 import { dataSyncService } from '@/services/dataSync';
 import { getUserInfo } from './ai/userHelpers';
+import { getComprehensiveKnowledge } from './ai/knowledgeBase';
+import { generateComprehensiveResponse } from './ai/responseGenerator';
+import { OpenAI } from "openai";
 import { supabase } from '@/integrations/supabase/client';
 import { findFAQAnswer } from './ai/faqData';
-import { OpenAI } from 'openai';
 
 interface AIContextType {
-  askEnhancedAI: (message: string, context?: string, image?: File) => Promise<any>;
-  isAIThinking: boolean;
   userRole: string;
   userName: string;
-  aiMemory: any;
+  askEnhancedAI: (message: string, context?: string, image?: File) => Promise<any>;
+  isAIThinking: boolean;
 }
 
 const EnhancedAIContext = createContext<AIContextType | undefined>(undefined);
@@ -52,7 +54,8 @@ export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         // If we have a direct FAQ match, return it immediately
         return {
           type: 'text',
-          content: faqAnswer
+          content: faqAnswer,
+          model: 'FAQ Database'
         };
       }
 
@@ -151,7 +154,8 @@ ${image ? 'Note: The user has shared an image for analysis.' : ''}`;
       console.error('Enhanced AI Error:', error);
       return {
         type: 'text',
-        content: "I apologize, but I'm having trouble processing your request right now. Please try again, and I'll do my best to provide comprehensive assistance."
+        content: "I apologize, but I'm having trouble processing your request right now. Please try again, and I'll do my best to provide comprehensive assistance.",
+        model: 'error-fallback'
       };
     } finally {
       setIsAIThinking(false);
@@ -166,8 +170,7 @@ ${image ? 'Note: The user has shared an image for analysis.' : ''}`;
         askEnhancedAI,
         isAIThinking,
         userRole: userInfo.role,
-        userName: userInfo.name,
-        aiMemory
+        userName: userInfo.name
       }}
     >
       {children}
