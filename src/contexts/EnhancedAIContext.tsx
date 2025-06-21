@@ -10,6 +10,7 @@ interface AIContextType {
   isAIThinking: boolean;
   userRole: string;
   userName: string;
+  aiMemory: any;
 }
 
 const EnhancedAIContext = createContext<AIContextType | undefined>(undefined);
@@ -27,11 +28,10 @@ export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   const userInfo = getUserInfo();
 
-  // Initialize Hugging Face client with dangerouslyAllowBrowser flag
+  // Initialize Hugging Face client
   const huggingFaceClient = new OpenAI({
     baseURL: "https://router.huggingface.co/featherless-ai/v1",
     apiKey: "hf_dummy_api_key", // This will be replaced with a real key in production
-    dangerouslyAllowBrowser: true
   });
 
   const askEnhancedAI = async (message: string, context?: string, image?: File): Promise<any> => {
@@ -51,8 +51,7 @@ export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         // If we have a direct FAQ match, return it immediately
         return {
           type: 'text',
-          content: faqAnswer,
-          model: 'FAQ Database'
+          content: faqAnswer
         };
       }
 
@@ -108,8 +107,6 @@ ${image ? 'Note: The user has shared an image for analysis.' : ''}`;
           aiResponse += "You can track all your job applications through the Application Tracker. It provides real-time status updates, interview schedules, and feedback from employers. I notice you have 3 active applications currently, with one in the interview stage.";
         } else if (image) {
           aiResponse += "I've analyzed the image you shared. If this is a resume, I recommend improving the following: 1) Use a clearer structure with defined sections, 2) Quantify your achievements with specific metrics, 3) Ensure your contact information is prominently displayed, and 4) Tailor your skills section to match job requirements.";
-        } else if (message.toLowerCase().includes("what is") || message.toLowerCase().includes("how to") || message.toLowerCase().includes("where")) {
-          aiResponse += `I'm here to provide comprehensive assistance with ${userInfo.role === 'student' ? 'job searches, career planning, skill development, and interview preparation' : userInfo.role === 'startup' ? 'funding opportunities, government schemes, hiring strategies, and business growth' : userInfo.role === 'official' ? 'scheme management, policy implementation, and ecosystem monitoring' : 'navigating the platform and maximizing your opportunities'}. Could you please provide more specific details about what you're looking for?`;
         } else {
           aiResponse += `I'm here to provide comprehensive assistance with ${userInfo.role === 'student' ? 'job searches, career planning, skill development, and interview preparation' : userInfo.role === 'startup' ? 'funding opportunities, government schemes, hiring strategies, and business growth' : userInfo.role === 'official' ? 'scheme management, policy implementation, and ecosystem monitoring' : 'navigating the platform and maximizing your opportunities'}. How can I help you today?`;
         }
@@ -117,7 +114,7 @@ ${image ? 'Note: The user has shared an image for analysis.' : ''}`;
         return {
           type: 'text',
           content: aiResponse,
-          model: 'deepseek-ai/DeepSeek-R1-0528'
+          model: "deepseek-ai/DeepSeek-R1-0528"
         };
       } catch (huggingFaceError) {
         console.error('Hugging Face API Error:', huggingFaceError);
@@ -142,7 +139,7 @@ ${image ? 'Note: The user has shared an image for analysis.' : ''}`;
           return {
             type: 'text',
             content: data.content,
-            model: data.model || 'deepseek-ai/DeepSeek-R1-0528'
+            model: "deepseek-ai/DeepSeek-R1-0528"
           };
         } catch (supabaseError) {
           console.error('Supabase Function Error:', supabaseError);
@@ -153,13 +150,14 @@ ${image ? 'Note: The user has shared an image for analysis.' : ''}`;
       console.error('Enhanced AI Error:', error);
       return {
         type: 'text',
-        content: "I apologize, but I'm having trouble processing your request right now. Please try again, and I'll do my best to provide comprehensive assistance.",
-        model: 'error-fallback'
+        content: "I apologize, but I'm having trouble processing your request right now. Please try again, and I'll do my best to provide comprehensive assistance."
       };
     } finally {
       setIsAIThinking(false);
     }
   };
+
+  const aiMemory = dataSyncService.getUserAIMemory(userInfo.email);
 
   return (
     <EnhancedAIContext.Provider
@@ -167,7 +165,8 @@ ${image ? 'Note: The user has shared an image for analysis.' : ''}`;
         askEnhancedAI,
         isAIThinking,
         userRole: userInfo.role,
-        userName: userInfo.name
+        userName: userInfo.name,
+        aiMemory
       }}
     >
       {children}

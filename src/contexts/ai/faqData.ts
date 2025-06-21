@@ -3,20 +3,6 @@ export const FAQ_DATA = {
   // General Platform Questions
   'what is govstartup navigator': "GovStartup Navigator is Telangana's unified platform connecting startups, students, and government officials. It streamlines job searching, scheme discovery, compliance tracking, and ecosystem growth through AI-powered tools and analytics.",
   
-  'hi': "Hello! I'm Sethu, your AI assistant powered by DeepSeek-R1-0528. How can I help you today?",
-  
-  'hello': "Hi there! I'm Sethu, your AI assistant powered by DeepSeek-R1-0528. I'm here to help with any questions about the platform, government schemes, or career guidance. What can I assist you with?",
-  
-  'hey': "Hey! I'm Sethu, your AI assistant powered by DeepSeek-R1-0528. How can I assist you today?",
-  
-  'what is your role': "I'm Sethu, an AI assistant powered by DeepSeek-R1-0528. My role is to provide comprehensive assistance with platform navigation, government scheme discovery, job searching, application tracking, and career guidance. I can answer questions, provide recommendations, and help you make the most of the GovStartup Navigator platform.",
-  
-  'what can you do': "As Sethu, powered by DeepSeek-R1-0528, I can help you with: finding relevant job opportunities, discovering government schemes, tracking application status, providing career guidance, answering platform-related questions, and offering personalized recommendations based on your profile and activities.",
-  
-  'what is this website about': "This is GovStartup Navigator, Telangana's unified platform for connecting startups, students, and government officials. It helps startups with funding and compliance, assists students in finding opportunities, and enables officials to manage schemes and monitor ecosystem growth. The platform features AI-powered tools, real-time analytics, and comprehensive dashboards tailored to each user role.",
-  
-  'what is happening in the app': "In the GovStartup Navigator platform, users can access role-specific dashboards for startups, students, or government officials. Startups can post jobs and track compliance, students can find and apply for opportunities, and officials can manage schemes and monitor the ecosystem. The platform features real-time data synchronization, AI-powered recommendations, and comprehensive analytics.",
-  
   'find internships': "To find internships: 1) Go to the Job Board section, 2) Use filters for 'Internship' type positions, 3) Browse listings matching your skills, 4) Click on any listing to view details, and 5) Use the 'Apply Now' button to submit your application.",
   
   'apply for job': "To apply for a job: 1) Find a suitable position on the Job Board, 2) Click 'Apply Now', 3) Fill out the application form with your details, 4) Upload your resume, 5) Write a compelling cover letter, and 6) Submit your application. You'll receive a confirmation email.",
@@ -111,9 +97,34 @@ export const FAQ_DATA = {
   
   'difference intern full time': "The key differences between internships and full-time positions are: 1) Duration - internships typically last 3-6 months while full-time positions are ongoing, 2) Purpose - internships focus on learning and skill development while full-time roles expect productivity and results, 3) Compensation - internships usually offer stipends while full-time positions provide salaries and benefits, 4) Responsibilities - interns have limited responsibilities while full-time employees have comprehensive duties.",
   
-  'chatgpt powered assistant': "The AI-powered assistant (Sethu) is an AI tool that provides personalized guidance across the platform. It uses advanced natural language processing to understand your queries, offer tailored advice, answer questions, and help navigate features. It's continuously learning from interactions to improve its responses and can assist with everything from job searches to compliance requirements to scheme applications.",
+  'chatgpt powered assistant': "The ChatGPT-powered assistant (Sethu) is an AI tool that provides personalized guidance across the platform. It uses advanced natural language processing to understand your queries, offer tailored advice, answer questions, and help navigate features. It's continuously learning from interactions to improve its responses and can assist with everything from job searches to compliance requirements to scheme applications.",
   
-  'reset password': "To reset your password: 1) Go to the login page, 2) Click 'Forgot Password' below the login form, 3) Enter your registered email address, 4) Check your email for a password reset link, 5) Click the link and create a new password (must be at least 8 characters with a mix of letters, numbers, and symbols), 6) Log in with your new password. For security, reset links expire after 24 hours."
+  'reset password': "To reset your password: 1) Go to the login page, 2) Click 'Forgot Password' below the login form, 3) Enter your registered email address, 4) Check your email for a password reset link, 5) Click the link and create a new password (must be at least 8 characters with a mix of letters, numbers, and symbols), 6) Log in with your new password. For security, reset links expire after 24 hours.",
+
+  // Basic greeting responses
+  'hi': "Hello! I'm Sethu, your AI assistant for the GovStartup Navigator platform. I'm here to help you with job searches, government schemes, compliance tracking, and more. How can I assist you today?",
+  
+  'hello': "Hi there! I'm Sethu, your AI assistant for the GovStartup Navigator platform. I can help you navigate through various features like job applications, government schemes, startup compliance, and more. What would you like to know about?",
+  
+  'hey': "Hey! I'm Sethu, your AI assistant. I'm here to help you make the most of the GovStartup Navigator platform. Whether you need information about jobs, schemes, or platform features, just ask me. How can I assist you today?",
+  
+  'what is your role': "I'm Sethu, the AI assistant for GovStartup Navigator. My role is to provide comprehensive assistance to all platform users. For students, I help with job searches and career guidance. For startups, I assist with funding opportunities and compliance tracking. For officials, I support scheme management and analytics. I'm designed to make government services and opportunities more accessible to everyone.",
+  
+  'what can you do': "As Sethu, I can help you with many things on the GovStartup Navigator platform: 1) Find relevant jobs and internships, 2) Discover government schemes you're eligible for, 3) Track compliance requirements, 4) Provide career advice and resume tips, 5) Answer questions about the platform features, 6) Help with application processes, and 7) Connect you with the right resources based on your needs. What would you like assistance with?",
+  
+  'who are you': "I'm Sethu, the AI assistant for GovStartup Navigator. I was created to help users navigate Telangana's startup ecosystem, government schemes, and job opportunities. I'm powered by DeepSeek-R1-0528, an advanced AI model that allows me to understand your questions and provide helpful, accurate responses. How can I assist you today?",
+  
+  'what is this website': "This is GovStartup Navigator, Telangana's unified platform connecting startups, students, and government officials. The platform streamlines job searching, scheme discovery, compliance tracking, and ecosystem growth through AI-powered tools and analytics. It serves as a comprehensive hub for Telangana's innovation ecosystem, helping startups grow, students find opportunities, and officials implement effective policies.",
+  
+  'what is this app': "This is GovStartup Navigator, a comprehensive platform developed by the Government of Telangana. It connects three key user groups: 1) Students seeking jobs and career opportunities, 2) Startups looking for talent, funding, and compliance guidance, and 3) Government officials managing schemes and monitoring ecosystem growth. The platform features AI-powered tools like myself (Sethu) to make government services more accessible and user-friendly.",
+  
+  'what are the features': "GovStartup Navigator offers numerous features including: 1) AI-powered job matching for students, 2) Comprehensive application tracking, 3) Government scheme discovery and eligibility checking, 4) Startup compliance monitoring with automated reminders, 5) District-level analytics for officials, 6) Document management system, 7) Real-time communication between stakeholders, 8) Sentiment analysis of feedback, 9) Multi-language support, and 10) AI assistance through me, Sethu, to help navigate all these features.",
+  
+  'how does this work': "GovStartup Navigator works by connecting three key stakeholders in Telangana's innovation ecosystem: 1) Students can create profiles, search for jobs, and track applications, 2) Startups can post opportunities, manage compliance, and discover funding schemes, 3) Government officials can monitor ecosystem health, manage schemes, and analyze impact. The platform uses AI (like me) to personalize experiences, match opportunities to users, and simplify navigation of government services. What specific aspect would you like to know more about?",
+  
+  'thank you': "You're welcome! I'm happy to help. If you have any more questions about GovStartup Navigator or need assistance with anything else, feel free to ask anytime. Have a great day!",
+  
+  'thanks': "You're welcome! I'm here to make your experience with GovStartup Navigator as smooth as possible. If you need any more help in the future, don't hesitate to reach out. Is there anything else I can assist you with today?"
 };
 
 // Function to find the best matching answer for a question
@@ -156,23 +167,5 @@ export const findFAQAnswer = (question: string): string | null => {
     return scores[0].answer;
   }
   
-  // For basic greetings and common questions that might not match keywords well
-  if (normalizedQuestion === 'hi' || normalizedQuestion === 'hello' || normalizedQuestion === 'hey') {
-    return FAQ_DATA['hello'];
-  }
-  
-  if (normalizedQuestion.includes('who are you') || normalizedQuestion.includes('what are you')) {
-    return FAQ_DATA['what is your role'];
-  }
-  
-  if (normalizedQuestion.includes('what can you do') || normalizedQuestion.includes('how can you help')) {
-    return FAQ_DATA['what can you do'];
-  }
-  
-  if (normalizedQuestion.includes('what is this') || normalizedQuestion.includes('about this website')) {
-    return FAQ_DATA['what is this website about'];
-  }
-  
-  // For questions we don't understand
   return null;
 };
