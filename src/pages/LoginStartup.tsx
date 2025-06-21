@@ -5,18 +5,67 @@ import { Card, CardContent } from "@/components/ui/card";
 import { FloatingParticles } from "@/components/startup/FloatingParticles";
 import { StartupLoginHeader } from "@/components/startup/StartupLoginHeader";
 import { StartupLoginForm } from "@/components/startup/StartupLoginForm";
-import { useStartupAuth } from "@/hooks/useStartupAuth";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { authService } from "@/services/authService";
 
 const LoginStartup = () => {
-  const {
-    isLogin,
-    setIsLogin,
-    showPassword,
-    setShowPassword,
-    formData,
-    handleSubmit,
-    handleInputChange
-  } = useStartupAuth();
+  const [isLogin, setIsLogin] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    startup: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+  });
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Basic validation
+    if (!formData.email || !formData.password) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+    
+    if (!isLogin) {
+      if (!formData.name || !formData.startup) {
+        toast.error("Please fill in all required fields");
+        return;
+      }
+      
+      if (formData.password !== formData.confirmPassword) {
+        toast.error("Passwords don't match");
+        return;
+      }
+    }
+    
+    if (isLogin) {
+      // Login
+      const success = await authService.login(formData.email, formData.password);
+      if (success) {
+        navigate("/dashboard/startup");
+      }
+    } else {
+      // Register
+      const success = await authService.register(formData.email, formData.password, {
+        name: formData.name,
+        role: 'startup',
+        organization: formData.startup,
+        department: 'Management'
+      });
+      if (success) {
+        navigate("/dashboard/startup");
+      }
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500 flex items-center justify-center p-6 relative overflow-hidden">

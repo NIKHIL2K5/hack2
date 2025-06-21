@@ -1,6 +1,18 @@
+import { authService } from '@/services/authService';
 
 // Get user info from localStorage
 export const getUserInfo = () => {
+  const currentUser = authService.getCurrentUser();
+  
+  if (currentUser) {
+    return { 
+      role: currentUser.role, 
+      name: currentUser.name || 'User', 
+      email: currentUser.email 
+    };
+  }
+  
+  // Fallback to legacy storage methods
   const studentUser = JSON.parse(localStorage.getItem('studentUser') || '{}');
   const officialUser = JSON.parse(localStorage.getItem('officialUser') || '{}');
   const startupAuth = JSON.parse(localStorage.getItem('startupAuth') || '{}');
@@ -12,5 +24,6 @@ export const getUserInfo = () => {
   } else if (startupAuth.user) {
     return { role: 'startup', name: startupAuth.user.name || 'Startup', email: startupAuth.user.email };
   }
+  
   return { role: 'guest', name: 'User', email: '' };
 };

@@ -11,56 +11,57 @@ import { Scene3D } from "@/components/3d/Scene3D";
 import { JobPostingModal } from "@/components/official/JobPostingModal";
 import { JobManagement } from "@/components/official/JobManagement";
 import { StartupProfile } from "@/components/official/StartupProfile";
-import { isValidOfficialEmail } from "@/services/officialAuth";
 import { dataSyncService } from "@/services/dataSync";
+import { authService } from "@/services/authService";
 
 const DashboardStartup = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
-  const [hasValidAccess, setHasValidAccess] = useState(false);
+  const [hasValidAccess, setHasValidAccess] = useState(true);
   const [userEmail, setUserEmail] = useState("");
+  const [organizationName, setOrganizationName] = useState("");
   const { getApplicationStats, officialUser } = useOfficialData();
   const stats = getApplicationStats();
 
   useEffect(() => {
-    // Check if user has valid org.in email access
-    const storedUser = localStorage.getItem('officialUser');
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      const email = user.email;
-      setUserEmail(email);
-      
-      if (isValidOfficialEmail(email)) {
-        setHasValidAccess(true);
-        
-        // Track dashboard access
-        dataSyncService.trackAction(
-          email,
-          'startup',
-          'dashboard_access',
-          { timestamp: new Date().toISOString() },
-          user.organization?.name
-        );
-      } else {
-        setHasValidAccess(false);
-      }
-    } else {
-      setHasValidAccess(false);
+    // Check if user is logged in
+    const currentUser = authService.getCurrentUser();
+    if (!currentUser) {
+      navigate('/login/startup');
+      return;
     }
-  }, []);
+    
+    if (currentUser.role !== 'startup') {
+      navigate(`/dashboard/${currentUser.role}`);
+      return;
+    }
+    
+    setUserEmail(currentUser.email);
+    setOrganizationName(currentUser.organization || 'Your Organization');
+    
+    // Track dashboard access
+    dataSyncService.trackAction(
+      currentUser.email,
+      'startup',
+      'dashboard_access',
+      { timestamp: new Date().toISOString() },
+      currentUser.organization
+    );
+  }, [navigate]);
 
   // Track tab changes
   const handleTabChange = (tabId: string) => {
     setActiveTab(tabId);
     
-    if (officialUser) {
+    const currentUser = authService.getCurrentUser();
+    if (currentUser) {
       dataSyncService.trackAction(
-        officialUser.email,
+        currentUser.email,
         'startup',
         'tab_change',
         { tab: tabId },
-        officialUser.organization.name
+        currentUser.organization
       );
     }
   };
@@ -69,73 +70,22 @@ const DashboardStartup = () => {
   const handlePostJob = () => {
     setIsJobModalOpen(true);
     
-    if (officialUser) {
+    const currentUser = authService.getCurrentUser();
+    if (currentUser) {
       dataSyncService.trackAction(
-        officialUser.email,
+        currentUser.email,
         'startup',
         'job_posting_modal_opened',
         {},
-        officialUser.organization.name
+        currentUser.organization
       );
     }
   };
 
-  // If user doesn't have valid access, show access denied message
-  if (!hasValidAccess) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-red-900 via-red-700 to-red-500 flex items-center justify-center p-6">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="max-w-md w-full"
-        >
-          <Card className="bg-white/10 backdrop-blur-lg border-red-300/20">
-            <CardHeader className="text-center">
-              <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <AlertTriangle className="w-8 h-8 text-red-300" />
-              </div>
-              <CardTitle className="text-2xl font-bold text-white">Access Restricted</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Alert className="bg-red-500/20 border-red-400/50">
-                <AlertTriangle className="h-4 w-4 text-red-300" />
-                <AlertTitle className="text-red-200">Organization Email Required</AlertTitle>
-                <AlertDescription className="text-red-100">
-                  Only official organization emails ending with "org.in" are allowed to access the startup dashboard.
-                </AlertDescription>
-              </Alert>
-              
-              {userEmail && (
-                <div className="text-center">
-                  <p className="text-white/70 text-sm mb-2">Current email:</p>
-                  <p className="text-white font-mono bg-white/10 rounded px-3 py-2">{userEmail}</p>
-                </div>
-              )}
-              
-              <div className="text-center space-y-4">
-                <p className="text-white/80">
-                  Please contact your organization administrator or use a valid organization email to access this dashboard.
-                </p>
-                
-                <div className="flex flex-col space-y-2">
-                  <Link to="/login/startup">
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                      Login with Organization Email
-                    </Button>
-                  </Link>
-                  <Link to="/">
-                    <Button variant="outline" className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20">
-                      Back to Home
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-    );
-  }
+  const handleLogout = () => {
+    authService.logout();
+    navigate('/');
+  };
 
   const dashboardStats = [
     { title: "Active Jobs", value: "12", icon: Briefcase, color: "text-blue-500" },
@@ -171,7 +121,7 @@ const DashboardStartup = () => {
                 <Building2 className="w-7 h-7 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold">{officialUser?.organization.name || 'Partner Organization'} Dashboard</h1>
+                <h1 className="text-2xl font-bold">{organizationName} Dashboard</h1>
                 <p className="text-white/60">Manage applications and job postings</p>
               </div>
             </motion.div>
@@ -194,13 +144,15 @@ const DashboardStartup = () => {
                 </motion.div>
               </Link>
               
-              <Link to="/">
-                <motion.div whileHover={{ scale: 1.1 }}>
-                  <Button variant="outline" className="bg-red-500/20 border-red-500/50 text-red-200 hover:bg-red-500/30">
-                    <LogOut className="w-4 h-4" />
-                  </Button>
-                </motion.div>
-              </Link>
+              <motion.div whileHover={{ scale: 1.1 }}>
+                <Button 
+                  variant="outline" 
+                  className="bg-red-500/20 border-red-500/50 text-red-200 hover:bg-red-500/30"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="w-4 h-4" />
+                </Button>
+              </motion.div>
             </div>
           </div>
         </div>
@@ -348,8 +300,8 @@ const DashboardStartup = () => {
             animate={{ opacity: 1, y: 0 }}
           >
             <StartupProfile 
-              userEmail={officialUser?.email || ''} 
-              organizationName={officialUser?.organization.name || 'Unknown Organization'} 
+              userEmail={userEmail} 
+              organizationName={organizationName} 
             />
           </motion.div>
         )}
@@ -370,7 +322,7 @@ const DashboardStartup = () => {
                 Post New Job
               </Button>
             </div>
-            <JobManagement organizationName={officialUser?.organization.name || 'Unknown Organization'} />
+            <JobManagement organizationName={organizationName} />
           </motion.div>
         )}
 
@@ -399,7 +351,7 @@ const DashboardStartup = () => {
       <JobPostingModal
         isOpen={isJobModalOpen}
         onClose={() => setIsJobModalOpen(false)}
-        organizationName={officialUser?.organization.name || 'Unknown Organization'}
+        organizationName={organizationName}
       />
     </div>
   );

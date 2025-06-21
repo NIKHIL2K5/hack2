@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { Shield, ArrowLeft, Eye, EyeOff, Lock } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,8 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { toast } from "sonner";
-import { isValidOfficialEmail, getOrganizationByEmail } from "@/services/officialAuth";
-import { useOfficialData } from "@/hooks/useOfficialData";
+import { authService } from "@/services/authService";
 
 const FloatingShape = ({ delay = 0 }) => (
   <motion.div
@@ -39,56 +37,45 @@ const LoginOfficial = () => {
     confirmPassword: ""
   });
   const navigate = useNavigate();
-  const { loginOfficial } = useOfficialData();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate official email
-    if (!isValidOfficialEmail(formData.email)) {
-      toast.error("This email is not authorized for official access. Please contact your administrator.");
+    // Basic validation
+    if (!formData.email || !formData.password) {
+      toast.error("Please fill in all required fields");
       return;
     }
     
-    // Additional validation for registration
     if (!isLogin) {
-      if (!formData.name.trim()) {
-        toast.error("Please enter your full name");
+      if (!formData.name || !formData.department || !formData.employeeId) {
+        toast.error("Please fill in all required fields");
         return;
       }
-      if (!formData.department.trim()) {
-        toast.error("Please enter your department");
-        return;
-      }
-      if (!formData.employeeId.trim()) {
-        toast.error("Please enter your employee ID");
-        return;
-      }
+      
       if (formData.password !== formData.confirmPassword) {
-        toast.error("Passwords do not match");
+        toast.error("Passwords don't match");
         return;
       }
     }
     
-    if (formData.password.length < 8) {
-      toast.error("Password must be at least 8 characters long");
-      return;
-    }
-
-    // Login or register the official
-    const success = loginOfficial(
-      formData.email,
-      formData.name || "Official User",
-      formData.department || "General",
-      formData.employeeId || "EMP001"
-    );
-
-    if (success) {
-      const organization = getOrganizationByEmail(formData.email);
-      toast.success(`Welcome to ${organization?.name}! Access granted.`);
-      setTimeout(() => navigate("/dashboard/official"), 1500);
+    if (isLogin) {
+      // Login
+      const success = await authService.login(formData.email, formData.password);
+      if (success) {
+        navigate("/dashboard/official");
+      }
     } else {
-      toast.error("Authentication failed. Please try again.");
+      // Register
+      const success = await authService.register(formData.email, formData.password, {
+        name: formData.name,
+        role: 'official',
+        department: formData.department,
+        employeeId: formData.employeeId
+      });
+      if (success) {
+        navigate("/dashboard/official");
+      }
     }
   };
 

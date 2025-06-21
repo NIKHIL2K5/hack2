@@ -33,10 +33,24 @@ import { OfficialProfile } from '@/components/official/OfficialProfile';
 import { OfficialMobileNav } from '@/components/official/OfficialMobileNav';
 import { OfficialMobileHeader } from '@/components/official/OfficialMobileHeader';
 import { Link, useNavigate } from 'react-router-dom';
+import { authService } from '@/services/authService';
 
 const DashboardOfficial = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const navigate = useNavigate();
+
+  // Check if user is logged in and has the correct role
+  useEffect(() => {
+    const currentUser = authService.getCurrentUser();
+    if (!currentUser) {
+      navigate('/login/official');
+      return;
+    }
+    
+    if (currentUser.role !== 'official') {
+      navigate(`/dashboard/${currentUser.role}`);
+    }
+  }, [navigate]);
 
   // Initialize with overview tab and scroll to top on tab change
   useEffect(() => {
@@ -72,7 +86,7 @@ const DashboardOfficial = () => {
 
   const handleLogout = () => {
     // Clear any stored user data
-    localStorage.removeItem('officialUser');
+    authService.logout();
     // Navigate to home page
     navigate('/');
   };

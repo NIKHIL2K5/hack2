@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { toast } from "sonner";
+import { authService } from "@/services/authService";
 
 const LoginStudent = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -20,10 +21,38 @@ const LoginStudent = () => {
   });
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success(isLogin ? "Welcome back!" : "Account created successfully!");
-    setTimeout(() => navigate("/dashboard/student"), 1500);
+    
+    // Basic validation
+    if (!formData.email || !formData.password) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+    
+    if (!isLogin && formData.password !== formData.confirmPassword) {
+      toast.error("Passwords don't match");
+      return;
+    }
+    
+    if (isLogin) {
+      // Login
+      const success = await authService.login(formData.email, formData.password);
+      if (success) {
+        navigate("/dashboard/student");
+      }
+    } else {
+      // Register
+      const success = await authService.register(formData.email, formData.password, {
+        name: formData.name,
+        role: 'student',
+        college: formData.college,
+        skills: []
+      });
+      if (success) {
+        navigate("/dashboard/student");
+      }
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
