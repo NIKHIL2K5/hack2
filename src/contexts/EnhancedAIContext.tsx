@@ -33,7 +33,7 @@ export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   // Initialize Hugging Face client
   const huggingFaceClient = new OpenAI({
     baseURL: "https://router.huggingface.co/featherless-ai/v1",
-    apiKey: process.env.HF_TOKEN || "hf_dummy_api_key", // This will be replaced with a real key in production
+    apiKey: import.meta.env.VITE_HF_TOKEN || "hf_dummy_api_key", // This will be replaced with a real key in production
     dangerouslyAllowBrowser: true,
   });
 
