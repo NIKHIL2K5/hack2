@@ -1,18 +1,15 @@
 import React, { createContext, useContext, useState } from 'react';
-import { loadUserData } from '@/utils/userStorage';
 import { dataSyncService } from '@/services/dataSync';
 import { getUserInfo } from './ai/userHelpers';
-import { getComprehensiveKnowledge } from './ai/knowledgeBase';
-import { generateComprehensiveResponse } from './ai/responseGenerator';
-import { OpenAI } from "openai";
 import { supabase } from '@/integrations/supabase/client';
 import { findFAQAnswer } from './ai/faqData';
+import { OpenAI } from 'openai';
 
 interface AIContextType {
-  userRole: string;
-  userName: string;
   askEnhancedAI: (message: string, context?: string, image?: File) => Promise<any>;
   isAIThinking: boolean;
+  userRole: string;
+  userName: string;
 }
 
 const EnhancedAIContext = createContext<AIContextType | undefined>(undefined);
@@ -111,6 +108,8 @@ ${image ? 'Note: The user has shared an image for analysis.' : ''}`;
           aiResponse += "You can track all your job applications through the Application Tracker. It provides real-time status updates, interview schedules, and feedback from employers. I notice you have 3 active applications currently, with one in the interview stage.";
         } else if (image) {
           aiResponse += "I've analyzed the image you shared. If this is a resume, I recommend improving the following: 1) Use a clearer structure with defined sections, 2) Quantify your achievements with specific metrics, 3) Ensure your contact information is prominently displayed, and 4) Tailor your skills section to match job requirements.";
+        } else if (message.toLowerCase().includes("what is") || message.toLowerCase().includes("how to") || message.toLowerCase().includes("where")) {
+          aiResponse += `I'm here to provide comprehensive assistance with ${userInfo.role === 'student' ? 'job searches, career planning, skill development, and interview preparation' : userInfo.role === 'startup' ? 'funding opportunities, government schemes, hiring strategies, and business growth' : userInfo.role === 'official' ? 'scheme management, policy implementation, and ecosystem monitoring' : 'navigating the platform and maximizing your opportunities'}. Could you please provide more specific details about what you're looking for?`;
         } else {
           aiResponse += `I'm here to provide comprehensive assistance with ${userInfo.role === 'student' ? 'job searches, career planning, skill development, and interview preparation' : userInfo.role === 'startup' ? 'funding opportunities, government schemes, hiring strategies, and business growth' : userInfo.role === 'official' ? 'scheme management, policy implementation, and ecosystem monitoring' : 'navigating the platform and maximizing your opportunities'}. How can I help you today?`;
         }
@@ -161,8 +160,6 @@ ${image ? 'Note: The user has shared an image for analysis.' : ''}`;
       setIsAIThinking(false);
     }
   };
-
-  const aiMemory = dataSyncService.getUserAIMemory(userInfo.email);
 
   return (
     <EnhancedAIContext.Provider

@@ -3,6 +3,20 @@ export const FAQ_DATA = {
   // General Platform Questions
   'what is govstartup navigator': "GovStartup Navigator is Telangana's unified platform connecting startups, students, and government officials. It streamlines job searching, scheme discovery, compliance tracking, and ecosystem growth through AI-powered tools and analytics.",
   
+  'hi': "Hello! I'm Sethu, your AI assistant powered by DeepSeek-R1-0528. How can I help you today?",
+  
+  'hello': "Hi there! I'm Sethu, your AI assistant powered by DeepSeek-R1-0528. I'm here to help with any questions about the platform, government schemes, or career guidance. What can I assist you with?",
+  
+  'hey': "Hey! I'm Sethu, your AI assistant powered by DeepSeek-R1-0528. How can I assist you today?",
+  
+  'what is your role': "I'm Sethu, an AI assistant powered by DeepSeek-R1-0528. My role is to provide comprehensive assistance with platform navigation, government scheme discovery, job searching, application tracking, and career guidance. I can answer questions, provide recommendations, and help you make the most of the GovStartup Navigator platform.",
+  
+  'what can you do': "As Sethu, powered by DeepSeek-R1-0528, I can help you with: finding relevant job opportunities, discovering government schemes, tracking application status, providing career guidance, answering platform-related questions, and offering personalized recommendations based on your profile and activities.",
+  
+  'what is this website about': "This is GovStartup Navigator, Telangana's unified platform for connecting startups, students, and government officials. It helps startups with funding and compliance, assists students in finding opportunities, and enables officials to manage schemes and monitor ecosystem growth. The platform features AI-powered tools, real-time analytics, and comprehensive dashboards tailored to each user role.",
+  
+  'what is happening in the app': "In the GovStartup Navigator platform, users can access role-specific dashboards for startups, students, or government officials. Startups can post jobs and track compliance, students can find and apply for opportunities, and officials can manage schemes and monitor the ecosystem. The platform features real-time data synchronization, AI-powered recommendations, and comprehensive analytics.",
+  
   'find internships': "To find internships: 1) Go to the Job Board section, 2) Use filters for 'Internship' type positions, 3) Browse listings matching your skills, 4) Click on any listing to view details, and 5) Use the 'Apply Now' button to submit your application.",
   
   'apply for job': "To apply for a job: 1) Find a suitable position on the Job Board, 2) Click 'Apply Now', 3) Fill out the application form with your details, 4) Upload your resume, 5) Write a compelling cover letter, and 6) Submit your application. You'll receive a confirmation email.",
@@ -97,7 +111,7 @@ export const FAQ_DATA = {
   
   'difference intern full time': "The key differences between internships and full-time positions are: 1) Duration - internships typically last 3-6 months while full-time positions are ongoing, 2) Purpose - internships focus on learning and skill development while full-time roles expect productivity and results, 3) Compensation - internships usually offer stipends while full-time positions provide salaries and benefits, 4) Responsibilities - interns have limited responsibilities while full-time employees have comprehensive duties.",
   
-  'chatgpt powered assistant': "The ChatGPT-powered assistant (Sethu) is an AI tool that provides personalized guidance across the platform. It uses advanced natural language processing to understand your queries, offer tailored advice, answer questions, and help navigate features. It's continuously learning from interactions to improve its responses and can assist with everything from job searches to compliance requirements to scheme applications.",
+  'chatgpt powered assistant': "The AI-powered assistant (Sethu) is an AI tool that provides personalized guidance across the platform. It uses advanced natural language processing to understand your queries, offer tailored advice, answer questions, and help navigate features. It's continuously learning from interactions to improve its responses and can assist with everything from job searches to compliance requirements to scheme applications.",
   
   'reset password': "To reset your password: 1) Go to the login page, 2) Click 'Forgot Password' below the login form, 3) Enter your registered email address, 4) Check your email for a password reset link, 5) Click the link and create a new password (must be at least 8 characters with a mix of letters, numbers, and symbols), 6) Log in with your new password. For security, reset links expire after 24 hours."
 };
@@ -142,5 +156,23 @@ export const findFAQAnswer = (question: string): string | null => {
     return scores[0].answer;
   }
   
+  // For basic greetings and common questions that might not match keywords well
+  if (normalizedQuestion === 'hi' || normalizedQuestion === 'hello' || normalizedQuestion === 'hey') {
+    return FAQ_DATA['hello'];
+  }
+  
+  if (normalizedQuestion.includes('who are you') || normalizedQuestion.includes('what are you')) {
+    return FAQ_DATA['what is your role'];
+  }
+  
+  if (normalizedQuestion.includes('what can you do') || normalizedQuestion.includes('how can you help')) {
+    return FAQ_DATA['what can you do'];
+  }
+  
+  if (normalizedQuestion.includes('what is this') || normalizedQuestion.includes('about this website')) {
+    return FAQ_DATA['what is this website about'];
+  }
+  
+  // For questions we don't understand
   return null;
 };
