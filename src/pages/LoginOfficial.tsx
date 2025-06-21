@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import { Shield, ArrowLeft, Eye, EyeOff, Lock } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,7 +10,6 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { isValidOfficialEmail, getOrganizationByEmail } from "@/services/officialAuth";
 import { useOfficialData } from "@/hooks/useOfficialData";
-import { getDashboardPathByRole } from "@/utils/navigation";
 
 const FloatingShape = ({ delay = 0 }) => (
   <motion.div
@@ -85,27 +85,8 @@ const LoginOfficial = () => {
 
     if (success) {
       const organization = getOrganizationByEmail(formData.email);
-      
-      // Store user role
-      localStorage.setItem('userRole', 'official');
-      
-      // Store user data
-      const userData = {
-        email: formData.email,
-        name: formData.name || "Official User",
-        role: 'official',
-        department: formData.department || "General",
-        organization: organization?.name
-      };
-      
-      localStorage.setItem('userData', JSON.stringify(userData));
-      
       toast.success(`Welcome to ${organization?.name}! Access granted.`);
-      
-      // Get the correct dashboard path
-      const dashboardPath = getDashboardPathByRole('official');
-      
-      setTimeout(() => navigate(dashboardPath), 1500);
+      setTimeout(() => navigate("/dashboard/official"), 1500);
     } else {
       toast.error("Authentication failed. Please try again.");
     }

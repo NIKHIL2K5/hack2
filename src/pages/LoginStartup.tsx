@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { FloatingParticles } from "@/components/startup/FloatingParticles";
 import { StartupLoginHeader } from "@/components/startup/StartupLoginHeader";

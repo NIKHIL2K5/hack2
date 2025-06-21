@@ -1,16 +1,12 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Building2, GraduationCap, Shield, Sparkles, ChevronDown, Mail, Phone, MapPin, Clock, Users, Target, Award, Globe } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { getDashboardPathByRole } from "@/utils/navigation";
 
 const Index = () => {
-  const navigate = useNavigate();
-  
   const roles = [
     {
-      id: 'startup',
       title: "Startup Founder",
       description: "Discover schemes, post internships, track compliance with AI assistance",
       icon: Building2,
@@ -21,7 +17,6 @@ const Index = () => {
       features: ["DPIIT Recognition", "Scheme Discovery AI", "Compliance Tracker", "Talent Acquisition"]
     },
     {
-      id: 'student',
       title: "Student / Freelancer", 
       description: "Browse opportunities, apply for internships, get AI-powered job recommendations",
       icon: GraduationCap,
@@ -32,7 +27,6 @@ const Index = () => {
       features: ["Smart Job Matching", "Application Tracking", "Skill Development", "Resume Builder"]
     },
     {
-      id: 'official',
       title: "Government Official",
       description: "Manage schemes, monitor compliance, view district-level analytics",
       icon: Shield,
@@ -41,50 +35,11 @@ const Index = () => {
       bgGradient: "from-purple-50 to-purple-100",
       textColor: "text-purple-700",
       features: ["Scheme Management", "Compliance Monitoring", "Analytics Dashboard", "Policy Insights"]
-    },
-    {
-      id: 'freelancer',
-      title: "Freelancer/Agency",
-      description: "Manage your freelance projects and clients",
-      icon: Building2,
-      path: "/login/freelancer",
-      color: "#F59E0B",
-      bgGradient: "from-amber-50 to-amber-100",
-      textColor: "text-amber-700",
-      features: ["Project Management", "Client Communication", "Invoice Tracking", "Portfolio Builder"]
-    },
-    {
-      id: 'client',
-      title: "Client (YouTuber, NGO, etc.)",
-      description: "Manage your projects and collaborate with teams",
-      icon: Building2,
-      path: "/login/client",
-      color: "#EC4899",
-      bgGradient: "from-pink-50 to-pink-100",
-      textColor: "text-pink-700",
-      features: ["Project Tracking", "Team Collaboration", "Resource Management", "Budget Control"]
     }
   ];
 
   const scrollToRoles = () => {
     document.getElementById('role-selection')?.scrollIntoView({ behavior: 'smooth' });
-  };
-  
-  const handleGetStarted = (role: string) => {
-    // Check if user is already logged in
-    const userData = localStorage.getItem('userData');
-    if (userData) {
-      const user = JSON.parse(userData);
-      if (user.role) {
-        // Navigate to the appropriate dashboard
-        const dashboardPath = getDashboardPathByRole(user.role);
-        navigate(dashboardPath);
-        return;
-      }
-    }
-    
-    // If not logged in, go to login page
-    navigate(`/login/${role}`);
   };
 
   return (
@@ -190,7 +145,7 @@ const Index = () => {
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {roles.slice(0, 3).map((role, index) => (
+            {roles.map((role, index) => (
               <motion.div
                 key={role.title}
                 initial={{ opacity: 0, y: 50 }}
@@ -223,66 +178,17 @@ const Index = () => {
                       ))}
                     </div>
                     
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Button 
-                        className="w-full text-white border-0 py-3 text-base font-semibold rounded-xl shadow-md hover:shadow-lg transition-all"
-                        style={{ backgroundColor: role.color }}
-                        onClick={() => handleGetStarted(role.id)}
-                      >
-                        Get Started
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    </motion.div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto mt-8">
-            {roles.slice(3).map((role, index) => (
-              <motion.div
-                key={role.title}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: (index + 3) * 0.2 }}
-                whileHover={{ y: -10, scale: 1.02 }}
-                className="group"
-              >
-                <Card className={`h-full bg-gradient-to-br ${role.bgGradient} border-0 shadow-lg hover:shadow-2xl transition-all duration-500`}>
-                  <CardContent className="p-8">
-                    <motion.div 
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      transition={{ duration: 0.3 }}
-                      className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg"
-                      style={{ backgroundColor: role.color }}
-                    >
-                      <role.icon className="w-8 h-8 text-white" />
-                    </motion.div>
-                    
-                    <h3 className={`text-2xl font-bold mb-4 ${role.textColor}`}>{role.title}</h3>
-                    <p className="text-gray-600 mb-6 leading-relaxed">{role.description}</p>
-                    
-                    <div className="space-y-2 mb-8">
-                      {role.features.map((feature, idx) => (
-                        <div key={idx} className="flex items-center text-sm text-gray-600">
-                          <div className="w-1.5 h-1.5 rounded-full mr-3" style={{ backgroundColor: role.color }}></div>
-                          {feature}
-                        </div>
-                      ))}
-                    </div>
-                    
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Button 
-                        className="w-full text-white border-0 py-3 text-base font-semibold rounded-xl shadow-md hover:shadow-lg transition-all"
-                        style={{ backgroundColor: role.color }}
-                        onClick={() => handleGetStarted(role.id)}
-                      >
-                        Get Started
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    </motion.div>
+                    <Link to={role.path}>
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <Button 
+                          className="w-full text-white border-0 py-3 text-base font-semibold rounded-xl shadow-md hover:shadow-lg transition-all"
+                          style={{ backgroundColor: role.color }}
+                        >
+                          Get Started
+                          <ArrowRight className="w-4 h-4 ml-2" />
+                        </Button>
+                      </motion.div>
+                    </Link>
                   </CardContent>
                 </Card>
               </motion.div>

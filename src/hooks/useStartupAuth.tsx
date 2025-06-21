@@ -1,8 +1,8 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { isValidOfficialEmail, getOrganizationByEmail } from "@/services/officialAuth";
-import { getDashboardPathByRole } from "@/utils/navigation";
 
 interface FormData {
   name: string;
@@ -63,28 +63,11 @@ export const useStartupAuth = () => {
 
     // Store in localStorage
     localStorage.setItem('officialUser', JSON.stringify(officialUser));
-    
-    // Store user role
-    localStorage.setItem('userRole', 'startup');
-    
-    // Store user data
-    const userData = {
-      email: formData.email,
-      name: formData.name || `${organization.name} User`,
-      role: 'startup',
-      organization: organization.name
-    };
-    
-    localStorage.setItem('userData', JSON.stringify(userData));
 
     // Simulate authentication
     toast.success(isLogin ? "Welcome back!" : "Account created successfully!");
-    
-    // Get the correct dashboard path
-    const dashboardPath = getDashboardPathByRole('startup');
-    
     setTimeout(() => {
-      navigate(dashboardPath);
+      navigate("/dashboard/startup");
     }, 1500);
   };
 
