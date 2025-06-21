@@ -1,76 +1,70 @@
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 const LoadingScreen = () => {
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    // Hide loading screen after 2.5 seconds
+    const timer = setTimeout(() => {
+      setIsVisible(false);
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!isVisible) return null;
+
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-gradient-to-br from-blue-900 via-blue-600 to-teal-500 flex items-center justify-center z-50"
+      transition={{ duration: 0.5 }}
+      className="fixed inset-0 bg-black z-50 flex items-center justify-center"
     >
-      <div className="text-center">
-        <div className="w-64 h-64 mb-8 relative">
-          {/* Animated loading indicator */}
-          <motion.div
-            className="absolute inset-0 rounded-full bg-blue-400/30"
-            animate={{ 
-              scale: [1, 1.2, 1],
-              opacity: [0.3, 0.5, 0.3],
-            }}
-            transition={{ 
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
-          <motion.div
-            className="absolute inset-4 rounded-full bg-blue-500/40"
-            animate={{ 
-              scale: [1, 1.15, 1],
-              opacity: [0.4, 0.6, 0.4],
-            }}
-            transition={{ 
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 0.2
-            }}
-          />
-          <motion.div
-            className="absolute inset-8 rounded-full bg-blue-600/50"
-            animate={{ 
-              scale: [1, 1.1, 1],
-              opacity: [0.5, 0.7, 0.5],
-            }}
-            transition={{ 
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 0.4
-            }}
-          />
-        </div>
-        <motion.h2
-          animate={{ 
-            scale: [1, 1.1, 1],
-            opacity: [0.7, 1, 0.7],
-          }}
+      <div className="flex flex-col items-center">
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
           transition={{ 
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut"
+            duration: 0.8,
+            ease: [0.43, 0.13, 0.23, 0.96]
           }}
-          className="text-4xl font-bold text-white mb-4"
+          className="w-32 h-32 mb-8 relative"
+        >
+          <img 
+            src="/lovable-uploads/dc27c7bf-1e1d-4fb1-a5c7-01b85351db67.png" 
+            alt="GovStartup Navigator Logo"
+            className="w-full h-full object-contain"
+          />
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-blue-500 to-teal-500 mix-blend-overlay rounded-lg"
+            animate={{ 
+              opacity: [0, 0.5, 0]
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              repeatType: "loop"
+            }}
+          />
+        </motion.div>
+        
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
+          className="text-3xl font-bold text-white mb-4"
         >
           GovStartup Navigator
-        </motion.h2>
-        <motion.p
-          animate={{ opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="text-white/80 text-lg"
-        >
-          Initializing Telangana's Innovation Hub...
-        </motion.p>
+        </motion.h1>
+        
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: "100%" }}
+          transition={{ duration: 2, ease: "easeInOut" }}
+          className="h-1 bg-gradient-to-r from-blue-500 to-teal-500 rounded-full w-48"
+        />
       </div>
     </motion.div>
   );

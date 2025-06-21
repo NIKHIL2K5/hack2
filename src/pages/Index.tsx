@@ -3,7 +3,7 @@ import { ArrowRight, Building2, GraduationCap, Shield, Sparkles, ChevronDown, Ma
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { authService } from "@/services/authService";
 import { useResponsive } from "@/hooks/useResponsive";
 import { ResponsiveGrid } from "@/components/ui/responsive-grid";

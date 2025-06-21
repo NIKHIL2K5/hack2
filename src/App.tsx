@@ -4,6 +4,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { UniversalAIChat } from "@/components/ai/UniversalAIChat";
+import { useState, useEffect } from "react";
+import LoadingScreen from "./components/LoadingScreen";
 import Index from "./pages/Index";
 import LoginStudent from "./pages/LoginStudent";
 import LoginStartup from "./pages/LoginStartup";
@@ -24,7 +26,6 @@ import JobBoard from "./pages/JobBoard";
 import Analytics from "./pages/Analytics";
 import FeedbackSentiment from "./pages/FeedbackSentiment";
 import NotFound from "./pages/NotFound";
-import { useEffect } from "react";
 import { authService } from "./services/authService";
 
 const queryClient = new QueryClient();
@@ -47,6 +48,8 @@ const ProtectedRoute = ({ children, role }: { children: JSX.Element, role: strin
 };
 
 const App = () => {
+  const [loading, setLoading] = useState(true);
+  
   // Check if user is already logged in and redirect to appropriate dashboard
   useEffect(() => {
     const currentUser = authService.getCurrentUser();
@@ -57,6 +60,13 @@ const App = () => {
         window.location.href = dashboardPath;
       }
     }
+    
+    // Simulate loading time for Netflix effect
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -64,6 +74,7 @@ const App = () => {
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        {loading && <LoadingScreen />}
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
