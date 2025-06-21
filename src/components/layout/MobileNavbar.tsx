@@ -16,6 +16,7 @@ export const MobileNavbar: React.FC = () => {
         { path: '/dashboard/student', label: 'Home', icon: Home },
         { path: '/jobs', label: 'Jobs', icon: Briefcase },
         { path: '/my-applications', label: 'Applications', icon: FileText },
+        { path: '/chatbot', label: 'AI Chat', icon: MessageSquare },
         { path: '/profile-settings', label: 'Profile', icon: User },
       ];
     }
@@ -25,6 +26,7 @@ export const MobileNavbar: React.FC = () => {
         { path: '/dashboard/startup', label: 'Home', icon: Home },
         { path: '/applications', label: 'Applications', icon: FileText },
         { path: '/compliance', label: 'Compliance', icon: Briefcase },
+        { path: '/chatbot', label: 'AI Chat', icon: MessageSquare },
         { path: '/profile-settings', label: 'Profile', icon: User },
       ];
     }
@@ -34,6 +36,7 @@ export const MobileNavbar: React.FC = () => {
         { path: '/dashboard/official', label: 'Home', icon: Home },
         { path: '/scheme-manager', label: 'Schemes', icon: FileText },
         { path: '/analytics', label: 'Analytics', icon: Briefcase },
+        { path: '/chatbot', label: 'AI Chat', icon: MessageSquare },
         { path: '/profile-settings', label: 'Profile', icon: User },
       ];
     }
@@ -73,7 +76,7 @@ export const MobileNavbar: React.FC = () => {
               {isActive && (
                 <motion.div
                   layoutId="activeTab"
-                  className="absolute bottom-0 w-1/4 h-0.5 bg-primary-600"
+                  className="absolute bottom-0 w-1/5 h-0.5 bg-primary-600"
                   transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 />
               )}
