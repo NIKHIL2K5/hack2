@@ -46,19 +46,6 @@ class AuthService {
         localStorage.setItem('studentUser', JSON.stringify(newUser));
       } else if (userData.role === 'startup') {
         localStorage.setItem('startupAuth', JSON.stringify({ user: newUser }));
-        localStorage.setItem('officialUser', JSON.stringify({
-          email: newUser.email,
-          name: newUser.name,
-          organization: {
-            id: 'custom-org',
-            name: newUser.organization || 'Custom Organization',
-            type: 'corporate',
-            allowedEmails: [newUser.email]
-          },
-          department: newUser.department || 'General',
-          employeeId: newUser.employeeId || 'EMP001',
-          registeredAt: new Date().toISOString()
-        }));
       } else if (userData.role === 'official') {
         localStorage.setItem('officialUser', JSON.stringify({
           email: newUser.email,
@@ -114,19 +101,6 @@ class AuthService {
         localStorage.setItem('studentUser', JSON.stringify(user));
       } else if (user.role === 'startup') {
         localStorage.setItem('startupAuth', JSON.stringify({ user }));
-        localStorage.setItem('officialUser', JSON.stringify({
-          email: user.email,
-          name: user.name,
-          organization: {
-            id: 'custom-org',
-            name: user.organization || 'Custom Organization',
-            type: 'corporate',
-            allowedEmails: [user.email]
-          },
-          department: user.department || 'General',
-          employeeId: user.employeeId || 'EMP001',
-          registeredAt: new Date().toISOString()
-        }));
       } else if (user.role === 'official') {
         localStorage.setItem('officialUser', JSON.stringify({
           email: user.email,
