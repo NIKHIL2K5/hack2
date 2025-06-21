@@ -26,6 +26,7 @@ import FeedbackSentiment from "./pages/FeedbackSentiment";
 import NotFound from "./pages/NotFound";
 import { useEffect } from "react";
 import { authService } from "./services/authService";
+import { MobileNavbar } from "./components/layout/MobileNavbar";
 
 const queryClient = new QueryClient();
 

@@ -4,6 +4,7 @@ import { ChatHeader } from './ChatHeader';
 import { ChatMessages } from './ChatMessages';
 import { ChatInput } from './ChatInput';
 import { ImagePreview } from './ImagePreview';
+import { useResponsive } from '@/hooks/useResponsive';
 
 interface Message {
   id: number;
@@ -38,12 +39,14 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
   onImageUpload,
   onRemoveSelectedImage
 }) => {
+  const { isMobile, isTablet } = useResponsive();
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.9, y: 20 }}
-      className="fixed bottom-24 right-6 w-96 h-[500px] bg-white rounded-lg shadow-2xl border border-gray-200 z-40 flex flex-col"
+      className={`fixed ${isMobile ? 'inset-0 z-50' : 'bottom-24 right-6 w-96 h-[500px] z-40'} bg-white rounded-lg shadow-2xl border border-gray-200 flex flex-col`}
     >
       <ChatHeader />
       

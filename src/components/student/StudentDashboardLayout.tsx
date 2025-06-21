@@ -9,6 +9,8 @@ import { JobsSection } from "@/components/student/JobsSection";
 import { QuickActions } from "@/components/student/QuickActions";
 import { SavedJobsWidget } from "@/components/student/SavedJobsWidget";
 import { useNavigate } from "react-router-dom";
+import { useResponsive } from "@/hooks/useResponsive";
+import { PageContainer } from "@/components/layout/PageContainer";
 
 interface StudentDashboardLayoutProps {
   // State props
@@ -67,6 +69,7 @@ export const StudentDashboardLayout = (props: StudentDashboardLayoutProps) => {
   } = props;
 
   const navigate = useNavigate();
+  const { isMobile, isTablet } = useResponsive();
 
   const handleNavigation = (path: string) => {
     if (onNavigate) {
@@ -83,7 +86,7 @@ export const StudentDashboardLayout = (props: StudentDashboardLayoutProps) => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-neutral-100 to-neutral-200">
+    <PageContainer className="bg-gradient-to-br from-neutral-50 via-neutral-100 to-neutral-200">
       <StudentHeader 
         profileName={profile.name}
         showProfile={showProfile}
@@ -100,8 +103,8 @@ export const StudentDashboardLayout = (props: StudentDashboardLayoutProps) => {
         }
       />
 
-      <main className="container mx-auto px-6 py-8">
-        <StudentStats stats={stats} />
+      <div className="mt-6 space-y-6">
+        <StudentStats stats={isMobile ? stats.slice(0, 2) : stats} />
         
         <JobSearchFilters
           searchTerm={searchTerm}
@@ -113,12 +116,12 @@ export const StudentDashboardLayout = (props: StudentDashboardLayoutProps) => {
         />
 
         <JobsSection 
-          filteredJobs={filteredJobs}
+          filteredJobs={filteredJobs.slice(0, isMobile ? 3 : isTablet ? 4 : 6)}
           onApply={handleApplyJob}
         />
 
         <QuickActions onNavigate={handleNavigation} />
-      </main>
+      </div>
 
       <SavedJobsWidget />
 
@@ -131,6 +134,6 @@ export const StudentDashboardLayout = (props: StudentDashboardLayoutProps) => {
           onSubmit={handleSubmitJobApplication}
         />
       </Dialog>
-    </div>
+    </PageContainer>
   );
 };

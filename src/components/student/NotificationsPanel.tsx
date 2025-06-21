@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { notificationService, Notification } from '@/services/notificationService';
+import { useResponsive } from '@/hooks/useResponsive';
 
 interface NotificationsPanelProps {
   appliedJobs: any[];
@@ -15,6 +16,7 @@ export const NotificationsPanel = ({ appliedJobs, profile }: NotificationsPanelP
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const { isMobile } = useResponsive();
 
   // Load notifications on mount and when applied jobs change
   useEffect(() => {
@@ -96,7 +98,7 @@ export const NotificationsPanel = ({ appliedJobs, profile }: NotificationsPanelP
             initial={{ opacity: 0, scale: 0.95, y: -10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -10 }}
-            className="absolute right-0 top-12 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-[500px] overflow-hidden"
+            className={`absolute right-0 top-12 ${isMobile ? 'w-[calc(100vw-2rem)]' : 'w-80'} bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-[500px] overflow-hidden`}
           >
             <div className="p-4 border-b border-gray-200">
               <div className="flex items-center justify-between">
@@ -151,7 +153,12 @@ export const NotificationsPanel = ({ appliedJobs, profile }: NotificationsPanelP
                                 <p className="font-medium text-sm text-gray-900">{notification.title}</p>
                                 <p className="text-sm text-gray-600 mt-1">{notification.message}</p>
                                 <p className="text-xs text-gray-400 mt-1">
-                                  {new Date(notification.createdAt).toLocaleString()}
+                                  {new Date(notification.createdAt).toLocaleString(undefined, {
+                                    month: 'short',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  })}
                                 </p>
                               </div>
                             </div>

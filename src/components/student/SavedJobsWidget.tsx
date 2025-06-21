@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bookmark, Eye, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { useResponsive } from '@/hooks/useResponsive';
 
 interface SavedJob {
   id: number;
@@ -19,6 +19,7 @@ interface SavedJob {
 export const SavedJobsWidget = () => {
   const [savedJobs, setSavedJobs] = useState<SavedJob[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
+  const { isMobile } = useResponsive();
 
   useEffect(() => {
     const saved = localStorage.getItem('savedJobs');
@@ -39,7 +40,7 @@ export const SavedJobsWidget = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="fixed bottom-20 right-6 z-40"
+      className={`fixed ${isMobile ? 'bottom-16' : 'bottom-6'} right-4 sm:right-6 z-40`}
     >
       <AnimatePresence>
         {isExpanded && (
@@ -47,7 +48,7 @@ export const SavedJobsWidget = () => {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="mb-4 w-80 max-h-64 overflow-y-auto"
+            className="mb-4 w-64 sm:w-80 max-h-64 overflow-y-auto"
           >
             <Card className="bg-white shadow-xl border border-gray-200">
               <div className="p-3 border-b border-gray-200">
@@ -76,7 +77,7 @@ export const SavedJobsWidget = () => {
                         <div className="flex items-start justify-between">
                           <div className="flex-1 min-w-0">
                             <p className="font-medium text-sm text-gray-900 truncate">{job.title}</p>
-                            <p className="text-sm text-gray-600">{job.company}</p>
+                            <p className="text-sm text-gray-600 truncate">{job.company}</p>
                             <div className="flex items-center space-x-2 mt-1">
                               <Badge variant="outline" className="text-xs">{job.type}</Badge>
                               <span className="text-xs text-gray-500">{job.stipend}</span>
@@ -103,10 +104,10 @@ export const SavedJobsWidget = () => {
 
       <Button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-14 h-14 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 shadow-lg"
+        className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 shadow-lg"
       >
         <div className="relative">
-          <Bookmark className="w-6 h-6" />
+          <Bookmark className="w-5 h-5" />
           {savedJobs.length > 0 && (
             <Badge className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 min-w-[18px] h-[18px] flex items-center justify-center">
               {savedJobs.length}

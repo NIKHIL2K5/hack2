@@ -1,9 +1,9 @@
-
 import { User, Briefcase, FileText, Upload, Globe, Github, Linkedin, Building2 } from "lucide-react";
 import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { useResponsive } from "@/hooks/useResponsive";
 
 interface Job {
   id: number;
@@ -52,12 +52,14 @@ export const JobApplicationModal = ({
   onFileUpload,
   onSubmit
 }: JobApplicationModalProps) => {
+  const { isMobile } = useResponsive();
+  
   if (!selectedJob) return null;
 
   return (
-    <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white text-gray-900">
+    <DialogContent className={`${isMobile ? 'w-full h-full max-w-full max-h-full p-4 m-0 rounded-none' : 'max-w-4xl max-h-[90vh]'} overflow-y-auto bg-white text-gray-900`}>
       <DialogHeader className="border-b pb-4">
-        <DialogTitle className="text-2xl font-bold text-center text-primary-700">
+        <DialogTitle className="text-xl sm:text-2xl font-bold text-center text-primary-700">
           Apply for {selectedJob.title}
         </DialogTitle>
         <div className="text-center text-neutral-600 mt-2">
@@ -68,16 +70,16 @@ export const JobApplicationModal = ({
         </div>
       </DialogHeader>
       
-      <form onSubmit={onSubmit} className="space-y-6 py-4">
+      <form onSubmit={onSubmit} className="space-y-4 sm:space-y-6 py-4">
         {/* Personal Information Section */}
-        <div className="bg-gray-50 p-6 rounded-lg">
-          <h3 className="text-lg font-semibold mb-4 flex items-center">
-            <User className="w-5 h-5 mr-2 text-blue-600" />
+        <div className="bg-gray-50 p-4 sm:p-6 rounded-lg">
+          <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 flex items-center">
+            <User className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-blue-600" />
             Personal Information
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Full Name *</label>
+              <label className="block text-sm font-medium mb-1 sm:mb-2">Full Name *</label>
               <Input
                 value={applicationData.fullName}
                 onChange={(e) => onInputChange('fullName', e.target.value)}
@@ -87,7 +89,7 @@ export const JobApplicationModal = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Email Address *</label>
+              <label className="block text-sm font-medium mb-1 sm:mb-2">Email Address *</label>
               <Input
                 type="email"
                 value={applicationData.email}
@@ -98,7 +100,7 @@ export const JobApplicationModal = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Phone Number *</label>
+              <label className="block text-sm font-medium mb-1 sm:mb-2">Phone Number *</label>
               <Input
                 type="tel"
                 value={applicationData.phone}
@@ -109,7 +111,7 @@ export const JobApplicationModal = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Current Location</label>
+              <label className="block text-sm font-medium mb-1 sm:mb-2">Current Location</label>
               <Input
                 value={applicationData.location}
                 onChange={(e) => onInputChange('location', e.target.value)}
@@ -121,32 +123,32 @@ export const JobApplicationModal = ({
         </div>
 
         {/* Professional Information Section */}
-        <div className="bg-blue-50 p-6 rounded-lg">
-          <h3 className="text-lg font-semibold mb-4 flex items-center">
-            <Briefcase className="w-5 h-5 mr-2 text-blue-600" />
+        <div className="bg-blue-50 p-4 sm:p-6 rounded-lg">
+          <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 flex items-center">
+            <Briefcase className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-blue-600" />
             Professional Information
           </h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Education Background</label>
+              <label className="block text-sm font-medium mb-1 sm:mb-2">Education Background</label>
               <Textarea
                 value={applicationData.education}
                 onChange={(e) => onInputChange('education', e.target.value)}
                 placeholder="e.g., B.Tech Computer Science, JNTUH (2020-2024)"
-                className="border-gray-300 h-20"
+                className="border-gray-300 h-16 sm:h-20"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Experience</label>
+              <label className="block text-sm font-medium mb-1 sm:mb-2">Experience</label>
               <Textarea
                 value={applicationData.experience}
                 onChange={(e) => onInputChange('experience', e.target.value)}
                 placeholder="Describe your relevant work experience, internships, projects..."
-                className="border-gray-300 h-24"
+                className="border-gray-300 h-20 sm:h-24"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Skills (comma separated)</label>
+              <label className="block text-sm font-medium mb-1 sm:mb-2">Skills (comma separated)</label>
               <Input
                 value={applicationData.skills}
                 onChange={(e) => onInputChange('skills', e.target.value)}
@@ -158,26 +160,26 @@ export const JobApplicationModal = ({
         </div>
 
         {/* Application Details Section */}
-        <div className="bg-green-50 p-6 rounded-lg">
-          <h3 className="text-lg font-semibold mb-4 flex items-center">
-            <FileText className="w-5 h-5 mr-2 text-green-600" />
+        <div className="bg-green-50 p-4 sm:p-6 rounded-lg">
+          <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 flex items-center">
+            <FileText className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-green-600" />
             Application Details
           </h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Cover Letter *</label>
+              <label className="block text-sm font-medium mb-1 sm:mb-2">Cover Letter *</label>
               <Textarea
                 value={applicationData.coverLetter}
                 onChange={(e) => onInputChange('coverLetter', e.target.value)}
                 placeholder="Write a compelling cover letter explaining why you're perfect for this role..."
-                className="border-gray-300 h-32"
+                className="border-gray-300 h-24 sm:h-32"
                 required
               />
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-2">Expected Salary/Stipend</label>
+                <label className="block text-sm font-medium mb-1 sm:mb-2">Expected Salary/Stipend</label>
                 <Input
                   value={applicationData.expectedSalary}
                   onChange={(e) => onInputChange('expectedSalary', e.target.value)}
@@ -186,7 +188,7 @@ export const JobApplicationModal = ({
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Available From</label>
+                <label className="block text-sm font-medium mb-1 sm:mb-2">Available From</label>
                 <Input
                   type="date"
                   value={applicationData.availableFrom}
@@ -197,7 +199,7 @@ export const JobApplicationModal = ({
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Work Mode Preference</label>
+              <label className="block text-sm font-medium mb-1 sm:mb-2">Work Mode Preference</label>
               <select
                 value={applicationData.workMode}
                 onChange={(e) => onInputChange('workMode', e.target.value)}
@@ -212,15 +214,15 @@ export const JobApplicationModal = ({
         </div>
 
         {/* Portfolio & Resume Section */}
-        <div className="bg-purple-50 p-6 rounded-lg">
-          <h3 className="text-lg font-semibold mb-4 flex items-center">
-            <Upload className="w-5 h-5 mr-2 text-purple-600" />
+        <div className="bg-purple-50 p-4 sm:p-6 rounded-lg">
+          <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 flex items-center">
+            <Upload className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-purple-600" />
             Portfolio & Resume
           </h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Resume/CV *</label>
-              <div className="flex items-center space-x-4">
+              <label className="block text-sm font-medium mb-1 sm:mb-2">Resume/CV *</label>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0">
                 <input
                   type="file"
                   accept=".pdf,.doc,.docx"
@@ -230,7 +232,7 @@ export const JobApplicationModal = ({
                 />
                 <label
                   htmlFor="resume-upload"
-                  className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer transition-colors"
+                  className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer transition-colors w-full sm:w-auto justify-center"
                 >
                   <Upload className="w-4 h-4 mr-2" />
                   Upload Resume
@@ -246,7 +248,7 @@ export const JobApplicationModal = ({
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-2">Portfolio URL</label>
+                <label className="block text-sm font-medium mb-1 sm:mb-2">Portfolio URL</label>
                 <div className="relative">
                   <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <Input
@@ -258,7 +260,7 @@ export const JobApplicationModal = ({
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">GitHub Profile</label>
+                <label className="block text-sm font-medium mb-1 sm:mb-2">GitHub Profile</label>
                 <div className="relative">
                   <Github className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <Input
@@ -270,7 +272,7 @@ export const JobApplicationModal = ({
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">LinkedIn Profile</label>
+                <label className="block text-sm font-medium mb-1 sm:mb-2">LinkedIn Profile</label>
                 <div className="relative">
                   <Linkedin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <Input
@@ -286,18 +288,18 @@ export const JobApplicationModal = ({
         </div>
 
         {/* Additional Information */}
-        <div className="bg-gray-50 p-6 rounded-lg">
-          <h3 className="text-lg font-semibold mb-4">Additional Information</h3>
+        <div className="bg-gray-50 p-4 sm:p-6 rounded-lg">
+          <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Additional Information</h3>
           <Textarea
             value={applicationData.additionalInfo}
             onChange={(e) => onInputChange('additionalInfo', e.target.value)}
             placeholder="Any additional information you'd like to share (achievements, certifications, etc.)..."
-            className="border-gray-300 h-24"
+            className="border-gray-300 h-20 sm:h-24"
           />
         </div>
 
         {/* Form Actions */}
-        <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 sm:pt-6 border-t">
           <Button
             type="button"
             variant="outline"

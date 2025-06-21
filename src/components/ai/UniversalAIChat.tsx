@@ -5,6 +5,7 @@ import { ChatToggleButton } from './chat/ChatToggleButton';
 import { ChatWindow } from './chat/ChatWindow';
 import { findFAQAnswer } from '@/contexts/ai/faqData';
 import { notificationService } from '@/services/notificationService';
+import { useResponsive } from '@/hooks/useResponsive';
 
 interface Message {
   id: number;
@@ -23,13 +24,14 @@ export const UniversalAIChat: React.FC = () => {
   const [inputMessage, setInputMessage] = useState('');
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const { askEnhancedAI, isAIThinking, userRole, userName } = useEnhancedAI();
+  const { isMobile } = useResponsive();
 
   useEffect(() => {
     // Initialize with a welcome message
     if (messages.length === 0) {
       const welcomeMessage = {
         id: 1,
-        text: `Hi ${userName || 'there'}! I'm Sethu, your comprehensive AI assistant powered by DeepSeek-R1-0528. I can help you with detailed guidance on ${userRole === 'student' ? 'job searches, career planning, skill development, and interview preparation' : userRole === 'startup' ? 'funding opportunities, government schemes, hiring strategies, and business growth' : userRole === 'official' ? 'scheme management, policy implementation, and ecosystem monitoring' : 'navigating the platform and maximizing your opportunities'}. I provide precise, actionable advice tailored to your specific situation. You can also share images for visual analysis. How can I assist you today?`,
+        text: `Hi ${userName || 'there'}! I'm Sethu, your comprehensive AI assistant powered by DeepSeek-R1-0528. I can help you with detailed guidance on ${userRole === 'student' ? 'job searches, career planning, skill development, and interview preparation' : userRole === 'startup' ? 'funding opportunities, government schemes, hiring strategies, and business growth' : userRole === 'official' ? 'scheme management, policy implementation, and ecosystem monitoring' : 'navigating the platform and maximizing your opportunities'}. I provide precise, actionable advice tailored to your specific situation. You can also share images for analysis. How can I assist you today?`,
         sender: "ai" as const,
         timestamp: new Date().toLocaleTimeString(),
         model: "deepseek-ai/DeepSeek-R1-0528"
