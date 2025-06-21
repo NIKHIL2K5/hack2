@@ -29,6 +29,23 @@ import { authService } from "./services/authService";
 
 const queryClient = new QueryClient();
 
+// Protected route component
+const ProtectedRoute = ({ children, role }: { children: JSX.Element, role: string }) => {
+  const currentUser = authService.getCurrentUser();
+  
+  if (!currentUser) {
+    // Not logged in, redirect to home
+    return <Navigate to="/" replace />;
+  }
+  
+  if (currentUser.role !== role) {
+    // Wrong role, redirect to correct dashboard
+    return <Navigate to={`/dashboard/${currentUser.role}`} replace />;
+  }
+  
+  return children;
+};
+
 const App = () => {
   // Check if user is already logged in and redirect to appropriate dashboard
   useEffect(() => {
@@ -53,9 +70,27 @@ const App = () => {
             <Route path="/login/student" element={<LoginStudent />} />
             <Route path="/login/startup" element={<LoginStartup />} />
             <Route path="/login/official" element={<LoginOfficial />} />
-            <Route path="/dashboard/student" element={<DashboardStudent />} />
-            <Route path="/dashboard/startup" element={<DashboardStartup />} />
-            <Route path="/dashboard/official" element={<DashboardOfficial />} />
+            
+            {/* Protected routes with role-based access */}
+            <Route path="/dashboard/student" element={
+              <ProtectedRoute role="student">
+                <DashboardStudent />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/dashboard/startup" element={
+              <ProtectedRoute role="startup">
+                <DashboardStartup />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/dashboard/official" element={
+              <ProtectedRoute role="official">
+                <DashboardOfficial />
+              </ProtectedRoute>
+            } />
+            
+            {/* Other routes */}
             <Route path="/my-applications" element={<MyApplications />} />
             <Route path="/application-tracker" element={<ApplicationTracker />} />
             <Route path="/profile-settings" element={<ProfileSettings />} />

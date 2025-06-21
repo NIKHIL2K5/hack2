@@ -34,10 +34,12 @@ import { OfficialMobileNav } from '@/components/official/OfficialMobileNav';
 import { OfficialMobileHeader } from '@/components/official/OfficialMobileHeader';
 import { Link, useNavigate } from 'react-router-dom';
 import { authService } from '@/services/authService';
+import { useResponsive } from '@/hooks/useResponsive';
 
 const DashboardOfficial = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const navigate = useNavigate();
+  const { isMobile, isTablet } = useResponsive();
 
   // Check if user is logged in and has the correct role
   useEffect(() => {
