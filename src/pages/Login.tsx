@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -10,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import { getDashboardPathByRole } from "@/utils/navigation";
 
 const Login = () => {
   const { role } = useParams();
@@ -48,6 +48,20 @@ const Login = () => {
       color: "#7C3AED",
       bgGradient: "from-purple-600 to-purple-800",
       description: "Manage schemes and monitor district-level compliance"
+    },
+    freelancer: {
+      title: "Freelancer/Agency",
+      icon: Building2,
+      color: "#F59E0B",
+      bgGradient: "from-amber-600 to-amber-800",
+      description: "Manage your freelance projects and clients"
+    },
+    client: {
+      title: "Client",
+      icon: Building2,
+      color: "#EC4899",
+      bgGradient: "from-pink-600 to-pink-800",
+      description: "Manage your projects and collaborate with teams"
     }
   };
 
@@ -83,11 +97,26 @@ const Login = () => {
       return;
     }
 
+    // Store user role in localStorage
+    localStorage.setItem('userRole', role || '');
+    
+    // Store user data based on role
+    const userData = {
+      email: formData.email,
+      name: formData.name || 'User',
+      role: role
+    };
+    
+    localStorage.setItem('userData', JSON.stringify(userData));
+
     // Simulate login/signup
     toast.success(isLogin ? "Login successful!" : "Account created successfully!");
     
+    // Get the correct dashboard path based on role
+    const dashboardPath = getDashboardPathByRole(role);
+    
     setTimeout(() => {
-      navigate(`/dashboard/${role}`);
+      navigate(dashboardPath);
     }, 1000);
   };
 

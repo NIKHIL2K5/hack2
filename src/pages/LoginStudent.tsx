@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { toast } from "sonner";
+import { getDashboardPathByRole } from "@/utils/navigation";
 
 const LoginStudent = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -22,8 +23,32 @@ const LoginStudent = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Store user role
+    localStorage.setItem('userRole', 'student');
+    
+    // Store user data
+    const userData = {
+      email: formData.email,
+      name: formData.name || 'Student User',
+      role: 'student',
+      college: formData.college
+    };
+    
+    localStorage.setItem('userData', JSON.stringify(userData));
+    
+    // Store student user
+    localStorage.setItem('studentUser', JSON.stringify({
+      email: formData.email,
+      name: formData.name || 'Student User'
+    }));
+    
     toast.success(isLogin ? "Welcome back!" : "Account created successfully!");
-    setTimeout(() => navigate("/dashboard/student"), 1500);
+    
+    // Get the correct dashboard path
+    const dashboardPath = getDashboardPathByRole('student');
+    
+    setTimeout(() => navigate(dashboardPath), 1500);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

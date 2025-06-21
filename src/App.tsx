@@ -24,41 +24,64 @@ import JobBoard from "./pages/JobBoard";
 import Analytics from "./pages/Analytics";
 import FeedbackSentiment from "./pages/FeedbackSentiment";
 import NotFound from "./pages/NotFound";
+import { useEffect } from "react";
+import { getDashboardPathByRole } from "./utils/navigation";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/login/student" element={<LoginStudent />} />
-          <Route path="/login/startup" element={<LoginStartup />} />
-          <Route path="/login/official" element={<LoginOfficial />} />
-          <Route path="/dashboard/student" element={<DashboardStudent />} />
-          <Route path="/dashboard/startup" element={<DashboardStartup />} />
-          <Route path="/dashboard/official" element={<DashboardOfficial />} />
-          <Route path="/my-applications" element={<MyApplications />} />
-          <Route path="/application-tracker" element={<ApplicationTracker />} />
-          <Route path="/profile-settings" element={<ProfileSettings />} />
-          <Route path="/startup-profile" element={<StartupProfileCreator />} />
-          <Route path="/scheme-manager" element={<SchemeManager />} />
-          <Route path="/student-list" element={<StudentList />} />
-          <Route path="/chatbot" element={<ChatbotPage />} />
-          <Route path="/applications" element={<ApplicationsManagement />} />
-          <Route path="/compliance" element={<ComplianceTracker />} />
-          <Route path="/jobs" element={<JobBoard />} />
-          <Route path="/analytics" element={<Analytics />} />
-          <Route path="/feedback" element={<FeedbackSentiment />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <UniversalAIChat />
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  // Check for existing user and redirect to appropriate dashboard
+  useEffect(() => {
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      const user = JSON.parse(userData);
+      // We don't auto-redirect here to avoid infinite redirects
+      // The navigation will happen in specific components when needed
+      console.log('User already logged in as:', user.role);
+    }
+  }, []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/login/student" element={<LoginStudent />} />
+            <Route path="/login/startup" element={<LoginStartup />} />
+            <Route path="/login/official" element={<LoginOfficial />} />
+            <Route path="/login/freelancer" element={<LoginOfficial />} />
+            <Route path="/login/client" element={<LoginOfficial />} />
+            
+            {/* Dashboard routes */}
+            <Route path="/dashboard/student" element={<DashboardStudent />} />
+            <Route path="/dashboard/startup" element={<DashboardStartup />} />
+            <Route path="/dashboard/official" element={<DashboardOfficial />} />
+            <Route path="/freelancer-dashboard" element={<DashboardStartup />} />
+            <Route path="/client-dashboard" element={<DashboardStartup />} />
+            
+            {/* Application routes */}
+            <Route path="/my-applications" element={<MyApplications />} />
+            <Route path="/application-tracker" element={<ApplicationTracker />} />
+            <Route path="/profile-settings" element={<ProfileSettings />} />
+            <Route path="/startup-profile" element={<StartupProfileCreator />} />
+            <Route path="/scheme-manager" element={<SchemeManager />} />
+            <Route path="/student-list" element={<StudentList />} />
+            <Route path="/chatbot" element={<ChatbotPage />} />
+            <Route path="/applications" element={<ApplicationsManagement />} />
+            <Route path="/compliance" element={<ComplianceTracker />} />
+            <Route path="/jobs" element={<JobBoard />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/feedback" element={<FeedbackSentiment />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <UniversalAIChat />
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
