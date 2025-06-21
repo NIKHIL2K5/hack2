@@ -34,7 +34,7 @@ export const ResponsiveGrid = React.forwardRef<HTMLDivElement, ResponsiveGridPro
       : { ...defaultGap, ...gap };
 
     // Generate responsive classes
-    const gridClasses = isClient ? cn(
+    const gridClasses = cn(
       'grid',
       `grid-cols-${mergedCols.xs}`,
       `sm:grid-cols-${mergedCols.sm}`,
@@ -47,7 +47,7 @@ export const ResponsiveGrid = React.forwardRef<HTMLDivElement, ResponsiveGridPro
       `lg:gap-${mergedGap.lg}`,
       `xl:gap-${mergedGap.xl}`,
       className
-    ) : 'grid grid-cols-1 gap-4';
+    );
 
     return (
       <div ref={ref} className={gridClasses} {...props}>

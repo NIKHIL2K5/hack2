@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useResponsive } from "@/hooks/useResponsive";
 
 interface JobSearchFiltersProps {
   searchTerm: string;
@@ -24,6 +25,7 @@ export const JobSearchFilters = ({
   setSkillFilter
 }: JobSearchFiltersProps) => {
   const [isAiRecommending, setIsAiRecommending] = useState(false);
+  const { isMobile } = useResponsive();
 
   const handleAIRecommendations = () => {
     setIsAiRecommending(true);
@@ -46,19 +48,19 @@ export const JobSearchFilters = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
-      className="mb-8"
+      className="mb-6 sm:mb-8"
     >
       <Card className="glass-card border-neutral-200">
-        <CardHeader>
-          <CardTitle className="text-neutral-800 flex items-center">
-            <Search className="w-5 h-5 mr-2 text-primary-600" />
+        <CardHeader className={isMobile ? "px-4 py-3" : undefined}>
+          <CardTitle className="text-neutral-800 flex items-center text-lg">
+            <Search className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-primary-600" />
             Search Jobs
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className={`space-y-4 ${isMobile ? "px-4 py-3" : undefined}`}>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-              <label className="block text-neutral-700 text-sm mb-2 font-medium">Search by title or company</label>
+              <label className="block text-neutral-700 text-xs sm:text-sm mb-1 sm:mb-2 font-medium">Search by title or company</label>
               <Input
                 placeholder="e.g. Frontend Developer"
                 value={searchTerm}
@@ -67,7 +69,7 @@ export const JobSearchFilters = ({
               />
             </div>
             <div>
-              <label className="block text-neutral-700 text-sm mb-2 font-medium">Location</label>
+              <label className="block text-neutral-700 text-xs sm:text-sm mb-1 sm:mb-2 font-medium">Location</label>
               <div className="relative">
                 <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
@@ -79,7 +81,7 @@ export const JobSearchFilters = ({
               </div>
             </div>
             <div>
-              <label className="block text-neutral-700 text-sm mb-2 font-medium">Skills</label>
+              <label className="block text-neutral-700 text-xs sm:text-sm mb-1 sm:mb-2 font-medium">Skills</label>
               <div className="relative">
                 <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
@@ -93,10 +95,10 @@ export const JobSearchFilters = ({
             <div className="flex items-end">
               <Button 
                 onClick={handleAIRecommendations}
-                className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white"
+                className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white text-xs sm:text-sm"
                 disabled={isAiRecommending}
               >
-                <Sparkles className="w-4 h-4 mr-2" />
+                <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                 {isAiRecommending ? "Finding matches..." : "AI Recommendations"}
               </Button>
             </div>

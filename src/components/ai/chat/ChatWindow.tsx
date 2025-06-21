@@ -39,7 +39,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
   onImageUpload,
   onRemoveSelectedImage
 }) => {
-  const { isMobile, isTablet } = useResponsive();
+  const { isMobile } = useResponsive();
 
   return (
     <motion.div
