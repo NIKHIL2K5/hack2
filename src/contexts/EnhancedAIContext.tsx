@@ -32,6 +32,7 @@ export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const huggingFaceClient = new OpenAI({
     baseURL: "https://router.huggingface.co/featherless-ai/v1",
     apiKey: "hf_dummy_api_key", // This will be replaced with a real key in production
+    dangerouslyAllowBrowser: true
   });
 
   const askEnhancedAI = async (message: string, context?: string, image?: File): Promise<any> => {

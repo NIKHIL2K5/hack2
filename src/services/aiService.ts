@@ -4,6 +4,7 @@ import { OpenAI } from "openai";
 const huggingFaceClient = new OpenAI({
   baseURL: "https://router.huggingface.co/featherless-ai/v1",
   apiKey: process.env.HF_TOKEN || "hf_dummy_api_key", // This will be replaced with a real key in production
+  dangerouslyAllowBrowser: true
 });
 
 export interface AIServiceOptions {
