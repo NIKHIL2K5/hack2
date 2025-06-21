@@ -26,7 +26,7 @@ const mockSupabase = {
           const faqAnswer = findFAQAnswer(message);
           
           if (faqAnswer) {
-            return { data: { content: faqAnswer } };
+            return { data: { content: faqAnswer, model: 'FAQ Database' } };
           }
         } catch (error) {
           console.error("Error importing FAQ data:", error);
@@ -49,7 +49,7 @@ const mockSupabase = {
           response += `I'm here to help with ${userRole === 'student' ? 'job searches, career planning, skill development, and interview preparation' : userRole === 'startup' ? 'funding opportunities, government schemes, hiring strategies, and business growth' : userRole === 'official' ? 'scheme management, policy implementation, and ecosystem monitoring' : 'navigating the platform and maximizing your opportunities'}. How can I assist you today?`;
         }
         
-        return { data: { content: response } };
+        return { data: { content: response, model: 'deepseek-ai/DeepSeek-R1-0528' } };
       }
       
       return { data: { content: "I'm sorry, I couldn't process that request." } };
@@ -58,6 +58,18 @@ const mockSupabase = {
   auth: {
     getSession: () => ({ data: { session: null }, error: null }),
     onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+    signUp: async (credentials: any) => {
+      console.log('Mock sign up:', credentials);
+      return { data: { user: { id: 'mock-user-id', email: credentials.email } }, error: null };
+    },
+    signIn: async (credentials: any) => {
+      console.log('Mock sign in:', credentials);
+      return { data: { user: { id: 'mock-user-id', email: credentials.email } }, error: null };
+    },
+    signOut: async () => {
+      console.log('Mock sign out');
+      return { error: null };
+    }
   },
   from: () => ({
     select: () => ({ data: [], error: null }),

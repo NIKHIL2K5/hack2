@@ -1,10 +1,22 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Building2, GraduationCap, Shield, Sparkles, ChevronDown, Mail, Phone, MapPin, Clock, Users, Target, Award, Globe } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useEffect } from "react";
+import { authService } from "@/services/authService";
 
 const Index = () => {
+  const navigate = useNavigate();
+  
+  // Check if user is already logged in and redirect to appropriate dashboard
+  useEffect(() => {
+    const currentUser = authService.getCurrentUser();
+    if (currentUser) {
+      navigate(`/dashboard/${currentUser.role}`);
+    }
+  }, [navigate]);
+  
   const roles = [
     {
       title: "Startup Founder",

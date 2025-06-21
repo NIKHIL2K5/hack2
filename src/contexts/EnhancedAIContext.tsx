@@ -28,7 +28,7 @@ export const EnhancedAIProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   const userInfo = getUserInfo();
 
-  // Initialize Hugging Face client
+  // Initialize Hugging Face client with dangerouslyAllowBrowser flag
   const huggingFaceClient = new OpenAI({
     baseURL: "https://router.huggingface.co/featherless-ai/v1",
     apiKey: "hf_dummy_api_key", // This will be replaced with a real key in production
@@ -114,7 +114,8 @@ ${image ? 'Note: The user has shared an image for analysis.' : ''}`;
 
         return {
           type: 'text',
-          content: aiResponse
+          content: aiResponse,
+          model: 'deepseek-ai/DeepSeek-R1-0528'
         };
       } catch (huggingFaceError) {
         console.error('Hugging Face API Error:', huggingFaceError);
@@ -138,7 +139,8 @@ ${image ? 'Note: The user has shared an image for analysis.' : ''}`;
 
           return {
             type: 'text',
-            content: data.content
+            content: data.content,
+            model: data.model || 'deepseek-ai/DeepSeek-R1-0528'
           };
         } catch (supabaseError) {
           console.error('Supabase Function Error:', supabaseError);

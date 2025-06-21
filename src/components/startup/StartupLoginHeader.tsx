@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { Building2 } from "lucide-react";
 import { CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,9 +20,6 @@ export const StartupLoginHeader = ({ isLogin }: StartupLoginHeaderProps) => (
     </CardTitle>
     <p className="text-white/80 text-lg">
       {isLogin ? "Sign in to your startup dashboard" : "Create your startup founder account"}
-    </p>
-    <p className="text-yellow-300 text-sm mt-2 font-medium">
-      Only official organization emails ending with "org.in" are accepted
     </p>
   </CardHeader>
 );
