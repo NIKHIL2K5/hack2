@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Send, Bot, User, ArrowLeft, Globe, Sparkles } from "lucide-react";
+import { Search, Filter, MapPin, DollarSign, Clock, Building2, ArrowLeft, Globe, Sparkles, Bot, User, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
