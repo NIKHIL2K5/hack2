@@ -12,6 +12,22 @@ import { PageContainer } from "@/components/layout/PageContainer";
 const Index = () => {
   const navigate = useNavigate();
   const { isMobile, isTablet } = useResponsive();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  // Background images for different categories
+  const backgroundImages = [
+    // Startup images
+    "https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2", // Startup team meeting
+    "https://images.pexels.com/photos/3182812/pexels-photo-3182812.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2", // Startup office
+    
+    // Government/official images
+    "https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2", // Professional meeting
+    "https://images.pexels.com/photos/3182781/pexels-photo-3182781.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2", // Government building
+    
+    // Student/freelancer images
+    "https://images.pexels.com/photos/3184317/pexels-photo-3184317.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2", // Students studying
+    "https://images.pexels.com/photos/3184328/pexels-photo-3184328.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"  // Freelancer working
+  ];
   
   // Check if user is already logged in and redirect to appropriate dashboard
   useEffect(() => {
@@ -21,6 +37,15 @@ const Index = () => {
     }
   }, [navigate]);
   
+  // Rotate background images
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % backgroundImages.length);
+    }, 5000); // Change image every 5 seconds
+    
+    return () => clearInterval(interval);
+  }, []);
+
   const roles = [
     {
       title: "Startup Founder",
@@ -88,9 +113,37 @@ const Index = () => {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="pt-24 sm:pt-32 pb-16 sm:pb-20 px-4 sm:px-6">
-        <div className="container mx-auto text-center">
+      {/* Hero Section with Background Image Carousel */}
+      <section className="relative pt-24 sm:pt-32 pb-16 sm:pb-20 px-4 sm:px-6 overflow-hidden">
+        {/* Background Image Carousel */}
+        <div className="absolute inset-0 z-0">
+          {backgroundImages.map((image, index) => (
+            <motion.div
+              key={index}
+              className="absolute inset-0 w-full h-full"
+              initial={{ opacity: 0 }}
+              animate={{ 
+                opacity: currentImageIndex === index ? 0.2 : 0,
+                scale: currentImageIndex === index ? 1 : 1.1
+              }}
+              transition={{ 
+                opacity: { duration: 1.5 },
+                scale: { duration: 8 }
+              }}
+            >
+              <div 
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ 
+                  backgroundImage: `url(${image})`,
+                  filter: "blur(8px)"
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-slate-50/90 via-blue-50/90 to-emerald-50/90" />
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="container mx-auto text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
